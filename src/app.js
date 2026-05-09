@@ -36,6 +36,15 @@ backpressureToggle.addEventListener("change", () => {
   backpressureEnabled = backpressureToggle.checked;
 });
 
+// --- Order decomposition tree -----------------------------------------------
+// Klick på en nod öppnar motsvarande learning-pattern i höger sidopanel.
+document.querySelectorAll("#decomp-panel .decomp-node").forEach(node => {
+  node.addEventListener("click", () => {
+    const key = node.dataset.pattern;
+    if (key) showLearningPattern(key);
+  });
+});
+
 // --- Simulation controls -----------------------------------------------------
 document.getElementById("btn-happy").addEventListener("click",
   () => runFlow(HAPPY_PATH, "happy path", "happy"));

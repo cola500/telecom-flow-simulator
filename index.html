@@ -34,6 +34,97 @@
       <div class="row oss" id="row-oss"></div>
     </div>
 
+    <div class="panel" id="decomp-panel">
+      <h2>Order Decomposition</h2>
+      <p class="decomp-intro">
+        En kundorder är inte ett enda arbetsobjekt — den dekomponeras till en service order, flera resource orders och en uppsättning aktiveringsuppgifter. Klicka på en nivå för att läsa mer i learning-panelen.
+      </p>
+
+      <div class="decomp-tree">
+        <div class="decomp-node decomp-customer" data-pattern="customer_order">
+          <div class="decomp-head"><span class="layer-tag bss">BSS</span><strong>Customer Order</strong></div>
+          <div class="decomp-body">Det kunden faktiskt beställer (t.ex. <em>"Fiber 500 Mbps"</em>). Kommersiella villkor, kontaktperson, kampanj.</div>
+          <div class="decomp-link">↳ O2A: <code>OrderCreated</code> · CRM / Order Management</div>
+        </div>
+
+        <div class="decomp-arrow" aria-hidden="true">▼</div>
+
+        <div class="decomp-node decomp-service" data-pattern="service_order">
+          <div class="decomp-head"><span class="layer-tag oss">OSS</span><strong>Service Order</strong></div>
+          <div class="decomp-body">Den tjänst som ska skapas i nätet (t.ex. <em>"Broadband Access service"</em>). Kundagnostisk mall, parametriseras per order.</div>
+          <div class="decomp-link">↳ O2A: <code>FeasibilityChecked</code> · Service Inventory</div>
+        </div>
+
+        <div class="decomp-arrow" aria-hidden="true">▼</div>
+
+        <div class="decomp-row">
+          <div class="decomp-node decomp-resource" data-pattern="resource_order">
+            <div class="decomp-head"><span class="layer-tag oss">OSS</span><strong>RO: Access</strong></div>
+            <div class="decomp-body">Tillgänglig fiberport / kapacitet på OLT/DSLAM</div>
+            <div class="decomp-link">↳ Resource Inventory</div>
+          </div>
+          <div class="decomp-node decomp-resource" data-pattern="resource_order">
+            <div class="decomp-head"><span class="layer-tag oss">OSS</span><strong>RO: CPE / Router</strong></div>
+            <div class="decomp-body">Hårdvara hos kund + initial konfig</div>
+            <div class="decomp-link">↳ Resource Inventory</div>
+          </div>
+          <div class="decomp-node decomp-resource" data-pattern="resource_order">
+            <div class="decomp-head"><span class="layer-tag oss">OSS</span><strong>RO: Network Profile</strong></div>
+            <div class="decomp-body">VLAN, QoS, tjänsteprofil, IP ur pool</div>
+            <div class="decomp-link">↳ Resource Inventory</div>
+          </div>
+          <div class="decomp-node decomp-activation" data-pattern="activation">
+            <div class="decomp-head"><span class="layer-tag oss">OSS</span><strong>Activation Tasks</strong></div>
+            <div class="decomp-body">Konfigurera nät, binda kund till tjänst, verifiera end-to-end</div>
+            <div class="decomp-link">↳ <code>ProvisioningStarted</code> → <code>ServiceActivated</code></div>
+          </div>
+        </div>
+
+        <div class="decomp-arrow" aria-hidden="true">▼</div>
+
+        <div class="decomp-node decomp-billing" data-pattern="decomposition_why">
+          <div class="decomp-head"><span class="layer-tag bss">BSS</span><strong>Billing trigger (efter verifierad aktivering)</strong></div>
+          <div class="decomp-body">Charging-systemet börjar beräkna förbrukning. Triggas <em>inte</em> på orderstatus — på verifierad service.</div>
+          <div class="decomp-link">↳ O2A: <code>BillingStartRequested</code> · Billing Trigger</div>
+        </div>
+      </div>
+
+      <div class="decomp-example">
+        <h3>Konkret exempel — <em>Fiber 500 Mbps</em></h3>
+        <div class="decomp-example-grid">
+          <div class="decomp-example-cell">
+            <h4>Customer wants</h4>
+            <ul><li>Fiber 500 Mbps, fast IP, månadsvis fakturering</li></ul>
+          </div>
+          <div class="decomp-example-cell">
+            <h4>Service</h4>
+            <ul><li>Broadband Access (B2C, fiber, 500/500 Mbps, statisk IP)</li></ul>
+          </div>
+          <div class="decomp-example-cell">
+            <h4>Resources</h4>
+            <ul>
+              <li>Tillgänglig fiber-access (port + fiberpar)</li>
+              <li>Network profile (VLAN, QoS, IP)</li>
+              <li>CPE / router</li>
+              <li>Customer service location / adress</li>
+            </ul>
+          </div>
+          <div class="decomp-example-cell">
+            <h4>Activation</h4>
+            <ul>
+              <li>Configure access (NETCONF mot OLT)</li>
+              <li>Bind service to customer</li>
+              <li>Verify service end-to-end</li>
+              <li>Request billing start</li>
+            </ul>
+          </div>
+        </div>
+        <p class="decomp-example-foot">
+          <strong>Notera:</strong> en customer order blev fyra parallella resource orders och fyra activation tasks. Allt detta måste lyckas — och verifieras — innan billing får triggas. <em>"Order active" ≠ "service working".</em>
+        </p>
+      </div>
+    </div>
+
     <div class="panel">
       <h2>Simulering</h2>
       <div class="experiment-row">

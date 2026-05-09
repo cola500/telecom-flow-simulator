@@ -14,6 +14,14 @@ function patternList() {
       <button class="pattern-link" data-pattern="queueing">Queueing theory på 60 sekunder</button>
       <button class="pattern-link" data-pattern="utilization">Varför hög utilization är farligt</button>
       <button class="pattern-link" data-pattern="flow_efficiency">Resource efficiency vs flow efficiency</button>
+    </div>
+    <div class="pattern-list">
+      <h4>Order decomposition</h4>
+      <button class="pattern-link" data-pattern="customer_order">What is a Customer Order?</button>
+      <button class="pattern-link" data-pattern="service_order">What is a Service Order?</button>
+      <button class="pattern-link" data-pattern="resource_order">What is a Resource Order?</button>
+      <button class="pattern-link" data-pattern="activation">What is Activation?</button>
+      <button class="pattern-link" data-pattern="decomposition_why">Why decomposition matters</button>
     </div>`;
 }
 

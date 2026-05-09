@@ -4,7 +4,7 @@ description: Lokal browser-baserad lärsimulator för en förenklad telekom-stac
 category: learning-tool
 status: in-progress
 last_updated: 2026-05-09
-sections: [Disclaimer, Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
+sections: [Disclaimer, Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
 ---
 
 # OSS/BSS Order-to-Activate Simulator
@@ -109,6 +109,37 @@ Typiska OSS-domäner:
 OSS svarar på frågor som *"Kan vi leverera detta? Är resurserna lediga? Har konfigurationen gått ut till nätet? Funkar tjänsten i drift?"*
 
 Gränsen BSS/OSS är inte stenhård — *Order Management* sitter ofta som brygga mellan dem och olika operatörer drar gränserna olika.
+
+## From Customer Order to Service and Resource Orders
+
+En av de viktigaste lärdomarna att ta med sig från OSS/BSS är att en *kundorder* aldrig är ett enda arbetsobjekt i nätet. Den dekomponeras i flera nivåer innan något faktiskt aktiveras. Simulatorns panel "Order Decomposition" visar hur:
+
+```
+Customer Order        BSS — det kunden köper ("Fiber 500 Mbps")
+        │
+        ▼
+Service Order         OSS — den tjänst som ska skapas ("Broadband Access")
+        │
+        ├─ Resource Order: Access            OSS — port + fiberpar
+        ├─ Resource Order: CPE / Router      OSS — hårdvara hos kund
+        ├─ Resource Order: Network Profile   OSS — VLAN, QoS, IP
+        └─ Activation Tasks                  OSS — config + verifiering
+        │
+        ▼
+Billing trigger       BSS — först efter verifierad aktivering
+```
+
+**BSS fokuserar på kund, order, produkt och kommersiella triggers.** Vem är kunden, vad har de köpt, vad ska de betala, när startar fakturaklockan. Affärs-domän, oftast långsam livscykel (kontraktsförändringar, kampanjer).
+
+**OSS fokuserar på tjänster, resurser, nät, aktivering och assurance.** Vad ska finnas i nätet, vilka portar/IP/profiler krävs, är konfigurationen pushad, fungerar tjänsten i drift. Teknisk domän, snabb operativ livscykel.
+
+**Decomposition är bryggan mellan affärsorder och teknisk leverans.** Tre skäl att ha den:
+
+1. *Olika ägare och olika livscykler* — BSS-team och OSS-team behöver kunna utveckla och driva sina respektive system oberoende.
+2. *En customer order = flera tekniska arbetsobjekt* — fiber+TV+telefon innebär minst tre service orders, var och en med flera resource orders. Utan dekomponering kan du inte parallellisera, prioritera eller felhantera dem oberoende.
+3. *Order active ≠ service working* — customer order kan vara "completed" i CRM medan tjänsten ännu inte fungerar i nätet. Du behöver olika status per nivå för att kunna svara på frågan *"vad har egentligen gått fel?"* när något inte stämmer.
+
+Klicka på en nivå i "Order Decomposition"-panelen för att läsa mer i learning-mode (Customer Order, Service Order, Resource Order, Activation, eller "Why decomposition matters").
 
 ## Hur hänger Order-to-Activate ihop?
 

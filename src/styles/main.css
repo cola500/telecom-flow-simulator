@@ -331,6 +331,124 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
 }
 #learning .pattern-link:hover { background: #f3f6ff; border-color: #4a6cf7; }
 
+/* Order decomposition (domain learning slice) */
+.decomp-intro {
+  font-size: 13px;
+  color: #5b6478;
+  margin: 0 0 12px;
+}
+.decomp-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+.decomp-node {
+  background: #fbfcfe;
+  border: 1px solid #d8dde8;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.decomp-node:hover { border-color: #4a6cf7; background: #f3f6ff; }
+.decomp-node.decomp-customer { border-top: 3px solid #4a6cf7; }
+.decomp-node.decomp-service { border-top: 3px solid #2da66a; }
+.decomp-node.decomp-resource { border-top: 3px solid #2da66a; }
+.decomp-node.decomp-activation { border-top: 3px solid #2da66a; }
+.decomp-node.decomp-billing { border-top: 3px solid #4a6cf7; }
+.decomp-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.decomp-head .layer-tag {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.decomp-head .layer-tag.bss { background: #e8eeff; color: #2c3da3; }
+.decomp-head .layer-tag.oss { background: #e0f5e9; color: #1f7a47; }
+.decomp-body { font-size: 12px; color: #2c3a52; margin-top: 4px; }
+.decomp-link {
+  font-size: 11px;
+  color: #5b6478;
+  margin-top: 4px;
+  font-family: ui-monospace, Menlo, monospace;
+}
+.decomp-link code {
+  background: #1c2330;
+  color: #8edcff;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 10px;
+}
+.decomp-arrow {
+  text-align: center;
+  color: #8a93a6;
+  font-size: 14px;
+  margin: 0;
+  user-select: none;
+}
+.decomp-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.decomp-row .decomp-node { padding: 8px 10px; }
+.decomp-row .decomp-head { font-size: 12px; }
+.decomp-row .decomp-body { font-size: 11px; }
+.decomp-row .decomp-link { font-size: 10px; }
+
+.decomp-example {
+  margin-top: 14px;
+  padding: 12px;
+  background: #fafbfd;
+  border: 1px solid #e2e6ee;
+  border-left: 3px solid #4a6cf7;
+  border-radius: 0 8px 8px 0;
+}
+.decomp-example h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #2c3da3;
+}
+.decomp-example-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.decomp-example-cell h4 {
+  margin: 0 0 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #8a93a6;
+  letter-spacing: 0.04em;
+}
+.decomp-example-cell ul {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 12px;
+  color: #2c3a52;
+}
+.decomp-example-cell li { margin-bottom: 2px; }
+.decomp-example-foot {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: #2c3a52;
+}
+
+@media (max-width: 900px) {
+  .decomp-row { grid-template-columns: 1fr 1fr; }
+  .decomp-example-grid { grid-template-columns: 1fr 1fr; }
+}
+
 /* Slice C — toggle + improvement panel */
 .experiment-row {
   display: flex;
