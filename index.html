@@ -20,7 +20,7 @@
         <div class="dash-card"><div class="label">Queued</div><div class="value" id="d-queued">0</div></div>
         <div class="dash-card"><div class="label">Completed</div><div class="value" id="d-completed">0</div></div>
         <div class="dash-card"><div class="label">Avg lead time</div><div class="value" id="d-lead">—</div></div>
-        <div class="dash-card"><div class="label">Throughput</div><div class="value" id="d-throughput">—</div></div>
+        <div class="dash-card"><div class="label">Throughput (sim)</div><div class="value" id="d-throughput">—</div></div>
         <div class="dash-card" id="d-incidents-card"><div class="label">Incidents</div><div class="value" id="d-incidents">0</div></div>
       </div>
       <div class="dash-busy">Busiest system: <strong id="d-busiest">—</strong><span id="d-bp-status"></span></div>
@@ -74,8 +74,8 @@
         <button id="btn-happy" class="primary">1 order</button>
         <button id="btn-batch-5" class="primary">5 orders</button>
         <button id="btn-batch-20" class="primary">20 orders</button>
-        <button id="btn-fail-resource" class="danger">Simulera ResourceMissing</button>
-        <button id="btn-fail-prov" class="danger">Simulera ProvisioningFailed</button>
+        <button id="btn-fail-resource" class="danger">Simulera ResourceUnavailable</button>
+        <button id="btn-fail-prov" class="danger">Simulera ActivationRejected</button>
         <button id="btn-reset">Reset</button>
       </div>
       <div class="status-row">
@@ -156,7 +156,7 @@
       <div class="metrics" id="metrics">
         <div class="metric"><div class="label">Total lead time</div><div class="value" id="m-total">—</div><div class="sub">från order till klart</div></div>
         <div class="metric"><div class="label">Tid i handoffs</div><div class="value" id="m-handoff">—</div><div class="sub" id="m-handoff-sub">väntetid mellan system</div></div>
-        <div class="metric"><div class="label">Bottleneck</div><div class="value" id="m-bottleneck">—</div><div class="sub" id="m-bottleneck-sub">längsta steg</div></div>
+        <div class="metric"><div class="label">Slowest step (this run)</div><div class="value" id="m-bottleneck">—</div><div class="sub" id="m-bottleneck-sub">längsta steg</div></div>
         <div class="metric"><div class="label">Handoffs</div><div class="value" id="m-handoff-count">—</div><div class="sub">domänbyten</div></div>
         <div class="metric"><div class="label">Failed events</div><div class="value" id="m-fail">—</div><div class="sub">stoppade flödet</div></div>
       </div>

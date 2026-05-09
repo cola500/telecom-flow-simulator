@@ -19,10 +19,10 @@ const SYSTEMS = {
   billing: {
     layer: "bss",
     name: "Billing Trigger",
-    role: "Startar fakturaklocka",
-    what: "Tar emot signal när tjänsten faktiskt aktiverats och initierar fakturering/charging.",
+    role: "Skickar trigger till charging",
+    what: "Tar emot signal när tjänsten faktiskt aktiverats och skickar trigger till charging-systemet — som i sin tur producerar fakturan. Det här systemet *triggar* alltså fakturering, det fakturerar inte själv.",
     why: "Om triggern kommer för sent eller fel tappas intäkt; kommer den för tidigt fakturerar vi för icke-levererat.",
-    problems: "Drift mellan teknisk aktivering och billing-event, saknade trigger-event vid fel-handling. Strategy & Enablement-frågor: Hur lång är ledtiden mellan ServiceActivated och första debitering?"
+    problems: "Drift mellan teknisk aktivering och billing-event, saknade trigger-event vid fel-handling. Strategy & Enablement-frågor: Hur lång är ledtiden mellan ServiceActivated och BillingStartRequested? Triggar vi på verifierad leverans eller bara på orderstatus?"
   },
   si: {
     layer: "oss",
@@ -56,6 +56,20 @@ const SYSTEMS = {
     why: "En tjänst kan vara aktiverad men inte fungera. Assurance verifierar leverans och fångar driftstörningar.",
     problems: "Larmstormar utan korrelation, oklart vilka larm som motsvarar kundupplevd störning. Strategy & Enablement-frågor: Hur många incidenter är 'self-detected' vs. anmälda av kund?"
   }
+};
+
+// More descriptive label for the *activity* that's slow at each system, used
+// in insight text so the explanation reads "Resource reservation / inventory
+// validation is the bottleneck" instead of "Resource Inventory is the
+// bottleneck" (which conflates the activity with the whole domain).
+const BOTTLENECK_DETAIL = {
+  crm: "CRM lookup",
+  om: "Order management dispatch",
+  billing: "Billing trigger send",
+  si: "Feasibility check (Service Inventory)",
+  ri: "Resource reservation / inventory validation",
+  prov: "Network config push (Provisioning)",
+  assur: "Assurance loop"
 };
 
 // --- Process patterns (learning mode) ---------------------------------------
@@ -104,17 +118,17 @@ const HAPPY_PATH = [
   { tech: "ServiceActivated",    system: "prov",    duration: 1000,
     domain: "Tjänsten är tänd och verifierad. Service Inventory uppdateras till 'active'.",
     teach: "Lär dig: aktivering ≠ leverans förrän kund kan använda tjänsten — assurance bekräftar." },
-  { tech: "BillingStarted",      system: "billing", duration: 800,
-    domain: "Billing-triggern går: nu får kunden faktura.",
-    teach: "Lär dig: triggern bör synka mot riktig aktivering, inte mot ordertillstånd, för att undvika felfakturering." }
+  { tech: "BillingStartRequested", system: "billing", duration: 800,
+    domain: "Trigger skickas till charging-systemet — själva fakturan produceras nedströms av billing/charging.",
+    teach: "Lär dig: detta är en signal, inte en faktura. Triggern bör synka mot verifierad aktivering, inte mot ordertillstånd, för att undvika fakturering av icke-levererade tjänster." }
 ];
 
 const FAIL_RESOURCE = [
   HAPPY_PATH[0],
   HAPPY_PATH[1],
-  { tech: "ResourceMissing", system: "ri", fail: true, duration: 4000,
-    domain: "Resource Inventory hittar ingen ledig port för adressen — flödet stoppas.",
-    teach: "Lär dig: en av de vanligaste orsakerna till manuella ärenden i order-to-activate. Drivs ofta av inventory drift." }
+  { tech: "ResourceUnavailable", system: "ri", fail: true, duration: 4000,
+    domain: "Resource Inventory hittar ingen ledig port för adressen — flödet stoppas. Vanligaste underliggande orsak är inventory drift, inte att porten faktiskt saknas i nätet.",
+    teach: "Lär dig: en av de vanligaste orsakerna till manuella ärenden i order-to-activate. Inventory-data ligger ur synk med nätet, så feasibility kan säga 'ja' till en resurs som någon annan redan tagit." }
 ];
 
 const FAIL_PROV = [
@@ -122,7 +136,7 @@ const FAIL_PROV = [
   HAPPY_PATH[1],
   HAPPY_PATH[2],
   HAPPY_PATH[3],
-  { tech: "ProvisioningFailed", system: "prov", fail: true, duration: 3000,
-    domain: "Adaptern avvisar konfigurationen — kanske fel template, kanske ett element som inte svarar.",
-    teach: "Lär dig: utan rollback hamnar vi i 'partial activation'. Strategy & Enablement: hur ser vår rollback-strategi ut?" }
+  { tech: "ActivationRejected", system: "prov", fail: true, duration: 3000,
+    domain: "Nätelementet (eller dess EMS/NMS-adapter) avvisar konfigurationen — fel template, syntax-mismatch, eller ett element som inte svarar.",
+    teach: "Lär dig: utan rollback hamnar vi i 'partial activation' — config finns delvis i nätet, service inventory tror det är aktivt, men kunden får inte tjänsten. Strategy & Enablement: hur ser vår rollback-strategi ut, och verifierar vi tjänsten post-activation?" }
 ];

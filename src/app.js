@@ -42,7 +42,7 @@ document.getElementById("btn-happy").addEventListener("click",
 document.getElementById("btn-batch-5").addEventListener("click", () => startParallel(5));
 document.getElementById("btn-batch-20").addEventListener("click", () => startParallel(20));
 document.getElementById("btn-fail-resource").addEventListener("click",
-  () => runFlow(FAIL_RESOURCE, "ResourceMissing", "resource"));
+  () => runFlow(FAIL_RESOURCE, "ResourceUnavailable", "resource"));
 document.getElementById("btn-fail-prov").addEventListener("click",
-  () => runFlow(FAIL_PROV, "ProvisioningFailed", "prov"));
+  () => runFlow(FAIL_PROV, "ActivationRejected", "prov"));
 document.getElementById("btn-reset").addEventListener("click", fullReset);

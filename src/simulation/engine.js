@@ -332,10 +332,10 @@ function advanceOrder(order) {
     const fp = failProb(sysId, queueLen);
     if (Math.random() < fp) {
       order.status = "failed";
-      order.failedStep = "ProvisioningFailed";
+      order.failedStep = "ActivationRejected";
       if (SINGLE_PROC.has(sysId)) q.activeList = q.activeList.filter(o => o !== order);
       sim.incidents += 1;
-      logParallelEvent(order, { tech: "ProvisioningFailed", system: sysId, fail: true });
+      logParallelEvent(order, { tech: "ActivationRejected", system: sysId, fail: true });
       if (!order.isRetry && Math.random() < RETRY_PROB) {
         spawnOrder(order);
       }
@@ -414,11 +414,12 @@ function finalizeParallel() {
 
   if (topQueueSys && topQueueSys.wait > 0) {
     const sysName = SYSTEMS[topQueueSys.sysId].name;
-    parts.push(`Mest kötid totalt: <strong>${sysName}</strong> (${fmtMs(topQueueSys.wait)} ackumulerat över ${topQueueSys.count} kötillfällen).`);
+    const detail = BOTTLENECK_DETAIL[topQueueSys.sysId] || sysName;
+    parts.push(`Mest kötid totalt: <strong>${detail}</strong> (${fmtMs(topQueueSys.wait)} ackumulerat över ${topQueueSys.count} kötillfällen).`);
     if (topQueueSys.sysId !== "ri" && workersPerSystem.ri > 1) {
-      parts.push(`<strong>Bottlenecken har flyttat.</strong> Med ${workersPerSystem.ri} workers i Resource Inventory är ${sysName} nu det system där mest tid spenderas i kö. Det är Theory of Constraints i praktiken: när du förbättrar bottlenecken försvinner den inte — den hittar en ny plats i flödet. Nästa fråga: är det värt att höja kapaciteten i ${sysName} också, eller har vi nått en punkt där handoffs och fel dominerar?`);
+      parts.push(`<strong>Bottlenecken har flyttat.</strong> Med ${workersPerSystem.ri} workers i Resource Inventory är ${detail} nu det steg där mest tid spenderas i kö. Det är Theory of Constraints i praktiken: när du förbättrar bottlenecken försvinner den inte — den hittar en ny plats i flödet. Nästa fråga: är det värt att höja kapaciteten i ${detail} också, eller har vi nått en punkt där handoffs och fel dominerar?`);
     } else if (topQueueSys.sysId === "ri" && workersPerSystem.ri === 1) {
-      parts.push(`Resource Inventory är fortfarande bottlenecken med 1 worker. Prova att höja capacity till 2 eller 3 och kör om — du ser hur bottlenecken flyttar till Provisioning.`);
+      parts.push(`${detail} är fortfarande bottlenecken med 1 worker. Prova att höja capacity till 2 eller 3 och kör om — du ser hur bottlenecken flyttar till Provisioning.`);
     }
   }
   if (stretchPct > 50) {

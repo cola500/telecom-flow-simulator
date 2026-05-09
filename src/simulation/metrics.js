@@ -28,7 +28,10 @@ function finalize(queue, scenarioId, label) {
 
   if (bottleneck) {
     const sysName = SYSTEMS[bottleneck.system].name;
+    const detail = BOTTLENECK_DETAIL[bottleneck.system] || sysName;
     const pct = Math.round((bottleneck.duration / total) * 100);
+    // UI-värdet är kort (sys-name) så det får plats i metric-cellen; insight
+    // använder den längre, mer beskrivande aktivitetsetiketten.
     document.getElementById("m-bottleneck").textContent = sysName;
     document.getElementById("m-bottleneck-sub").textContent =
       `${fmtMs(bottleneck.duration)} · ${pct}% av total lead time`;
@@ -44,7 +47,7 @@ function finalize(queue, scenarioId, label) {
 
     insightEl.classList.remove("hidden");
     insightEl.innerHTML =
-      `<strong>${sysName}</strong> är flödets flaskhals — ${pct}% av total lead time spenderades här (${fmtMs(bottleneck.duration)} av ${fmtMs(total)}). ` +
+      `<strong>${detail}</strong> är flödets flaskhals — ${pct}% av total lead time spenderades här (${fmtMs(bottleneck.duration)} av ${fmtMs(total)}). ` +
       `Handoffs stod för ytterligare ${Math.round((handoffTime/total)*100)}%. Strategy & Enablement: är den långsamma tiden här ` +
       `processrelaterad (manuella godkännanden, batchjobb), datarelaterad (inventory accuracy), eller integrationsrelaterad (synkrona API-kedjor)?`;
   }
@@ -96,11 +99,13 @@ function showImprovement(slots, label) {
   deltaEl.classList.toggle("regression", delta < 0);
 
   const moved = m.bottleneck && a.bottleneck && m.bottleneck.system !== a.bottleneck.system;
+  const mDetail = m.bottleneck ? (BOTTLENECK_DETAIL[m.bottleneck.system] || SYSTEMS[m.bottleneck.system].name) : null;
+  const aDetail = a.bottleneck ? (BOTTLENECK_DETAIL[a.bottleneck.system] || SYSTEMS[a.bottleneck.system].name) : null;
   let bottleneckText = "";
   if (moved) {
-    bottleneckText = `Bottleneck flyttade: ${SYSTEMS[m.bottleneck.system].name} → ${SYSTEMS[a.bottleneck.system].name}`;
+    bottleneckText = `Bottleneck flyttade: ${mDetail} → ${aDetail}`;
   } else if (m.bottleneck && a.bottleneck) {
-    bottleneckText = `Bottleneck oförändrad: ${SYSTEMS[m.bottleneck.system].name}`;
+    bottleneckText = `Bottleneck oförändrad: ${mDetail}`;
   }
   document.getElementById("imp-bottleneck").textContent = bottleneckText;
 
@@ -108,9 +113,9 @@ function showImprovement(slots, label) {
   if (delta > 0) {
     insight = `Automation reduced total lead time by ${pct.toFixed(1)}%.`;
     if (moved) {
-      insight += ` Bottleneck moved from ${SYSTEMS[m.bottleneck.system].name} to ${SYSTEMS[a.bottleneck.system].name} — det är nästa förbättringsmål.`;
+      insight += ` Bottleneck moved from ${mDetail} to ${aDetail} — det är nästa förbättringsmål.`;
     } else if (m.bottleneck) {
-      insight += ` Bottleneck är fortfarande ${SYSTEMS[m.bottleneck.system].name} — automation räckte inte för att flytta begränsningen.`;
+      insight += ` Bottleneck är fortfarande ${mDetail} — automation räckte inte för att flytta begränsningen.`;
     }
   } else if (delta === 0) {
     insight = `Ingen mätbar effekt — automation påverkade inte lead time i detta scenario (möjligen för att flödet inte når reservation-steget).`;
