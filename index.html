@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<title>OSS/BSS Order-to-Activate Simulator</title>
+<link rel="stylesheet" href="src/styles/main.css" />
+</head>
+<body>
+<header>
+  <h1>OSS/BSS Order-to-Activate Simulator</h1>
+  <p>Klicka på en domän för att läsa om den. Skapa en order för att se eventflödet, lead time och bottlenecks.</p>
+</header>
+
+<div class="layout">
+  <main>
+    <div class="panel parallel-only">
+      <h2>Belastnings-dashboard</h2>
+      <div class="dashboard">
+        <div class="dash-card"><div class="label">Active</div><div class="value" id="d-active">0</div></div>
+        <div class="dash-card"><div class="label">Queued</div><div class="value" id="d-queued">0</div></div>
+        <div class="dash-card"><div class="label">Completed</div><div class="value" id="d-completed">0</div></div>
+        <div class="dash-card"><div class="label">Avg lead time</div><div class="value" id="d-lead">—</div></div>
+        <div class="dash-card"><div class="label">Throughput</div><div class="value" id="d-throughput">—</div></div>
+        <div class="dash-card" id="d-incidents-card"><div class="label">Incidents</div><div class="value" id="d-incidents">0</div></div>
+      </div>
+      <div class="dash-busy">Busiest system: <strong id="d-busiest">—</strong><span id="d-bp-status"></span></div>
+    </div>
+
+    <div class="panel">
+      <h2>Systemkarta</h2>
+      <div class="layer-label">BSS — Business Support Systems</div>
+      <div class="row bss" id="row-bss"></div>
+      <div class="layer-label">OSS — Operational Support Systems</div>
+      <div class="row oss" id="row-oss"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Simulering</h2>
+      <div class="experiment-row">
+        <label class="toggle">
+          <input type="checkbox" id="automation-toggle">
+          <span class="track"><span class="thumb"></span></span>
+          <span class="text">Automatisera resource reservation</span>
+        </label>
+        <span class="exp-hint">När på: ResourcesReserved 5.0s → 2.5s. Kör scenariot med och utan toggle för att se diff.</span>
+      </div>
+      <div class="experiment-row">
+        <span class="exp-label">Resource Inventory workers:</span>
+        <div class="capacity-buttons" id="capacity-buttons">
+          <button class="cap-btn active" data-workers="1">1</button>
+          <button class="cap-btn" data-workers="2">2</button>
+          <button class="cap-btn" data-workers="3">3</button>
+        </div>
+        <span class="exp-hint">Hur många reservationer som kan göras parallellt. Höj kapaciteten — se var bottlenecken hamnar härnäst.</span>
+      </div>
+      <div class="experiment-row">
+        <label class="toggle">
+          <input type="checkbox" id="backpressure-toggle">
+          <span class="track"><span class="thumb"></span></span>
+          <span class="text">Backpressure: pausa nya ordrar när RI-kö ≥ 3</span>
+        </label>
+        <span class="exp-hint">Order Management slutar tillfälligt acceptera ordrar när bottlenecken är full. Hellre långsam respons uppströms än kollaps nedströms.</span>
+      </div>
+      <div class="controls">
+        <button id="btn-happy" class="primary">1 order</button>
+        <button id="btn-batch-5" class="primary">5 orders</button>
+        <button id="btn-batch-20" class="primary">20 orders</button>
+        <button id="btn-fail-resource" class="danger">Simulera ResourceMissing</button>
+        <button id="btn-fail-prov" class="danger">Simulera ProvisioningFailed</button>
+        <button id="btn-reset">Reset</button>
+      </div>
+      <div class="status-row">
+        <strong>Order:</strong>
+        <span id="order-id">—</span>
+        <span class="status-pill" id="status-pill">Idle</span>
+      </div>
+      <h2>Eventlogg</h2>
+      <div class="log" id="log"></div>
+    </div>
+
+    <div class="panel singel-only">
+      <h2>Timeline</h2>
+      <div id="timeline" class="timeline">
+        <div class="timeline-empty">Kör en simulering för att se var tid spenderas. Streckmönstrade staplar = handoffs mellan domäner.</div>
+      </div>
+    </div>
+
+    <div class="panel parallel-only">
+      <h2>Köer (single-proc systems)</h2>
+      <div class="queue-panel" id="queue-panel"></div>
+    </div>
+
+    <div class="panel parallel-only">
+      <h2>Throughput &amp; system pressure over time</h2>
+      <div id="chart-wrap">
+        <div class="chart-empty" id="chart-empty">Kör en batch — grafen ritar sig själv under tiden.</div>
+        <svg id="chart" class="chart" viewBox="0 0 600 160" preserveAspectRatio="none" style="display:none;"></svg>
+      </div>
+      <div class="chart-legend">
+        <span class="leg leg-active"><span class="dot"></span>Active <span class="val" id="leg-active-val">0</span></span>
+        <span class="leg leg-queued"><span class="dot"></span>Queue <span class="val" id="leg-queued-val">0</span></span>
+        <span class="leg leg-completed"><span class="dot"></span>Completed <span class="val" id="leg-completed-val">0</span></span>
+        <span class="leg leg-incidents"><span class="dot"></span>Incidents <span class="val" id="leg-incidents-val">0</span></span>
+      </div>
+      <div class="chart-runs hidden" id="chart-runs">
+        <span class="run-prev">Previous run</span>
+        <span class="run-cur">Current run</span>
+      </div>
+      <div class="run-compare hidden" id="run-compare">
+        <h4>Jämförelse · Previous vs Current</h4>
+        <div class="cmp-settings">
+          <div><span class="cmp-tag prev">Previous</span><span id="cmp-prev-summary">—</span></div>
+          <div><span class="cmp-tag cur">Current</span><span id="cmp-cur-summary">—</span></div>
+        </div>
+        <div class="cmp-grid">
+          <div class="cmp-cell">
+            <div class="cmp-label">Avg lead time</div>
+            <div class="cmp-row"><span class="cmp-prev" id="cmp-lead-prev">—</span><span class="cmp-cur" id="cmp-lead-cur">—</span></div>
+            <div class="cmp-delta" id="cmp-lead-delta"></div>
+          </div>
+          <div class="cmp-cell">
+            <div class="cmp-label">Incidents</div>
+            <div class="cmp-row"><span class="cmp-prev" id="cmp-incidents-prev">—</span><span class="cmp-cur" id="cmp-incidents-cur">—</span></div>
+            <div class="cmp-delta" id="cmp-incidents-delta"></div>
+          </div>
+          <div class="cmp-cell">
+            <div class="cmp-label">Max queue</div>
+            <div class="cmp-row"><span class="cmp-prev" id="cmp-maxqueue-prev">—</span><span class="cmp-cur" id="cmp-maxqueue-cur">—</span></div>
+            <div class="cmp-delta" id="cmp-maxqueue-delta"></div>
+          </div>
+          <div class="cmp-cell">
+            <div class="cmp-label">Throughput</div>
+            <div class="cmp-row"><span class="cmp-prev" id="cmp-tput-prev">—</span><span class="cmp-cur" id="cmp-tput-cur">—</span></div>
+            <div class="cmp-delta" id="cmp-tput-delta"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel parallel-only">
+      <h2>Ordrar</h2>
+      <div class="order-list" id="order-list"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Metrics</h2>
+      <div class="metrics" id="metrics">
+        <div class="metric"><div class="label">Total lead time</div><div class="value" id="m-total">—</div><div class="sub">från order till klart</div></div>
+        <div class="metric"><div class="label">Tid i handoffs</div><div class="value" id="m-handoff">—</div><div class="sub" id="m-handoff-sub">väntetid mellan system</div></div>
+        <div class="metric"><div class="label">Bottleneck</div><div class="value" id="m-bottleneck">—</div><div class="sub" id="m-bottleneck-sub">längsta steg</div></div>
+        <div class="metric"><div class="label">Handoffs</div><div class="value" id="m-handoff-count">—</div><div class="sub">domänbyten</div></div>
+        <div class="metric"><div class="label">Failed events</div><div class="value" id="m-fail">—</div><div class="sub">stoppade flödet</div></div>
+      </div>
+      <div class="insight hidden" id="insight"></div>
+      <div class="improvement hidden" id="improvement">
+        <h4>Förbättringsexperiment — <span id="imp-scenario"></span></h4>
+        <div class="imp-grid">
+          <div class="imp-cell"><div class="imp-label">Manual</div><div class="imp-value" id="imp-manual">—</div></div>
+          <div class="imp-cell"><div class="imp-label">Automated</div><div class="imp-value" id="imp-auto">—</div></div>
+          <div class="imp-cell"><div class="imp-label">Förbättring</div><div class="imp-value imp-big" id="imp-delta">—</div></div>
+        </div>
+        <div class="imp-bottleneck" id="imp-bottleneck"></div>
+        <p class="imp-insight" id="imp-insight"></p>
+      </div>
+    </div>
+  </main>
+
+  <aside>
+    <div class="panel" style="margin-bottom:0;">
+      <h2>Learning mode</h2>
+      <div id="learning"></div>
+    </div>
+  </aside>
+</div>
+
+<script src="src/simulation/scenarios.js"></script>
+<script src="src/simulation/events.js"></script>
+<script src="src/simulation/metrics.js"></script>
+<script src="src/simulation/engine.js"></script>
+<script src="src/ui/render.js"></script>
+<script src="src/ui/charts.js"></script>
+<script src="src/ui/learning.js"></script>
+<script src="src/app.js"></script>
+</body>
+</html>
