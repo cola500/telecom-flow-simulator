@@ -8,6 +8,20 @@ function applyAutomation(events) {
   );
 }
 
+// Multiplies each event's duration by a uniform random factor in
+// [1 - pct/100, 1 + pct/100]. At pct=0 returns the input array unchanged so
+// behavior is identical to before this slice. Mean stays the same; only the
+// spread changes — that's the whole point ("variation is the enemy of flow").
+function applyVariability(events, pct) {
+  if (!pct) return events;
+  const span = pct / 100;
+  return events.map(ev => {
+    const factor = 1 + (Math.random() * 2 - 1) * span;
+    const newDuration = Math.max(100, Math.round(ev.duration * factor));
+    return { ...ev, duration: newDuration };
+  });
+}
+
 function fmtMs(ms) { return (ms / 1000).toFixed(1) + "s"; }
 
 function calcHandoff(fromSys, toSys) {

@@ -187,11 +187,14 @@ function updateParallelUI() {
     busy && busy.count > 0 ? `${SYSTEMS[busy.sysId].name} (${busy.count})` : "—";
 
   const bpEl = document.getElementById("d-bp-status");
+  let bpText;
   if (backpressureEnabled) {
-    bpEl.textContent = ` · Backpressure ${sim.queues.ri.queue.length >= BP_QUEUE_THRESHOLD ? "ACTIVE" : "armed"} (${sim.deferredEvents} pausad${sim.deferredEvents === 1 ? "" : "e"} spawns)`;
+    bpText = ` · Backpressure ${sim.queues.ri.queue.length >= BP_QUEUE_THRESHOLD ? "ACTIVE" : "armed"} (${sim.deferredEvents} pausad${sim.deferredEvents === 1 ? "" : "e"} spawns)`;
   } else {
-    bpEl.textContent = sim.deferredEvents > 0 ? ` · Backpressure pausade ${sim.deferredEvents} spawn${sim.deferredEvents === 1 ? "" : "s"}` : "";
+    bpText = sim.deferredEvents > 0 ? ` · Backpressure pausade ${sim.deferredEvents} spawn${sim.deferredEvents === 1 ? "" : "s"}` : "";
   }
+  if (sim.variabilityUsed) bpText += ` · Variation ±${sim.variabilityUsed}%`;
+  bpEl.textContent = bpText;
 
   updateQueuePanel();
   updateChart();

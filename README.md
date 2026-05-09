@@ -4,7 +4,7 @@ description: Lokal browser-baserad lärsimulator för en förenklad telekom-stac
 category: learning-tool
 status: in-progress
 last_updated: 2026-05-09
-sections: [Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
+sections: [Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
 ---
 
 # OSS/BSS Order-to-Activate Simulator
@@ -301,6 +301,28 @@ Som tumregel:
 Det är därför rätt kapacitetsmål är 60–80% utilization i bottleneck (inte högre), och varför *att slå dollar för dollar i mer load utan att öka kapacitet är ett av de vanligaste sätten att göra ett system instabilt*.
 
 I simulatorn ser du det när du kör 20 orders: Resource Inventory blir kraftigt rödfärgad (load-high) och dess kö växer. Lead time ökar inte med 20× — den ökar mer.
+
+### Variation is the enemy of flow
+
+Hittills har varje order tagit *exakt* samma tid i varje steg. Verkligheten är inte så snäll: vissa ordrar går rakt igenom, andra fastnar i godkännanden, vissa template-anrop tar 4× tiden. Variabilitet finns även när medelvärdet är konstant.
+
+Slidern **Variation i betjäningstid** (0% / ±25% / ±50%) lägger på en uniform slumpfaktor på varje stegs duration när en order spawnar. *Genomsnittet är samma* — bara spridningen ändras.
+
+Det viktiga: även med samma medelarbete växer kötiden mätbart när variationen ökar. Köteorin förklarar varför — kön drivs inte bara av utilization (ρ), utan också av kvadraten på variationskoefficienten:
+
+```
+W ≈ (ρ / (1 - ρ)) × ((C_a² + C_s²) / 2) × E[S]
+```
+
+där `C_a` och `C_s` är variationskoefficienter för ankomst- respektive betjäningstid. Dubblera spridningen och kötiden växer fyrfaldigt vid samma utilization. Det är därför Lean predikar *"variation is the enemy of flow"* lika mycket som *"don't max utilization"*.
+
+**Pedagogisk experiment-loop:**
+
+1. Reset, sätt variation till 0%, kör 20 orders. Notera avg lead time och max queue.
+2. Sätt variation till 50%, kör 20 orders direkt efter (utan reset, så ghost-trace visas).
+3. Run comparison-kortet visar diff: lead time ökar, max queue ökar, ofta även incidents — eftersom Provisionings fail-sannolikhet är kö-driven, så större kö → fler retries.
+
+I praktiken är variabilitet det dyraste och svåraste att minska i ett OSS/BSS-flöde: standardisera produkter, automatisera fall-out, sätta SLA på handoffs. Det gör mer för flow än att jaga ytterligare en procent utilization.
 
 ### Theory of Constraints (kort)
 

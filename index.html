@@ -54,6 +54,15 @@
         <span class="exp-hint">Hur många reservationer som kan göras parallellt. Höj kapaciteten — se var bottlenecken hamnar härnäst.</span>
       </div>
       <div class="experiment-row">
+        <span class="exp-label">Variation i betjäningstid:</span>
+        <div class="capacity-buttons" id="variability-buttons">
+          <button class="cap-btn active" data-variability="0">0%</button>
+          <button class="cap-btn" data-variability="25">±25%</button>
+          <button class="cap-btn" data-variability="50">±50%</button>
+        </div>
+        <span class="exp-hint">Slumpar varje stegs duration kring sitt medelvärde. Samma genomsnitt — men mer kö. <em>Variation is the enemy of flow.</em></span>
+      </div>
+      <div class="experiment-row">
         <label class="toggle">
           <input type="checkbox" id="backpressure-toggle">
           <span class="track"><span class="thumb"></span></span>

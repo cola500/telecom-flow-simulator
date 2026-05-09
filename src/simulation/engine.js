@@ -14,6 +14,8 @@ const workersPerSystem = { ri: 1, prov: 1 };
 const BP_QUEUE_THRESHOLD = 3;
 let backpressureEnabled = false;
 
+let variabilityPct = 0;
+
 // --- Parallel simulation constants ------------------------------------------
 const TICK_REAL_MS = 50;
 const SIM_PER_TICK = 100;          // 2x speed
@@ -40,7 +42,7 @@ function runFlow(events, label, scenarioId) {
   setStatus("Running: " + label + (automationEnabled ? " (automated)" : ""), "running");
   setButtonsRunning(true);
 
-  const queue = buildQueue(applyAutomation(events));
+  const queue = buildQueue(applyVariability(applyAutomation(events), variabilityPct));
   const scaleMax = Math.max(...queue.map(q => q.duration));
   let cumulative = 0;
   let i = 0;
@@ -170,6 +172,7 @@ function startParallel(batchSize) {
     maxQueue: 0,
     deferredEvents: 0,
     backpressureUsed: backpressureEnabled,
+    variabilityUsed: variabilityPct,
     intervalId: null
   };
   for (const sysId of Object.keys(SYSTEMS)) {
@@ -222,7 +225,7 @@ function spawnOrder(asRetryOf) {
     id = `ORD-${String(orderCounter).padStart(4, "0")}`;
     sim.spawnedCount += 1;
   }
-  const automated = applyAutomation(HAPPY_PATH);
+  const automated = applyVariability(applyAutomation(HAPPY_PATH), variabilityPct);
   const order = {
     id,
     createdAt: sim.simTime,
@@ -381,6 +384,7 @@ function finalizeParallel() {
     workers: workersPerSystem.ri,
     automation: automationEnabled,
     backpressure: sim.backpressureUsed,
+    variability: sim.variabilityUsed,
     avgLead,
     incidents: sim.incidents,
     maxQueue: sim.maxQueue,
@@ -401,7 +405,8 @@ function finalizeParallel() {
   insightEl.classList.remove("hidden");
   let parts = [];
   const bpLabel = sim.backpressureUsed ? `, backpressure <strong>på</strong> (${sim.deferredEvents} pausade spawns)` : "";
-  parts.push(`<strong>Batch klar.</strong> ${completed} klara, ${failed} failed, ${sim.incidents} incidents. Resource Inventory: <strong>${workersPerSystem.ri} worker${workersPerSystem.ri > 1 ? "s" : ""}</strong>${bpLabel}.`);
+  const varLabel = sim.variabilityUsed ? `, variation <strong>±${sim.variabilityUsed}%</strong>` : "";
+  parts.push(`<strong>Batch klar.</strong> ${completed} klara, ${failed} failed, ${sim.incidents} incidents. Resource Inventory: <strong>${workersPerSystem.ri} worker${workersPerSystem.ri > 1 ? "s" : ""}</strong>${bpLabel}${varLabel}.`);
   parts.push(`Avg lead time: ${fmtMs(avgLead)} · Längsta: ${fmtMs(maxLead)} · 1-order baseline: ${fmtMs(baseline)}.`);
   if (sim.backpressureUsed) {
     parts.push(`<strong>Backpressure-effekt:</strong> Order Management pausades ${sim.deferredEvents} gånger när RI:s kö nådde tröskeln. Lead time för enskilda ordrar minskar (de väntar mindre i RI), men totala batch-tiden kan öka eftersom inflödet saktas ner. Trade-offen är medveten — vi byter <em>orderns kötid</em> mot <em>real-tid till alla klara</em>. Strategin gör mest nytta när nedströms-fel (incidents) är dyrare än uppströms-fördröjning.`);

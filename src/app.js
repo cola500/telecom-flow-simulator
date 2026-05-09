@@ -21,6 +21,16 @@ document.querySelectorAll("#capacity-buttons .cap-btn").forEach(btn => {
   });
 });
 
+// --- Variability slider -----------------------------------------------------
+document.querySelectorAll("#variability-buttons .cap-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (parallelSim && parallelSim.intervalId) return; // freeze during run
+    document.querySelectorAll("#variability-buttons .cap-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    variabilityPct = parseInt(btn.dataset.variability, 10);
+  });
+});
+
 // --- Backpressure toggle ----------------------------------------------------
 backpressureToggle.addEventListener("change", () => {
   backpressureEnabled = backpressureToggle.checked;
