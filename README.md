@@ -4,12 +4,15 @@ description: Lokal browser-baserad lärsimulator för en förenklad telekom-stac
 category: learning-tool
 status: in-progress
 last_updated: 2026-05-09
-sections: [Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
+sections: [Disclaimer, Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
 ---
 
 # OSS/BSS Order-to-Activate Simulator
 
 En enkel HTML-simulator som visar hur en kundorder vandrar genom en telekomoperatörs OSS/BSS-stack tills tjänsten är aktiverad och fakturering startar.
+
+> **This is a simplified learning model, not a full telecom architecture.**
+> Domänerna och flödesfaserna är industristandard (TM Forum SID/eTOM-inspirerade), men eventnamn, durations, fail-typer och flöde är kraftigt förenklade för att vara begripliga på 5 minuter. Se [`REALISM_NOTES.md`](REALISM_NOTES.md) för en kalibrering: vad är realistiskt, vad är pedagogiskt förenklat, vilka antaganden modellen gör, och vilka namn-/textändringar som skulle öka trovärdigheten.
 
 ## Vad simulatorn lär ut
 
