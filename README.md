@@ -4,7 +4,7 @@ description: Lokal browser-baserad lärsimulator för en förenklad telekom-stac
 category: learning-tool
 status: in-progress
 last_updated: 2026-05-09
-sections: [Disclaimer, Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Activation capacity, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
+sections: [Disclaimer, Two modes Learn OSS/BSS and Optimize Process, Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Activation capacity, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
 ---
 
 # OSS/BSS Order-to-Activate Simulator
@@ -13,6 +13,17 @@ En enkel HTML-simulator som visar hur en kundorder vandrar genom en telekomopera
 
 > **This is a simplified learning model, not a full telecom architecture.**
 > Domänerna och flödesfaserna är industristandard (TM Forum SID/eTOM-inspirerade), men eventnamn, durations, fail-typer och flöde är kraftigt förenklade för att vara begripliga på 5 minuter. Se [`REALISM_NOTES.md`](REALISM_NOTES.md) för en kalibrering: vad är realistiskt, vad är pedagogiskt förenklat, vilka antaganden modellen gör, och vilka namn-/textändringar som skulle öka trovärdigheten.
+
+## Two modes: Learn OSS/BSS and Optimize Process
+
+Simulatorn har två lägen, valbara via tabs i headern:
+
+- **Learn OSS/BSS** (default) — fokus på domänen. Systemkartan, Order Decomposition (fiber/mobile), eventflödet vid en enskild order, Timeline, och Learning-panelen är synliga. Optimeringskontroller och belastnings-paneler är dolda.
+- **Optimize Process** — fokus på experiment och metrics. Belastnings-dashboard, kö-panel, throughput-chart, run comparison och alla optimeringskontroller (capacity, automation, variability, backpressure, batch-knappar) är synliga. Order Decomposition är dold.
+
+Learning-panelen (höger sidopanel) och Systemkartan är synliga i båda lägena. Mode-byte är fryst under en pågående batch — du kan inte växla mitt i en körning.
+
+Det är samma underliggande simulator-engine i båda lägena — bara olika UI-fokus för att minska kognitiv belastning.
 
 ## Vad simulatorn lär ut
 

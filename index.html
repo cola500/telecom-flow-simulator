@@ -5,15 +5,19 @@
 <title>OSS/BSS Order-to-Activate Simulator</title>
 <link rel="stylesheet" href="src/styles/main.css" />
 </head>
-<body>
+<body class="mode-learn">
 <header>
   <h1>OSS/BSS Order-to-Activate Simulator</h1>
   <p>Klicka på en domän för att läsa om den. Skapa en order för att se eventflödet, lead time och bottlenecks.</p>
+  <div class="mode-tabs" role="tablist">
+    <button class="mode-tab active" data-mode="learn" role="tab">Learn OSS/BSS</button>
+    <button class="mode-tab" data-mode="optimize" role="tab">Optimize Process</button>
+  </div>
 </header>
 
 <div class="layout">
   <main>
-    <div class="panel parallel-only">
+    <div class="panel parallel-only optimize-only">
       <h2>Belastnings-dashboard</h2>
       <div class="dashboard">
         <div class="dash-card"><div class="label">Active</div><div class="value" id="d-active">0</div></div>
@@ -34,7 +38,7 @@
       <div class="row oss" id="row-oss"></div>
     </div>
 
-    <div class="panel" id="decomp-panel">
+    <div class="panel learn-only" id="decomp-panel">
       <h2>Order Decomposition</h2>
       <p class="decomp-intro">
         En kundorder är inte ett enda arbetsobjekt — den dekomponeras till en service order, flera resource orders och en uppsättning aktiveringsuppgifter. <em>Olika produkter dekomponeras olika.</em> Klicka på en nivå för att läsa mer i learning-panelen.
@@ -56,7 +60,7 @@
 
     <div class="panel">
       <h2>Simulering</h2>
-      <div class="experiment-row">
+      <div class="experiment-row optimize-only">
         <label class="toggle">
           <input type="checkbox" id="automation-toggle">
           <span class="track"><span class="thumb"></span></span>
@@ -64,7 +68,7 @@
         </label>
         <span class="exp-hint">När på: ResourcesReserved 5.0s → 2.5s. Kör scenariot med och utan toggle för att se diff.</span>
       </div>
-      <div class="experiment-row">
+      <div class="experiment-row optimize-only">
         <label class="toggle">
           <input type="checkbox" id="prov-automation-toggle">
           <span class="track"><span class="thumb"></span></span>
@@ -72,7 +76,7 @@
         </label>
         <span class="exp-hint">När på: ProvisioningStarted 3.0s → 1.8s, ServiceActivated 1.0s → 0.7s, fail-prob × 0.5. Verifieringen finns kvar — automation tar inte bort inventory mismatch eller nätfel.</span>
       </div>
-      <div class="experiment-row">
+      <div class="experiment-row optimize-only">
         <span class="exp-label">Resource Inventory workers:</span>
         <div class="capacity-buttons" id="capacity-buttons">
           <button class="cap-btn active" data-workers="1">1</button>
@@ -81,7 +85,7 @@
         </div>
         <span class="exp-hint">Hur många reservationer som kan göras parallellt. Representerar parallell kapacitet — inte nödvändigtvis personer.</span>
       </div>
-      <div class="experiment-row">
+      <div class="experiment-row optimize-only">
         <span class="exp-label">Provisioning / Activation capacity:</span>
         <div class="capacity-buttons" id="prov-capacity-buttons">
           <button class="cap-btn active" data-workers="1">1</button>
@@ -90,7 +94,7 @@
         </div>
         <span class="exp-hint">Hur många activation-jobb som kan köras parallellt. Representerar adapterinstanser, parallel orchestration eller bättre köhantering — <em>inte</em> personer. Capacity och automation är separata begrepp.</span>
       </div>
-      <div class="experiment-row">
+      <div class="experiment-row optimize-only">
         <span class="exp-label">Variation i betjäningstid:</span>
         <div class="capacity-buttons" id="variability-buttons">
           <button class="cap-btn active" data-variability="0">0%</button>
@@ -99,7 +103,7 @@
         </div>
         <span class="exp-hint">Slumpar varje stegs duration kring sitt medelvärde. Samma genomsnitt — men mer kö. <em>Variation is the enemy of flow.</em></span>
       </div>
-      <div class="experiment-row">
+      <div class="experiment-row optimize-only">
         <label class="toggle">
           <input type="checkbox" id="backpressure-toggle">
           <span class="track"><span class="thumb"></span></span>
@@ -109,8 +113,8 @@
       </div>
       <div class="controls">
         <button id="btn-happy" class="primary">1 order</button>
-        <button id="btn-batch-5" class="primary">5 orders</button>
-        <button id="btn-batch-20" class="primary">20 orders</button>
+        <button id="btn-batch-5" class="primary optimize-only">5 orders</button>
+        <button id="btn-batch-20" class="primary optimize-only">20 orders</button>
         <button id="btn-fail-resource" class="danger">Simulera ResourceUnavailable</button>
         <button id="btn-fail-prov" class="danger">Simulera ActivationRejected</button>
         <button id="btn-reset">Reset</button>
@@ -131,12 +135,12 @@
       </div>
     </div>
 
-    <div class="panel parallel-only">
+    <div class="panel parallel-only optimize-only">
       <h2>Köer (single-proc systems)</h2>
       <div class="queue-panel" id="queue-panel"></div>
     </div>
 
-    <div class="panel parallel-only">
+    <div class="panel parallel-only optimize-only">
       <h2>Throughput &amp; system pressure over time</h2>
       <div id="chart-wrap">
         <div class="chart-empty" id="chart-empty">Kör en batch — grafen ritar sig själv under tiden.</div>
@@ -183,7 +187,7 @@
       </div>
     </div>
 
-    <div class="panel parallel-only">
+    <div class="panel parallel-only optimize-only">
       <h2>Ordrar</h2>
       <div class="order-list" id="order-list"></div>
     </div>

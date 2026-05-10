@@ -14,6 +14,37 @@ header {
 header h1 { margin: 0 0 4px; font-size: 18px; }
 header p { margin: 0; opacity: 0.75; font-size: 13px; }
 
+/* Mode tabs (Learn / Optimize) — minskar kognitiv belastning genom att
+   dela upp UI:t i två tydliga lägen. Default mode-learn på <body>. */
+.mode-tabs {
+  margin-top: 12px;
+  display: flex;
+  gap: 6px;
+}
+.mode-tab {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+}
+.mode-tab:hover { background: rgba(255,255,255,0.18); }
+.mode-tab.active {
+  background: #fff;
+  color: #1c2330;
+  border-color: #fff;
+}
+.mode-tab:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+/* Mode show/hide-reglerna ligger längst ned i filen så de vinner kaskaden
+   även mot body.mode-parallel-reglerna (samma specificity, sista vinner). */
+
 .layout {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -919,3 +950,10 @@ body.mode-parallel .parallel-only { display: block; }
   .order-row { grid-template-columns: 90px 1fr 60px; }
   .order-row .obar { display: none; }
 }
+
+/* Mode-tabs show/hide-regler — placerade sist så de vinner kaskaden mot
+   body.mode-parallel .parallel-only (samma specificity, sista vinner).
+   Konsekvens: i Learn-mode döljs alla optimize-only-paneler även om en
+   parallel-batch tidigare körts (mode-parallel kvar på body). */
+body.mode-learn .optimize-only { display: none; }
+body.mode-optimize .learn-only { display: none; }

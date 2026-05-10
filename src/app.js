@@ -7,6 +7,18 @@ renderSystems();
 showLearningEmpty();
 renderDecomposition("fiber"); // initial product — wirar noder + syncar badge
 
+// --- Mode tabs (Learn OSS/BSS / Optimize Process) ---------------------------
+// Mode-byte är fryst under run så användaren inte tappar UI mitt i en batch.
+document.querySelectorAll(".mode-tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (parallelSim && parallelSim.intervalId) return; // freeze during run
+    document.querySelectorAll(".mode-tab").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.body.classList.remove("mode-learn", "mode-optimize");
+    document.body.classList.add("mode-" + btn.dataset.mode);
+  });
+});
+
 // --- Automation toggle -------------------------------------------------------
 automationToggle.addEventListener("change", () => {
   automationEnabled = automationToggle.checked;
