@@ -1,21 +1,24 @@
 // --- Event helpers -----------------------------------------------------------
 // Shared between the single-order flow and the parallel engine.
 
-// Reservation-automation halverar ResourcesReserved (5.0s → 2.5s).
-// Provisioning-automation snabbar upp ProvisioningStarted (3.0s → 1.8s) och
-// ServiceActivated (1.0s → 0.7s) — verifieringen är kvar, bara snabbare.
+// Automation skalas på *role* istället för tech-namn, så samma logik fungerar
+// över olika produkter (fiber/mobile har olika tech-namn för samma roller).
+//
+// Reservation-automation halverar reservation-steg (× 0.5).
+// Provisioning-automation snabbar upp provisioning (× 0.6), activation och
+// verification (× 0.7) — verifieringen är kvar, bara snabbare.
 // När båda toggles är off är detta en referenslik no-op.
 function applyAutomation(events) {
   if (!automationEnabled && !provAutomationEnabled) return events;
   return events.map(ev => {
-    if (automationEnabled && ev.tech === "ResourcesReserved") {
-      return { ...ev, duration: 2500 };
+    if (automationEnabled && ev.role === "reservation") {
+      return { ...ev, duration: Math.round(ev.duration * 0.5) };
     }
-    if (provAutomationEnabled && ev.tech === "ProvisioningStarted") {
-      return { ...ev, duration: 1800 };
+    if (provAutomationEnabled && ev.role === "provisioning") {
+      return { ...ev, duration: Math.round(ev.duration * 0.6) };
     }
-    if (provAutomationEnabled && ev.tech === "ServiceActivated") {
-      return { ...ev, duration: 700 };
+    if (provAutomationEnabled && (ev.role === "activation" || ev.role === "verification")) {
+      return { ...ev, duration: Math.round(ev.duration * 0.7) };
     }
     return ev;
   });

@@ -6,16 +6,21 @@
 renderSystems();
 showLearningEmpty();
 renderDecomposition("fiber"); // initial product — wirar noder + syncar badge
+wireDocsTabs(); // wirar docs-flik-knapparna (lazy-load doc vid mode-byte)
 
-// --- Mode tabs (Learn OSS/BSS / Optimize Process) ---------------------------
+// --- Mode tabs (Learn OSS/BSS / Optimize Process / Documentation) -----------
 // Mode-byte är fryst under run så användaren inte tappar UI mitt i en batch.
 document.querySelectorAll(".mode-tab").forEach(btn => {
   btn.addEventListener("click", () => {
     if (parallelSim && parallelSim.intervalId) return; // freeze during run
     document.querySelectorAll(".mode-tab").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    document.body.classList.remove("mode-learn", "mode-optimize");
+    document.body.classList.remove("mode-learn", "mode-optimize", "mode-docs");
     document.body.classList.add("mode-" + btn.dataset.mode);
+    // Filtrera learning-panelen till patterns för aktivt mode
+    refreshLearningForMode();
+    // Vid byte till docs: ladda aktuellt dokument (cachad efter första gången)
+    if (btn.dataset.mode === "docs") showDoc(currentDocId);
   });
 });
 
@@ -79,11 +84,11 @@ document.querySelectorAll("#product-buttons .cap-btn").forEach(btn => {
 
 // --- Simulation controls -----------------------------------------------------
 document.getElementById("btn-happy").addEventListener("click",
-  () => runFlow(HAPPY_PATH, "happy path", "happy"));
+  () => runFlow(happyPathFor(currentProductId), "happy path", "happy"));
 document.getElementById("btn-batch-5").addEventListener("click", () => startParallel(5));
 document.getElementById("btn-batch-20").addEventListener("click", () => startParallel(20));
 document.getElementById("btn-fail-resource").addEventListener("click",
-  () => runFlow(FAIL_RESOURCE, "ResourceUnavailable", "resource"));
+  () => runFlow(failResourceFor(currentProductId), "ResourceUnavailable", "resource"));
 document.getElementById("btn-fail-prov").addEventListener("click",
-  () => runFlow(FAIL_PROV, "ActivationRejected", "prov"));
+  () => runFlow(failProvFor(currentProductId), "ActivationRejected", "prov"));
 document.getElementById("btn-reset").addEventListener("click", fullReset);

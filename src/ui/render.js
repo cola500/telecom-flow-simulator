@@ -33,6 +33,13 @@ let currentProductId = "fiber";
 function renderDecomposition(productId) {
   const product = PRODUCTS[productId];
   if (!product) return;
+  // Nolla improvement-historik vid produktbyte — fiber och mobile har olika
+  // baselines, så att blanda manual fiber + automated mobile i samma jämförelse
+  // skulle vara missvisande.
+  if (currentProductId !== productId) {
+    Object.keys(runHistory).forEach(k => { runHistory[k] = {}; });
+    if (typeof hideImprovement === "function") hideImprovement();
+  }
   currentProductId = productId;
   document.getElementById("decomp-tree-host").innerHTML = buildDecompTree(product);
   document.getElementById("decomp-failures-host").innerHTML = buildDecompFailures(product);

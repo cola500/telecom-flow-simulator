@@ -12,6 +12,7 @@
   <div class="mode-tabs" role="tablist">
     <button class="mode-tab active" data-mode="learn" role="tab">Learn OSS/BSS</button>
     <button class="mode-tab" data-mode="optimize" role="tab">Optimize Process</button>
+    <button class="mode-tab" data-mode="docs" role="tab">Documentation</button>
   </div>
 </header>
 
@@ -66,7 +67,7 @@
           <span class="track"><span class="thumb"></span></span>
           <span class="text">Automatisera resource reservation</span>
         </label>
-        <span class="exp-hint">När på: ResourcesReserved 5.0s → 2.5s. Kör scenariot med och utan toggle för att se diff.</span>
+        <span class="exp-hint">När på: reservation-steg halveras (× 0.5). Kör scenariot med och utan toggle för att se diff.</span>
       </div>
       <div class="experiment-row optimize-only">
         <label class="toggle">
@@ -74,7 +75,7 @@
           <span class="track"><span class="thumb"></span></span>
           <span class="text">Automated provisioning / activation</span>
         </label>
-        <span class="exp-hint">När på: ProvisioningStarted 3.0s → 1.8s, ServiceActivated 1.0s → 0.7s, fail-prob × 0.5. Verifieringen finns kvar — automation tar inte bort inventory mismatch eller nätfel.</span>
+        <span class="exp-hint">När på: provisioning × 0.6, activation/verification × 0.7, fail-prob × 0.5. Verifieringen finns kvar — automation tar inte bort inventory mismatch eller nätfel.</span>
       </div>
       <div class="experiment-row optimize-only">
         <span class="exp-label">Resource Inventory workers:</span>
@@ -213,6 +214,20 @@
         <p class="imp-insight" id="imp-insight"></p>
       </div>
     </div>
+    <div class="panel docs-only" id="docs-panel">
+      <h2>Documentation</h2>
+      <p class="docs-disclaimer">This documentation describes the simulator as a learning model, not a canonical telecom architecture.</p>
+      <div class="docs-tabs">
+        <button class="docs-tab active" data-doc="readme">README</button>
+        <button class="docs-tab" data-doc="realism">Realism Notes</button>
+      </div>
+      <div class="docs-layout">
+        <aside class="docs-toc" id="docs-toc" aria-label="Table of contents"></aside>
+        <div class="docs-content" id="docs-content">
+          <p class="docs-loading">Klicka på en flik ovan för att läsa dokumentet.</p>
+        </div>
+      </div>
+    </div>
   </main>
 
   <aside>
@@ -230,6 +245,7 @@
 <script src="src/ui/render.js"></script>
 <script src="src/ui/charts.js"></script>
 <script src="src/ui/learning.js"></script>
+<script src="src/ui/docs.js"></script>
 <script src="src/app.js"></script>
 </body>
 </html>

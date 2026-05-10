@@ -3,27 +3,36 @@ title: OSS/BSS Order-to-Activate Simulator
 description: Lokal browser-baserad lärsimulator för en förenklad telekom-stack — visar order-to-activate-flödet, lead time, handoffs, bottlenecks och förbättringsfrågor.
 category: learning-tool
 status: in-progress
-last_updated: 2026-05-09
-sections: [Disclaimer, Two modes Learn OSS/BSS and Optimize Process, Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Activation capacity, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
+last_updated: 2026-05-10
+sections: [Disclaimer, Three modes Learn OSS/BSS Optimize Process Documentation, Vad simulatorn lär ut, Saker att prova, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Same operating pattern different technical flow, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Activation capacity, Variation is the enemy of flow, Felscenarier, Begränsningar, For developers]
 ---
 
 # OSS/BSS Order-to-Activate Simulator
 
-En enkel HTML-simulator som visar hur en kundorder vandrar genom en telekomoperatörs OSS/BSS-stack tills tjänsten är aktiverad och fakturering startar.
+Ett interaktivt lärverktyg för att förstå hur en kundorder vandrar genom en telekomoperatörs IT-system tills tjänsten är aktiverad och fakturering startar.
+
+Simulatorn hjälper dig att se:
+- hur de stora system-domänerna i telekom är uppdelade (BSS för affär och kund, OSS för nät och tjänst);
+- hur en order dekomponeras till tekniska arbetsobjekt;
+- var flöden typiskt fastnar (köer, handoffs, "bottlenecks");
+- hur olika beslut — automation, kapacitet, variation — påverkar tjänstens leverans.
+
+Du behöver inte ha jobbat med telekom tidigare. Allt förklaras stegvis i appens *Learn OSS/BSS*-läge och i denna dokumentation.
 
 > **This is a simplified learning model, not a full telecom architecture.**
-> Domänerna och flödesfaserna är industristandard (TM Forum SID/eTOM-inspirerade), men eventnamn, durations, fail-typer och flöde är kraftigt förenklade för att vara begripliga på 5 minuter. Se [`REALISM_NOTES.md`](REALISM_NOTES.md) för en kalibrering: vad är realistiskt, vad är pedagogiskt förenklat, vilka antaganden modellen gör, och vilka namn-/textändringar som skulle öka trovärdigheten.
+> Domänerna och flödesfaserna är inspirerade av industristandard (TM Forum SID/eTOM), men eventnamn, durations, fail-typer och flöde är kraftigt förenklade för att vara begripliga på 5 minuter. Se [`REALISM_NOTES.md`](REALISM_NOTES.md) för en kalibrering: vad är realistiskt, vad är pedagogiskt förenklat, och vilka antaganden modellen gör.
 
-## Two modes: Learn OSS/BSS and Optimize Process
+## Three modes: Learn OSS/BSS, Optimize Process, Documentation
 
-Simulatorn har två lägen, valbara via tabs i headern:
+Simulatorn har tre lägen, valbara via tabs i headern:
 
 - **Learn OSS/BSS** (default) — fokus på domänen. Systemkartan, Order Decomposition (fiber/mobile), eventflödet vid en enskild order, Timeline, och Learning-panelen är synliga. Optimeringskontroller och belastnings-paneler är dolda.
 - **Optimize Process** — fokus på experiment och metrics. Belastnings-dashboard, kö-panel, throughput-chart, run comparison och alla optimeringskontroller (capacity, automation, variability, backpressure, batch-knappar) är synliga. Order Decomposition är dold.
+- **Documentation** — läser `README.md` och `REALISM_NOTES.md` direkt i appen via en minimal markdown-renderare. Båda dokumenten kan fortfarande läsas i repot (du gör det just nu); Documentation-vyn är ett bekvämt sätt att slå upp koncept utan att lämna appen.
 
-Learning-panelen (höger sidopanel) och Systemkartan är synliga i båda lägena. Mode-byte är fryst under en pågående batch — du kan inte växla mitt i en körning.
+Learning-panelen (höger sidopanel) och Systemkartan är synliga i Learn och Optimize — i Documentation visas bara docs-vyn för fokuserad läsning. Mode-byte är fryst under en pågående batch.
 
-Det är samma underliggande simulator-engine i båda lägena — bara olika UI-fokus för att minska kognitiv belastning.
+Det är samma underliggande simulator-engine i alla lägena — bara olika UI-fokus för att minska kognitiv belastning.
 
 ## Vad simulatorn lär ut
 
@@ -36,15 +45,7 @@ Det är samma underliggande simulator-engine i båda lägena — bara olika UI-f
 - **Var flödet typiskt går sönder** — ResourceMissing och ProvisioningFailed är de två klassiska.
 - **Vilka frågor en Strategy & Enablement-roll** kan ställa för att förbättra flödet.
 
-## Kör den
-
-```bash
-open index.html
-```
-
-Eller dra filen till en webbläsare. Ingen build, inga deps. Allt sker i klienten.
-
-**Saker att prova:**
+## Saker att prova
 
 1. Klicka **"1 order"** → se de 6 eventen ticka in. Notera vilken systemruta som lyser i varje steg.
 2. Titta på **Timeline** — du ser både eventen och handoffs (streckmönstrade staplar) mellan domäner. Det längsta steget får röd kant och systemboxen markeras som flaskhals.
@@ -60,38 +61,6 @@ Eller dra filen till en webbläsare. Ingen build, inga deps. Allt sker i kliente
 12. Titta på **Throughput &amp; system pressure over time**-grafen under körningen. Fyra linjer ritar sig: completed (grön, kumulativ — lutningen är throughput), active (blå), queue length (gul), incidents (röd). Mönster att leta efter: när blir gula linjen brant (kön bygger upp)? När börjar gröna linjens lutning plana ut (throughput nådd)? När börjar röda linjen ticka (load skapar incidents)? Kör samma 20-order-batch med 1 vs 3 workers och jämför formerna.
 13. Toggla **Backpressure** på och kör 20 orders med 1 worker. En streckad gul linje visas på grafen vid tröskeln (3) — gula linjen klipps automatiskt mot den och plattar ut, eftersom Order Management pausar nya ordrar när RI:s kö når 3. Färre incidents, men längre real-tid att processa hela batchen. Det är trade-offen mellan flow och throughput.
 14. Kör en till batch och titta på **jämförelse-blocket** under grafen. Den förra körningens kurva ritas svagt och streckad bakom den nuvarande, och fyra kort visar avg lead time / incidents / max queue / throughput (previous vs current) med pilar för bättre/sämre. Ändra ett enskilt reglage (capacity, automation, backpressure) mellan två körningar — då blir effekten av just den ändringen visuellt tydlig. Det här är simulatorns experiment-loop: ändra något, kör, se diff.
-
-## Kodstruktur
-
-Projektet är ren vanilla JS — inga build-tools, inga dependencies, ingen bundler. Filerna laddas i ordning som plain `<script>`-taggar och delar en gemensam global namnrymd (samma sak som om allt låg i ett enda script-block, bara delat i läsbara filer).
-
-```
-oss-bss-simulator/
-├── index.html              ← HTML body + script-taggar i rätt ordning
-├── README.md               ← denna fil
-├── HYPOTHESIS.md           ← experimenthypotes + verifieringskriterier
-└── src/
-    ├── app.js              ← bootstrap (renderSystems, showLearningEmpty) + alla event listeners
-    ├── simulation/
-    │   ├── scenarios.js    ← SYSTEMS (de 7 domänerna), PATTERNS (lärotexter), HAPPY_PATH/FAIL_*
-    │   ├── events.js       ← applyAutomation, fmtMs, calcHandoff, buildQueue (event-helpers)
-    │   ├── metrics.js      ← finalize (single), hideImprovement, showImprovement, loadClass
-    │   └── engine.js       ← state + runFlow (single) + parallel-engine + finalizeParallel
-    ├── ui/
-    │   ├── render.js       ← alla DOM-refs + renderSystems, log, timeline, dashboard, queue, order-list
-    │   ├── charts.js       ← updateChart (SVG), summarizeRun, setCmpCell, updateRunCompare
-    │   └── learning.js     ← right-hand learning panel (system-vy + pattern-vy)
-    └── styles/
-        └── main.css        ← all CSS
-```
-
-**Laddordning (definierad i `index.html`):**
-
-```
-scenarios → events → metrics → engine → render → charts → learning → app
-```
-
-`app.js` laddas sist eftersom den anropar funktioner från alla andra filer. State (som `parallelSim`, `automationEnabled`, `runHistory`) ägs av `engine.js` men läses/skrivs av render/charts/app — möjligt eftersom plain scripts delar en global namnrymd.
 
 ## Vad är BSS?
 
@@ -175,6 +144,53 @@ Det är därför TM Forums SID-modell separerar *Customer Facing Service* (CFS, 
 3. Klicka på <em>Why fiber and mobile decompose differently</em> i learning-panelen för att förstå *varför* de skiljer sig så mycket på OSS-sidan.
 4. Klicka på <em>What stays the same across products?</em> för att se vad som motiverar generiska OSS/BSS-plattformar — samma ramverk, parametriserat per produkt.
 
+## Same operating pattern, different technical flow
+
+Nu när du sett att fiber och mobil har olika dekomposition, är det värt att zooma ut. Båda produkter följer samma *övergripande mönster* från order till färdig leverans:
+
+```
+Customer Order → Service Order → (Feasibility) → Reservation → Provisioning
+              → Activation → Verification → BillingStartRequested
+```
+
+Men *de konkreta tekniska stegen inom mönstret skiljer sig per produkt* — för att modellen inte ska bygga upp en felaktig mental bild om att aktivering är "samma sak" oavsett vad kunden köper.
+
+**Fiber 500 Mbps (9 steg):**
+
+1. `CustomerOrderCreated` (CRM) — kunden lägger en order
+2. `ServiceOrderCreated` (Service Inventory) — Broadband Access-tjänsten skapas
+3. `FeasibilityChecked` (Service Inventory) — finns fiber till adressen?
+4. `ResourcesReserved` (Resource Inventory) — fiberport, profil, CPE/router reserveras
+5. `ProvisioningStarted` (Provisioning) — konfiguration pushas till OLT (fiber-utrustningen)
+6. `CPEConfigurationStarted` (Provisioning) — kundens router konfigureras
+7. `ServiceActivated` (Provisioning) — tjänsten aktiveras i nätet
+8. `ServiceVerified` (Provisioning) — end-to-end-test bekräftar att den faktiskt fungerar
+9. `BillingStartRequested` (Billing Trigger) — fakturaklockan startar
+
+**Mobile subscription (8 steg):**
+
+1. `CustomerOrderCreated` (CRM)
+2. `ServiceOrderCreated` (Service Inventory) — Mobile Connectivity-tjänsten
+3. `NumberReserved` (Resource Inventory) — MSISDN (telefonnumret) tas ur poolen
+4. `SimProfileReserved` (Resource Inventory) — SIM/eSIM + IMSI-identitet bindas
+5. `SubscriberProfileProvisioningStarted` (Provisioning) — kundens prenumerationsprofil läggs in i HSS/UDM (mobilnätets centrala kunddatabas)
+6. `NetworkSubscriptionActivated` (Provisioning) — nätbindningen slutförs
+7. `RegistrationReadinessVerified` (Provisioning) — telefonen kan nu registrera sig på nätet
+8. `BillingStartRequested` (Billing Trigger)
+
+**Pedagogiska skillnader att lägga märke till:**
+
+- *Mobile har ingen separat feasibility-check.* Det finns ingen geografisk adressvalidering som för fiber — service availability hanteras istället via SIM-profil och numbering plan.
+- *Mobile splittar reservation i två steg* (nummer + SIM/eSIM). Två separata logiska resurser, två separata externa system. Fiber har en kombinerad reservation av flera fysiska resurser.
+- *Fiber har ett extra provisioning-steg* (`CPEConfigurationStarted`). CPE-konfig är ofta separat från access-konfig — två olika element med olika fail-modes.
+- *Mobile är typiskt snabbare* än fiber (~15s baseline mot ~16.5s i simulatorn). Det speglar verkligheten där mobil aktivering ofta tar minuter medan fiber kan ta dagar eller veckor.
+
+**Hur det fungerar internt:** simulatorn kör samma motor för båda produkter. Varje steg har ett generiskt *role* (reservation, provisioning, activation, verification) som styr automation-effekter och fail-sannolikhet. Bara *namnet* på steget och *vilket system* det körs mot skiljer sig per produkt.
+
+Det är hur en mogen OSS/BSS-plattform faktiskt är byggd: *en gemensam flödesmotor* som parametriseras per produkt via en Product Catalog. Affärslogik och teknisk implementation hålls åtskilda så att samma motor kan stödja många produktfamiljer.
+
+> *Se [`REALISM_NOTES.md`](REALISM_NOTES.md) för modellantaganden och förenklingar* — där varje aspekt av flödet (för båda produkter) är bedömd som High / Medium / Low realism, med tydlig markering av vad som är osäkert eller inte verifierat mot specifik operatör.
+
 ## Hur hänger Order-to-Activate ihop?
 
 Order-to-Activate (O2A) är processen från att kunden lägger en order tills tjänsten är aktiverad och fakturering startar. Simulatorn modellerar det som en eventström:
@@ -192,7 +208,7 @@ I verkligheten är varje steg en eller flera tjänster, och varje övergång är
 
 ## Lead time, handoffs och bottlenecks — tre nyckelbegrepp
 
-Slice A i simulatorn lägger till tre koncept som tillsammans utgör grunden för att resonera om processoptimering i ett OSS/BSS-flöde.
+Det här är tre nyckelbegrepp som tillsammans utgör grunden för att resonera om processoptimering i ett OSS/BSS-flöde — och som simulatorn gör synliga vid varje körning.
 
 ### Vad är lead time?
 
@@ -310,7 +326,7 @@ Simulatorn har en toggle: **Automatisera resource reservation**. När den är p�
 
 ## Köbildning och belastning
 
-Slice F lägger till parallella ordrar (knapparna **5 orders** och **20 orders**). Plötsligt börjar simulatorn bete sig som ett system, inte ett scenario: köer bildas, lead time skenar, incidents spikar. Här är begreppen som hjälper dig läsa vad som händer.
+När du klickar på *5 orders* eller *20 orders* (i Optimize-läget) börjar simulatorn bete sig som ett system, inte bara ett enskilt scenario: köer bildas, lead time skenar, incidents spikar. Här är begreppen som hjälper dig läsa vad som händer.
 
 ### Vad är köbildning?
 
@@ -450,14 +466,14 @@ Eli Goldratts *Theory of Constraints* säger:
 
 I simulatorn ser du steg 5 på två sätt:
 
-- **Slice C** — toggla automation på reservation och kör om. Lead time minskar, bottleneck flyttar från Resource Inventory till Provisioning. Det är "ändra hur arbetet utförs i bottlenecken" (steg 2).
-- **Slice G** — höj `Resource Inventory workers` från 1 till 2 eller 3 och kör 20 orders. Kön framför RI minskar dramatiskt, men nu växer Provisionings kö istället. Det är "höj kapacitet i bottlenecken" (steg 4) följt direkt av "hitta nästa bottleneck" (steg 5).
+- **Automatisera reservationen** — toggla *Automatisera resource reservation* och kör om. Lead time minskar, och bottlenecken flyttar från Resource Inventory till Provisioning. Det motsvarar Goldratts steg 2: ändra *hur* arbetet utförs i bottlenecken.
+- **Höj kapaciteten** — sätt *Resource Inventory workers* till 2 eller 3 och kör 20 orders. Kön framför RI minskar dramatiskt, men nu växer Provisionings kö istället. Det är steg 4 ("höj kapacitet i bottlenecken") följt direkt av steg 5 ("hitta nästa bottleneck").
 
 Två olika typer av förbättring (göra varje order snabbare vs. bearbeta flera parallellt) — men båda visar samma underliggande sanning: bottlenecks försvinner inte, de hittar en ny plats.
 
 ### Varför skapar incidenter återarbete?
 
-Slice F:s incident-spike-mekanism: när Provisionings kö är ≥ 3 ordrar ökar fail-sannolikheten från 5% till 30%. Vid fail går 50% chans till retry — en ny order genereras med samma id + "-R". Den är retryorder är bara en till order i flödet — så den bidrar till load.
+Simulatorn modellerar en *incident-spike-mekanism*: när Provisionings kö är ≥ 3 ordrar ökar fail-sannolikheten från 5 % till 30 %. Vid fail finns 50 % chans till retry — en ny order genereras med samma id + "-R" och läggs i kön igen. Retry-ordern är bara ytterligare en order i flödet, så den bidrar till load.
 
 Loopen blir farlig:
 1. Hög load → längre kö i Provisioning.
@@ -490,40 +506,11 @@ Båda dessa fel pekar på samma underliggande tema: *datakvalitet* och *integrat
 Detta är ett **lärverktyg, inte en arkitekturreferens**. Förenklingar:
 
 - Inget Product Catalog, inga produkter att välja mellan.
-- Ingen orderdekomponering — vi hoppar direkt från kommersiell order till en teknisk delorder.
+- Ingen orderdekomponering — modellen hoppar direkt från kommersiell order till en teknisk delorder.
 - Inga TMF Open API-payloads (TMF622/TMF641 etc.). Eventnamnen är illustrativa.
 - Ingen persistens, ingen samtidighet, en order i taget.
 - Ingen riktig assurance-loop efter aktivering.
 
-## Lägga till nya pedagogiska slices
+## For developers
 
-När du vill bygga ett nytt scenario eller en ny visualisering, börja med att fråga vilken modul ändringen primärt hör hemma i:
-
-| Vad du vill göra | Var lägger du det |
-|---|---|
-| Lägga till ett nytt felscenario eller domänsystem | `src/simulation/scenarios.js` (utöka `SYSTEMS`, lägg till ny `FAIL_*`-array) |
-| Ändra hur lead time / handoffs / bottleneck räknas | `src/simulation/metrics.js` (single) eller `engine.js → finalizeParallel` (batch) |
-| Ny event-transformer (t.ex. en annan automationsregel) | `src/simulation/events.js` |
-| Ändra spawnlogik, kö-policy, fail-sannolikhet | `src/simulation/engine.js` (parallel-engine) |
-| Lägga till en ny dashboard-card eller order-list-kolumn | `src/ui/render.js` + uppdatera HTML i `index.html` |
-| Förändra grafen (ny linje, axlar, annotationer) | `src/ui/charts.js` |
-| Skriva en ny "Process pattern"-text (queueing, etc.) | `src/simulation/scenarios.js → PATTERNS` + en ny `<button>` i `learning.js → patternList()` |
-| Lägga till en ny knapp som triggar ett scenario | `index.html` (knappen) + `src/app.js` (event listener) |
-
-**Tips för att hålla det enkelt:**
-
-- En slice = en idé. Försök inte bygga två förbättringar samtidigt.
-- Behåll plain-script-strukturen. Inga ramverk, inga build-tools — det är hela poängen.
-- Ändrar du en enskild fil, behöver du inte röra de andra. Men kontrollera laddordningen om du introducerar nya beroenden.
-- Verifiera manuellt efter varje slice (samma 14-stegs-checklista som under "Saker att prova").
-
-## Nästa slice (om experimentet bekräftas)
-
-- **Justerbar arrival rate / variabilitet** — slumpa ankomsttider istället för fast 1500ms-spawning, så användaren kan se hur variabilitet påverkar kölängd även vid samma genomsnittliga belastning.
-- **Capacity-knapp för Resource Inventory** — låt användaren välja "1 worker" / "2 workers" / "3 workers" för att se hur kapacitetshöjning påverkar throughput och kötid (klassisk ToC-visualisering).
-- **Throughput-graf över tid** — line chart som ritar throughput, kö-längd och incident-rate över simulerad tid. Gör skillnaden mellan stationary och bursty load synlig.
-- **Backpressure-toggle** — när Order Management ser att Resource Inventorys kö > N, sluta acceptera nya ordrar. Pedagogiskt: hellre långsam respons uppströms än kollaps nedströms.
-- **Kanban-style swimlanes** — visa ordrar som kort som rör sig mellan domäner istället för i en lista. Mer "levande" känsla.
-- **Product Catalog** + ordervarianter (fiber/mobil/IoT) som ritar olika underflöden — och olika bottlenecks per produkt.
-- **TMF-event-payloads** (förenklade) så det blir tydligt hur event ser ut på riktigt.
-- **Scenarier som börjar från Assurance** (incident → root cause → fix) för att illustrera flödet baklänges.
+Teknisk dokumentation — hur appen körs lokalt, kodstruktur, laddordning, och hur du lägger till nya pedagogiska slices — finns i [`DEVELOPMENT.md`](DEVELOPMENT.md). Modellantaganden och realism-bedömningar finns i [`REALISM_NOTES.md`](REALISM_NOTES.md).

@@ -30,38 +30,49 @@ function formatInline(s) {
     .replace(/\*(.+?)\*/g, "<em>$1</em>");
 }
 
-function patternList() {
-  return `
-    <div class="pattern-list">
-      <h4>Process patterns</h4>
-      <button class="pattern-link" data-pattern="handoffs">Varför handoffs skapar friktion</button>
-      <button class="pattern-link" data-pattern="inventory">Varför inventory blir source-of-truth-problem</button>
-      <button class="pattern-link" data-pattern="downstream">Varför provisioningfel skapar downstream incidents</button>
-      <button class="pattern-link" data-pattern="queueing">Queueing theory på 60 sekunder</button>
-      <button class="pattern-link" data-pattern="utilization">Varför hög utilization är farligt</button>
-      <button class="pattern-link" data-pattern="flow_efficiency">Resource efficiency vs flow efficiency</button>
-    </div>
-    <div class="pattern-list">
-      <h4>Order decomposition</h4>
-      <button class="pattern-link" data-pattern="customer_order">What is a Customer Order?</button>
-      <button class="pattern-link" data-pattern="service_order">What is a Service Order?</button>
-      <button class="pattern-link" data-pattern="resource_order">What is a Resource Order?</button>
-      <button class="pattern-link" data-pattern="activation">What is Activation?</button>
-      <button class="pattern-link" data-pattern="provisioning_activation">Provisioning, activation, and the limits of automation</button>
-      <button class="pattern-link" data-pattern="provisioning_capacity">Provisioning capacity vs automation</button>
-      <button class="pattern-link" data-pattern="decomposition_why">Why decomposition matters</button>
-    </div>
-    <div class="pattern-list">
-      <h4>Product-specific concepts</h4>
-      <button class="pattern-link" data-pattern="fiber_vs_mobile">Why fiber and mobile decompose differently</button>
-      <button class="pattern-link" data-pattern="msisdn">What is MSISDN?</button>
-      <button class="pattern-link" data-pattern="imsi">What is IMSI?</button>
-      <button class="pattern-link" data-pattern="sim_esim">What is SIM/eSIM provisioning?</button>
-      <button class="pattern-link" data-pattern="common_across_products">What stays the same across products?</button>
-    </div>`;
+// Mappar pattern-grupp → vilket mode den hör till + display-rubrik. Vid
+// mode-byte filtreras patternList så bara grupper för aktivt mode visas.
+const GROUP_LABEL = {
+  concepts: "OSS/BSS concepts",
+  product: "Product-specific concepts",
+  process: "Process patterns",
+  automation: "Provisioning & activation"
+};
+const GROUP_MODE = {
+  concepts: "learn",
+  product: "learn",
+  process: "optimize",
+  automation: "optimize"
+};
+// Visningsordning per mode — så Concepts kommer före Product, Process före Automation.
+const GROUPS_BY_MODE = {
+  learn: ["concepts", "product"],
+  optimize: ["process", "automation"]
+};
+
+function currentMode() {
+  return document.body.classList.contains("mode-optimize") ? "optimize" : "learn";
 }
 
+function patternList() {
+  const mode = currentMode();
+  return GROUPS_BY_MODE[mode].map(g => {
+    const items = Object.entries(PATTERNS).filter(([, p]) => p.group === g);
+    if (items.length === 0) return "";
+    const buttons = items.map(([k, p]) =>
+      `<button class="pattern-link" data-pattern="${k}">${p.title}</button>`
+    ).join("");
+    return `<div class="pattern-list"><h4>${GROUP_LABEL[g]}</h4>${buttons}</div>`;
+  }).join("");
+}
+
+// Spara aktuell vy så att refreshLearningForMode() kan re-rendera
+// patternList vid mode-byte utan att förlora user state (eller falla tillbaka
+// graciöst om aktuell pattern inte finns i nya mode).
+let currentView = { type: "empty" };
+
 function showLearningEmpty() {
+  currentView = { type: "empty" };
   learningEl.innerHTML = `
     <p class="empty">Klicka på en domän till vänster eller på ett event i loggen för att läsa förklaringen här.</p>
     ${patternList()}`;
@@ -71,6 +82,7 @@ function showLearningEmpty() {
 function showLearningSystem(systemId) {
   const s = SYSTEMS[systemId];
   if (!s) return;
+  currentView = { type: "system", key: systemId };
   learningEl.innerHTML = `
     <a class="back" id="back-link">← Tillbaka</a>
     <h3>${s.name}</h3>
@@ -86,6 +98,7 @@ function showLearningSystem(systemId) {
 function showLearningPattern(key) {
   const p = PATTERNS[key];
   if (!p) return;
+  currentView = { type: "pattern", key };
   learningEl.innerHTML = `
     <a class="back" id="back-link">← Tillbaka</a>
     <h3>${p.title}</h3>
@@ -93,6 +106,28 @@ function showLearningPattern(key) {
     ${patternList()}`;
   wirePatterns();
   document.getElementById("back-link").addEventListener("click", showLearningEmpty);
+}
+
+// Re-render learning panel efter mode-byte. Om aktuellt visad pattern hör
+// till annat mode, fall tillbaka till första pattern i nya mode (eller empty
+// om inga patterns finns där). System-vyn är samma i båda mode — vi
+// re-rendererar bara för att uppdatera patternList nedanför.
+function refreshLearningForMode() {
+  const mode = currentMode();
+  if (currentView.type === "pattern") {
+    const p = PATTERNS[currentView.key];
+    if (!p || GROUP_MODE[p.group] !== mode) {
+      const firstKey = Object.keys(PATTERNS).find(k => GROUP_MODE[PATTERNS[k].group] === mode);
+      if (firstKey) showLearningPattern(firstKey);
+      else showLearningEmpty();
+      return;
+    }
+    showLearningPattern(currentView.key);
+  } else if (currentView.type === "system") {
+    showLearningSystem(currentView.key);
+  } else {
+    showLearningEmpty();
+  }
 }
 
 function wirePatterns() {

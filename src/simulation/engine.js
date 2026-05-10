@@ -229,7 +229,7 @@ function spawnOrder(asRetryOf) {
     id = `ORD-${String(orderCounter).padStart(4, "0")}`;
     sim.spawnedCount += 1;
   }
-  const automated = applyVariability(applyAutomation(HAPPY_PATH), variabilityPct);
+  const automated = applyVariability(applyAutomation(happyPathFor(currentProductId)), variabilityPct);
   const order = {
     id,
     createdAt: sim.simTime,
@@ -384,7 +384,13 @@ function finalizeParallel() {
   const avgLead = leads.length > 0 ? leads.reduce((a,b)=>a+b, 0) / leads.length : 0;
   const maxLead = leads.length > 0 ? Math.max(...leads) : 0;
   const throughput = sim.simTime > 0 ? completed / (sim.simTime / 1000) : 0;
-  const baseline = 16200; // 1-order happy path lead time
+  // 1-order happy-path baseline beräknad från aktiv produkts steg + handoffs.
+  // Används för att visa "order spent X% längre tid än baseline" i insight.
+  const path = happyPathFor(currentProductId);
+  let baseline = path.reduce((s, e) => s + e.duration, 0);
+  for (let i = 0; i < path.length - 1; i++) {
+    baseline += calcHandoff(path[i].system, path[i+1].system);
+  }
   const stretchPct = avgLead > 0 ? ((avgLead - baseline) / baseline) * 100 : 0;
 
   // Save run for ghost-comparison on the next batch.
