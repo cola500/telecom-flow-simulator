@@ -4,7 +4,7 @@ description: Lokal browser-baserad lärsimulator för en förenklad telekom-stac
 category: learning-tool
 status: in-progress
 last_updated: 2026-05-10
-sections: [Disclaimer, Three modes Learn OSS/BSS Optimize Process Documentation, Vad simulatorn lär ut, Saker att prova, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Same operating pattern different technical flow, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Activation capacity, Variation is the enemy of flow, Felscenarier, Begränsningar, For developers]
+sections: [Disclaimer, Three modes Learn OSS/BSS Optimize Process Documentation, Vad simulatorn lär ut, Saker att prova, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Same operating pattern different technical flow, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Frågor att ställa per domän, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Activation capacity, Variation is the enemy of flow, Felscenarier, Begränsningar, For developers]
 ---
 
 # OSS/BSS Order-to-Activate Simulator
@@ -52,7 +52,7 @@ Båda mäter samma flöde, men ur olika perspektiv. En enskild order kan se snab
 - **Var flaskhalsar uppstår** — flödet markerar automatiskt det långsammaste steget.
 - **Vad handoffs kostar** — varje gång arbete byter system eller team uppstår friktion.
 - **Var flödet typiskt går sönder** — ResourceMissing och ProvisioningFailed är de två klassiska.
-- **Vilka frågor en Strategy & Enablement-roll** kan ställa för att förbättra flödet.
+- **Vilka frågor team kan ställa** för att hitta var flödet bryter och var förbättring ger mest effekt.
 
 ## Saker att prova
 
@@ -253,7 +253,9 @@ Simulatorn markerar automatiskt det långsammaste steget i ett flöde och beräk
 
 
 
-En Strategy & Enablement-roll i ett telekom-OSS/BSS-program tittar typiskt på *processoptimering, automationsgrad och datakvalitet*. Bra frågor att ställa per domän:
+### Frågor att ställa per domän
+
+Bra frågor att ställa när man vill förstå var ett OSS/BSS-flöde fungerar bra eller dåligt — fokus ligger på *processoptimering, automationsgrad och datakvalitet*:
 
 **CRM / Customer**
 - Hur unik är vår kund-id-modell mellan B2B/B2C? Hur sker master data-styrning?
@@ -287,9 +289,9 @@ En Strategy & Enablement-roll i ett telekom-OSS/BSS-program tittar typiskt på *
 - Var i flödet förlorar vi automation? (Find the manual handovers and remove them.)
 - Hur lätt är det att lägga till en ny produkt i flödet — kräver det kodändring i alla domäner?
 
-## Hur kan Strategy & Enablement arbeta med detta?
+## Hur kan team arbeta med flödet?
 
-Strategy & Enablement-rollen i ett OSS/BSS-program är typiskt *inte* den som bygger systemen — utan den som hjälper organisationen att (1) förstå vad som faktiskt händer i flödet, (2) prioritera rätt förbättringar, och (3) bygga gemensamma mätetal och språk över domäner.
+Det här arbetet handlar typiskt *inte* om att bygga systemen — utan om att hjälpa organisationen att (1) förstå vad som faktiskt händer i flödet, (2) prioritera rätt förbättringar, och (3) bygga gemensamma mätetal och språk över domäner.
 
 Konkreta arbetssätt som passar den här simulatorns frågeställningar:
 
@@ -331,7 +333,7 @@ Simulatorn har en toggle: **Automatisera resource reservation**. När den är p�
 - **Förbättring nedströms från bottlenecken är värdelös.** Om vi istället hade automatiserat något i Provisioning (som inte var bottlenecken) hade total lead time inte påverkats — eftersom Resource Inventory ändå skulle hålla flödet tillbaka. Det här är en av de viktigaste lärdomarna i processoptimering.
 - **Förbättring uppströms från bottlenecken är "wasteful effort".** Att snabba upp Order Management när Resource Inventory är bottleneck betyder bara att fler ärenden köar framför Resource Inventory — kön blir längre, lead time minskar inte.
 
-**Strategy & Enablement-vinkel:** det här är varför *bottleneck-driven backlog* är ett kraftfullt prioriteringsverktyg. Mät, hitta bottlenecken, förbättra den, mät om, hitta nya bottlenecken, prioritera där. Linjärt och pragmatiskt — istället för att låta varje team optimera lokalt utan koppling till värdeflödet.
+**Förbättringsperspektiv:** det här är varför *bottleneck-driven backlog* är ett kraftfullt prioriteringsverktyg. Mät, hitta bottlenecken, förbättra den, mät om, hitta nya bottlenecken, prioritera där. Linjärt och pragmatiskt — istället för att låta varje team optimera lokalt utan koppling till värdeflödet.
 
 ## Köbildning och belastning
 
@@ -493,7 +495,7 @@ Loopen blir farlig:
 
 Det är så *cascading failures* uppstår i verkliga system. Lösningen är inte att försöka göra Provisioning "mer robust" utan att förhindra att kön byggs upp i första ledet — t.ex. genom *load shedding* (tackla nej till mer arbete när bottlenecken är full) eller *backpressure* (signalera uppströms att sakta ned).
 
-### Hur kan Strategy & Enablement arbeta med detta?
+### Hur kan team arbeta med detta?
 
 - **Mät utilization i bottlenecken**, inte i hela systemet. Genomsnitt över alla domäner döljer den enda siffra som spelar roll.
 - **Mät flow efficiency** (värdeskapande tid / lead time). Sätt det som ett ledningsmått, inte bara teamen.

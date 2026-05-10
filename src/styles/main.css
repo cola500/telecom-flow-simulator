@@ -1113,6 +1113,10 @@ body.mode-optimize .learn-only { display: none; }
 .docs-only { display: none; }
 body.mode-docs .docs-only { display: block; }
 body.mode-docs main > .panel:not(.docs-only) { display: none; }
+/* Analysis-area är en wrapper runt System metrics + Ordermått-panelerna — den
+   ligger som direktbarn till main, men panelerna inuti är inte direktbarn så
+   de fångas inte av regeln ovan. Dölj hela wrappern i docs-mode. */
+body.mode-docs .analysis-area { display: none; }
 /* Bara den direkta <aside> i .layout (learning-panelen) ska döljas — inte
    <aside class="docs-toc"> inuti docs-panelen. */
 body.mode-docs .layout > aside { display: none; }
