@@ -127,8 +127,16 @@ function renderSystems() {
     const el = document.createElement("div");
     el.className = `system ${s.layer}`;
     el.id = `sys-${id}`;
-    el.innerHTML = `<div class="name">${s.name}</div><div class="role">${s.role}</div>`;
-    el.addEventListener("click", () => showLearningSystem(id));
+    el.innerHTML = `
+      <div class="name">${s.name}${typeof infoIconHTML === "function" ? infoIconHTML(id, s.name) : ""}</div>
+      <div class="role">${s.role}</div>
+    `;
+    // System-cardet är fortfarande klickbart för att öppna learning panel,
+    // men klick på info-ikonen ska INTE trigga den (stopPropagation i wireInfoIcons).
+    el.addEventListener("click", (e) => {
+      if (e.target.closest(".info-icon")) return;
+      showLearningSystem(id);
+    });
     (s.layer === "bss" ? rowBss : rowOss).appendChild(el);
   }
 }

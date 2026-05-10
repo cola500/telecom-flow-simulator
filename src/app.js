@@ -7,6 +7,7 @@ renderSystems();
 showLearningEmpty();
 renderDecomposition("fiber"); // initial product — wirar noder + syncar badge
 wireDocsTabs(); // wirar docs-flik-knapparna (lazy-load doc vid mode-byte)
+wireInfoIcons(); // event-delegerar klick på alla .info-icon-knappar
 
 // --- Mode tabs (Learn OSS/BSS / Optimize Process / Documentation) -----------
 // Mode-byte är fryst under run så användaren inte tappar UI mitt i en batch.

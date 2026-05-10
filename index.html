@@ -21,21 +21,21 @@
     <div class="panel parallel-only optimize-only">
       <h2>Belastnings-dashboard</h2>
       <div class="dashboard">
-        <div class="dash-card"><div class="label">Active</div><div class="value" id="d-active">0</div></div>
-        <div class="dash-card"><div class="label">Queued</div><div class="value" id="d-queued">0</div></div>
-        <div class="dash-card"><div class="label">Completed</div><div class="value" id="d-completed">0</div></div>
-        <div class="dash-card"><div class="label">Avg lead time</div><div class="value" id="d-lead">—</div></div>
-        <div class="dash-card"><div class="label">Throughput (sim)</div><div class="value" id="d-throughput">—</div></div>
-        <div class="dash-card" id="d-incidents-card"><div class="label">Incidents</div><div class="value" id="d-incidents">0</div></div>
+        <div class="dash-card"><div class="label">Active<button type="button" class="info-icon" data-info="active" aria-label="Förklara Active orders" aria-expanded="false">i</button></div><div class="value" id="d-active">0</div></div>
+        <div class="dash-card"><div class="label">Queued<button type="button" class="info-icon" data-info="queued" aria-label="Förklara Queued orders" aria-expanded="false">i</button></div><div class="value" id="d-queued">0</div></div>
+        <div class="dash-card"><div class="label">Completed<button type="button" class="info-icon" data-info="completed" aria-label="Förklara Completed orders" aria-expanded="false">i</button></div><div class="value" id="d-completed">0</div></div>
+        <div class="dash-card"><div class="label">Avg lead time<button type="button" class="info-icon" data-info="lead_time" aria-label="Förklara Lead time" aria-expanded="false">i</button></div><div class="value" id="d-lead">—</div></div>
+        <div class="dash-card"><div class="label">Throughput (sim)<button type="button" class="info-icon" data-info="throughput" aria-label="Förklara Throughput" aria-expanded="false">i</button></div><div class="value" id="d-throughput">—</div></div>
+        <div class="dash-card" id="d-incidents-card"><div class="label">Incidents<button type="button" class="info-icon" data-info="incidents" aria-label="Förklara Incidents" aria-expanded="false">i</button></div><div class="value" id="d-incidents">0</div></div>
       </div>
       <div class="dash-busy">Busiest system: <strong id="d-busiest">—</strong><span id="d-bp-status"></span></div>
     </div>
 
     <div class="panel">
       <h2>Systemkarta</h2>
-      <div class="layer-label">BSS — Business Support Systems</div>
+      <div class="layer-label">BSS — Business Support Systems<button type="button" class="info-icon" data-info="bss" aria-label="Förklara BSS" aria-expanded="false">i</button></div>
       <div class="row bss" id="row-bss"></div>
-      <div class="layer-label">OSS — Operational Support Systems</div>
+      <div class="layer-label">OSS — Operational Support Systems<button type="button" class="info-icon" data-info="oss" aria-label="Förklara OSS" aria-expanded="false">i</button></div>
       <div class="row oss" id="row-oss"></div>
     </div>
 
@@ -67,6 +67,7 @@
           <span class="track"><span class="thumb"></span></span>
           <span class="text">Automatisera resource reservation</span>
         </label>
+        <button type="button" class="info-icon" data-info="automation_reservation" aria-label="Förklara Automatisera resource reservation" aria-expanded="false">i</button>
         <span class="exp-hint">När på: reservation-steg halveras (× 0.5). Kör scenariot med och utan toggle för att se diff.</span>
       </div>
       <div class="experiment-row optimize-only">
@@ -75,10 +76,11 @@
           <span class="track"><span class="thumb"></span></span>
           <span class="text">Automated provisioning / activation</span>
         </label>
+        <button type="button" class="info-icon" data-info="automation_provisioning" aria-label="Förklara Automated provisioning" aria-expanded="false">i</button>
         <span class="exp-hint">När på: provisioning × 0.6, activation/verification × 0.7, fail-prob × 0.5. Verifieringen finns kvar — automation tar inte bort inventory mismatch eller nätfel.</span>
       </div>
       <div class="experiment-row optimize-only">
-        <span class="exp-label">Resource Inventory workers:</span>
+        <span class="exp-label">Resource Inventory workers:<button type="button" class="info-icon" data-info="ri_capacity" aria-label="Förklara Resource Reservation capacity" aria-expanded="false">i</button></span>
         <div class="capacity-buttons" id="capacity-buttons">
           <button class="cap-btn active" data-workers="1">1</button>
           <button class="cap-btn" data-workers="2">2</button>
@@ -87,7 +89,7 @@
         <span class="exp-hint">Hur många reservationer som kan göras parallellt. Representerar parallell kapacitet — inte nödvändigtvis personer.</span>
       </div>
       <div class="experiment-row optimize-only">
-        <span class="exp-label">Provisioning / Activation capacity:</span>
+        <span class="exp-label">Provisioning / Activation capacity:<button type="button" class="info-icon" data-info="prov_capacity" aria-label="Förklara Provisioning capacity" aria-expanded="false">i</button></span>
         <div class="capacity-buttons" id="prov-capacity-buttons">
           <button class="cap-btn active" data-workers="1">1</button>
           <button class="cap-btn" data-workers="2">2</button>
@@ -96,7 +98,7 @@
         <span class="exp-hint">Hur många activation-jobb som kan köras parallellt. Representerar adapterinstanser, parallel orchestration eller bättre köhantering — <em>inte</em> personer. Capacity och automation är separata begrepp.</span>
       </div>
       <div class="experiment-row optimize-only">
-        <span class="exp-label">Variation i betjäningstid:</span>
+        <span class="exp-label">Variation i betjäningstid:<button type="button" class="info-icon" data-info="variability" aria-label="Förklara Variability" aria-expanded="false">i</button></span>
         <div class="capacity-buttons" id="variability-buttons">
           <button class="cap-btn active" data-variability="0">0%</button>
           <button class="cap-btn" data-variability="25">±25%</button>
@@ -110,6 +112,7 @@
           <span class="track"><span class="thumb"></span></span>
           <span class="text">Backpressure: pausa nya ordrar när RI-kö ≥ 3</span>
         </label>
+        <button type="button" class="info-icon" data-info="backpressure" aria-label="Förklara Backpressure" aria-expanded="false">i</button>
         <span class="exp-hint">Order Management slutar tillfälligt acceptera ordrar när bottlenecken är full. Hellre långsam respons uppströms än kollaps nedströms.</span>
       </div>
       <div class="controls">
@@ -196,11 +199,11 @@
     <div class="panel">
       <h2>Metrics</h2>
       <div class="metrics" id="metrics">
-        <div class="metric"><div class="label">Total lead time</div><div class="value" id="m-total">—</div><div class="sub">från order till klart</div></div>
-        <div class="metric"><div class="label">Tid i handoffs</div><div class="value" id="m-handoff">—</div><div class="sub" id="m-handoff-sub">väntetid mellan system</div></div>
-        <div class="metric"><div class="label">Slowest step (this run)</div><div class="value" id="m-bottleneck">—</div><div class="sub" id="m-bottleneck-sub">längsta steg</div></div>
-        <div class="metric"><div class="label">Handoffs</div><div class="value" id="m-handoff-count">—</div><div class="sub">domänbyten</div></div>
-        <div class="metric"><div class="label">Failed events</div><div class="value" id="m-fail">—</div><div class="sub">stoppade flödet</div></div>
+        <div class="metric"><div class="label">Total lead time<button type="button" class="info-icon" data-info="lead_time" aria-label="Förklara Lead time" aria-expanded="false">i</button></div><div class="value" id="m-total">—</div><div class="sub">från order till klart</div></div>
+        <div class="metric"><div class="label">Tid i handoffs<button type="button" class="info-icon" data-info="handoff_time" aria-label="Förklara Tid i handoffs" aria-expanded="false">i</button></div><div class="value" id="m-handoff">—</div><div class="sub" id="m-handoff-sub">väntetid mellan system</div></div>
+        <div class="metric"><div class="label">Slowest step (this run)<button type="button" class="info-icon" data-info="bottleneck_metric" aria-label="Förklara Slowest step" aria-expanded="false">i</button></div><div class="value" id="m-bottleneck">—</div><div class="sub" id="m-bottleneck-sub">längsta steg</div></div>
+        <div class="metric"><div class="label">Handoffs<button type="button" class="info-icon" data-info="handoff" aria-label="Förklara Handoff" aria-expanded="false">i</button></div><div class="value" id="m-handoff-count">—</div><div class="sub">domänbyten</div></div>
+        <div class="metric"><div class="label">Failed events<button type="button" class="info-icon" data-info="failed_events" aria-label="Förklara Failed events" aria-expanded="false">i</button></div><div class="value" id="m-fail">—</div><div class="sub">stoppade flödet</div></div>
       </div>
       <div class="insight hidden" id="insight"></div>
       <div class="improvement hidden" id="improvement">
@@ -246,6 +249,7 @@
 <script src="src/ui/charts.js"></script>
 <script src="src/ui/learning.js"></script>
 <script src="src/ui/docs.js"></script>
+<script src="src/ui/glossary.js"></script>
 <script src="src/app.js"></script>
 </body>
 </html>
