@@ -231,6 +231,7 @@ function clearMetrics() {
   document.getElementById("m-fail").textContent = "—";
   document.querySelectorAll(".metric").forEach(m => m.classList.remove("warn"));
   insightEl.classList.add("hidden");
+  if (typeof clearImpact === "function") clearImpact();
 }
 
 // --- Parallel-mode rendering ------------------------------------------------

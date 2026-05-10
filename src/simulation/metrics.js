@@ -62,6 +62,24 @@ function finalize(queue, scenarioId, label) {
       `vilket är just därför fall-out-rates är ett centralt KPI för operatörer.`;
   }
 
+  // Operational impact for this single order. Threshold for SLA risk: total
+  // > 1.5x baseline (sum of step durations + handoffs as a rough yardstick).
+  // ResourceUnavailable → inventory reconciliation; ActivationRejected → failed
+  // activation. A failed order has no verified activation so billing cannot
+  // trigger, and customer support typically gets at least one call per fail.
+  const baselineSingle = events.reduce((s, e) => s + e.duration, 0);
+  const resourceFails = failed.filter(f => /Resource/i.test(f.tech)).length;
+  const activationFails = failed.filter(f => /Activ|Reject/i.test(f.tech)).length;
+  const slaAtRiskSingle = (failed.length > 0 || (baselineSingle > 0 && total > baselineSingle * 1.5)) ? 1 : 0;
+  renderImpact({
+    investigations: failed.length,
+    recon: resourceFails,
+    failedActivations: activationFails,
+    slaAtRisk: slaAtRiskSingle,
+    delayedBilling: failed.length > 0 ? 1 : 0,
+    supportLoad: failed.length > 0 ? 1 : 0
+  });
+
   if (scenarioId) {
     const variant = automationEnabled ? "automated" : "manual";
     runHistory[scenarioId][variant] = {
@@ -132,4 +150,53 @@ function loadClass(count, capacity) {
   if (count <= capacity) return "load-low";
   if (count <= capacity + 2) return "load-medium";
   return "load-high";
+}
+
+// --- Operational impact -----------------------------------------------------
+// Translates raw metrics into operational consequences typical for a telecom
+// fulfillment org. Pedagogical model: every category gets a count + a severity
+// colour (ok / warn / critical) based on simple thresholds. Not real numbers.
+const IMPACT_CARDS = ["imp-investigations", "imp-recon", "imp-failed-act", "imp-sla", "imp-billing", "imp-support"];
+
+function impactLevel(value, warnAt, critAt) {
+  if (value <= 0) return "lvl-ok";
+  if (value < critAt) return "lvl-warn";
+  return "lvl-critical";
+}
+
+function setImpactCard(id, value, level) {
+  const card = document.getElementById(id);
+  if (!card) return;
+  card.querySelector(".impact-value").textContent = value;
+  card.classList.remove("lvl-ok", "lvl-warn", "lvl-critical");
+  card.classList.add(level);
+}
+
+function renderImpact(d) {
+  const empty = document.getElementById("impact-empty");
+  const grid = document.getElementById("impact-grid");
+  if (!empty || !grid) return;
+  empty.classList.add("hidden");
+  grid.classList.remove("hidden");
+
+  setImpactCard("imp-investigations", d.investigations, impactLevel(d.investigations, 1, 3));
+  setImpactCard("imp-recon", d.recon, impactLevel(d.recon, 1, 2));
+  setImpactCard("imp-failed-act", d.failedActivations, impactLevel(d.failedActivations, 1, 3));
+  setImpactCard("imp-sla", d.slaAtRisk, impactLevel(d.slaAtRisk, 1, 3));
+  setImpactCard("imp-billing", d.delayedBilling, impactLevel(d.delayedBilling, 1, 3));
+  setImpactCard("imp-support", d.supportLoad, impactLevel(d.supportLoad, 2, 5));
+}
+
+function clearImpact() {
+  const empty = document.getElementById("impact-empty");
+  const grid = document.getElementById("impact-grid");
+  if (!empty || !grid) return;
+  empty.classList.remove("hidden");
+  grid.classList.add("hidden");
+  IMPACT_CARDS.forEach(id => {
+    const card = document.getElementById(id);
+    if (!card) return;
+    card.querySelector(".impact-value").textContent = "—";
+    card.classList.remove("lvl-ok", "lvl-warn", "lvl-critical");
+  });
 }

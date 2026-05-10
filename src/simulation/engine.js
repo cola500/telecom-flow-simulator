@@ -454,4 +454,20 @@ function finalizeParallel() {
   }
   parts.push(`Klicka på "Queueing theory på 60 sekunder" eller "Resource efficiency vs flow efficiency" i learning-panelen till höger för att läsa mer.`);
   insightEl.innerHTML = parts.join("<br><br>");
+
+  // Operational impact. In batch mode all fails are activation rejects (the
+  // model doesn't synthesise ResourceUnavailable here, so recon stays 0).
+  // SLA risk: completed orders whose lead time exceeded 1.5x baseline.
+  // Support load: one call per failed order plus a small share of SLA-late
+  // ones (rough — pedagogical, not a real model).
+  const slaThreshold = baseline * 1.5;
+  const slaAtRiskBatch = sim.completedOrders.filter(o => (o.completedAt - o.createdAt) > slaThreshold).length;
+  renderImpact({
+    investigations: failed,
+    recon: 0,
+    failedActivations: failed,
+    slaAtRisk: slaAtRiskBatch,
+    delayedBilling: failed,
+    supportLoad: failed + Math.floor(slaAtRiskBatch / 4)
+  });
 }

@@ -433,6 +433,54 @@
       </div>
     </details>
 
+    <details class="panel collapsible" id="impact-panel" open>
+      <summary>
+        <h2>Operativ påverkan<button type="button" class="info-icon" data-info="operational_impact" aria-label="Förklara Operativ påverkan" aria-expanded="false">i</button></h2>
+        <span class="summary-hint">Vad metrics betyder operativt</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
+      <p class="impact-intro">Tekniska fel i ett OSS/BSS-flöde stannar sällan i sina egna system. De sprider sig som manuella ärenden, försenade fakturor och kundsamtal — ofta i en helt annan del av organisationen än där felet uppstod. Här översätts körningens metrics till den operativa belastningen som typiskt följer.</p>
+      <div class="impact-empty" id="impact-empty">Kör en simulering för att se operativa konsekvenser.</div>
+      <div class="impact-grid hidden" id="impact-grid">
+        <div class="impact-card" id="imp-investigations">
+          <div class="impact-label">Manuella undersökningar<button type="button" class="info-icon" data-info="impact_investigations" aria-label="Förklara Manuella undersökningar" aria-expanded="false">i</button></div>
+          <div class="impact-value">—</div>
+          <div class="impact-sub">Fall-out som kräver handpåläggning av en provisioning-tekniker eller fulfillment-koordinator.</div>
+          <div class="impact-why">Driver det mesta av FTE-belastningen i fulfillment-teamet.</div>
+        </div>
+        <div class="impact-card" id="imp-recon">
+          <div class="impact-label">Inventory reconciliation<button type="button" class="info-icon" data-info="impact_recon" aria-label="Förklara Inventory reconciliation" aria-expanded="false">i</button></div>
+          <div class="impact-value">—</div>
+          <div class="impact-sub">Tillfällen där inventory-data och nätet inte stämmer — kräver discovery-arbete.</div>
+          <div class="impact-why">Telekomdriftens kanske vanligaste tysta problem.</div>
+        </div>
+        <div class="impact-card" id="imp-failed-act">
+          <div class="impact-label">Failed activations<button type="button" class="info-icon" data-info="impact_failed_act" aria-label="Förklara Failed activations" aria-expanded="false">i</button></div>
+          <div class="impact-value">—</div>
+          <div class="impact-sub">Aktiveringar som inte resulterade i en levererad tjänst.</div>
+          <div class="impact-why">Risk för partial activation — kunden upptäcker felet före systemen.</div>
+        </div>
+        <div class="impact-card" id="imp-sla">
+          <div class="impact-label">Orders at SLA risk<button type="button" class="info-icon" data-info="impact_sla" aria-label="Förklara Orders at SLA risk" aria-expanded="false">i</button></div>
+          <div class="impact-value">—</div>
+          <div class="impact-sub">Ordrar vars leveranstid riskerar överskrida kundens utlovade tidsram.</div>
+          <div class="impact-why">Credits till kund, eskaleringar — och regulatoriska risker vid portering.</div>
+        </div>
+        <div class="impact-card" id="imp-billing">
+          <div class="impact-label">Försenad fakturering<button type="button" class="info-icon" data-info="impact_billing" aria-label="Förklara Försenad fakturering" aria-expanded="false">i</button></div>
+          <div class="impact-value">—</div>
+          <div class="impact-sub">Ordrar där BillingStartRequested inte kunnat skickas än.</div>
+          <div class="impact-why">Pengarna börjar inte räknas innan tjänsten är verifierad.</div>
+        </div>
+        <div class="impact-card" id="imp-support">
+          <div class="impact-label">Förväntad supportbelastning<button type="button" class="info-icon" data-info="impact_support" aria-label="Förklara Förväntad supportbelastning" aria-expanded="false">i</button></div>
+          <div class="impact-value">—</div>
+          <div class="impact-sub">Uppskattade kundinteraktioner som genereras av körningen.</div>
+          <div class="impact-why">Hög fall-out i fulfillment landar som bemanningskostnad i Customer Service.</div>
+        </div>
+      </div>
+    </details>
+
     </div><!-- /.analysis-area -->
 
     <div class="panel docs-only" id="docs-panel">

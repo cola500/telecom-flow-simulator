@@ -170,6 +170,41 @@ const GLOSSARY = {
     body: "These metrics describe a single order's journey through the flow — total lead time, time spent in handoffs, slowest step. Visas efter att du klickar 1 order eller ett fail-scenario.",
     why: "Order-nivå är bra för att förstå *var* tiden går för en enskild kund. System-nivå (batch) är bra för att förstå hur flödet skalas."
   },
+  operational_impact: {
+    title: "Operativ påverkan",
+    body: "Tekniska fel i ett OSS/BSS-flöde stannar sällan i sina egna system. De landar som manuellt arbete, fördröjda fakturor och kundsamtal — ofta i en helt annan del av organisationen än där felet uppstod. Den här panelen översätter körningens metrics till sex kategorier av operativ belastning.",
+    why: "En siffra som '5 incidents' är abstrakt. '5 manuella undersökningar + 5 försenade fakturor + ~6 förväntade supportsamtal' visar var arbetet faktiskt hamnar — och varför hög fall-out är dyrt långt utanför själva fulfillment-flödet."
+  },
+  impact_investigations: {
+    title: "Manuella undersökningar",
+    body: "Fall-out — ordrar som stannar i flödet utan att gå igenom — måste hanteras manuellt. Typiskt loggar en tekniker in i flera system, jämför inventory mot nätet, korrigerar för hand och försöker re-trigga ordern.",
+    why: "Varje undersökning är 30–60 minuter spridda över flera personer. Skalat över tusentals ordrar är det här som driver huvuddelen av FTE-belastningen i ett fulfillment-team. Att sänka fall-out-rate är därför en av de mest direkt mätbara förbättringseffekterna."
+  },
+  impact_recon: {
+    title: "Inventory reconciliation",
+    body: "När simulatorn rapporterar ResourceUnavailable är roten ofta inventory drift — data säger att en port är ledig fast den används, en IP redan tilldelad, eller en SIM allokerad i två system samtidigt. Reconciliation är arbetet att avgöra vad som är sant och uppdatera systemen att stämma.",
+    why: "Telekomdriftens kanske vanligaste tysta problem. Det visas inte i utåtvända KPI:er men förklarar varför så många 'enkla' aktiveringar fail:ar — och varför audits och discovery-jobb är centrala i en mogen drift."
+  },
+  impact_failed_act: {
+    title: "Failed activations",
+    body: "Aktiveringar där nätelementet eller dess adapter avvisade konfigurationen — fel template, syntax-mismatch, eller ett element som inte svarar. Tjänsten gick aldrig i drift trots att flödet startade aktiveringen.",
+    why: "Det farligaste fallet är *partial activation*: konfiguration accepteras delvis, service inventory tror tjänsten är aktiv, billing kanske triggas — men kunden får inte tjänsten. Felet hittas långt senare av kunden själv. Det är just därför verifieringssteg och rollback-strategier finns."
+  },
+  impact_sla: {
+    title: "Orders at SLA risk",
+    body: "Ordrar vars leveranstid riskerar överskrida kundens utlovade tidsram. Operatörer har typiskt SLA per produkt — fiber 5 arbetsdagar, mobile portering 3 dagar etc. Här definierat som lead time > 1.5 × baseline.",
+    why: "SLA-överskridande utlöser credits till kund, eskaleringar till sales, och vid nummerportering regulatorisk rapportering. Det är därför aktivt arbete att hålla flödets lead time inom marginal — inte bara för kundupplevelse, utan för avtalsefterlevnad."
+  },
+  impact_billing: {
+    title: "Försenad fakturering",
+    body: "Ordrar där BillingStartRequested ännu inte kunnat skickas eftersom flödet stoppade innan ServiceVerified. Billing-systemet räknar inte debitering förrän det får signalen.",
+    why: "Regeln är enkel: man fakturerar för det man levererar, inte för det man försökt leverera. Försenad billing skjuter upp kassaflödet — och kräver att en människa antingen reparerar ordern eller manuellt markerar den som leveransbar. Det är inte en teknisk gräns utan en process- och ansvarsgräns."
+  },
+  impact_support: {
+    title: "Förväntad supportbelastning",
+    body: "Uppskattat antal kundinteraktioner som körningen genererar — frågor, klagomål, eskaleringar. Härlett från failed orders och SLA-late orders enligt en grov pedagogisk modell.",
+    why: "Customer Service är ofta första som upptäcker att något i fulfillment fail:at — kunden ringer 'tjänsten fungerar inte' fast systemen säger 'aktiv'. Varje samtal är 5–15 minuter agent-tid plus efterföljande utredning. Hög fall-out i fulfillment översätts direkt till bemanningskostnader i en annan del av organisationen."
+  },
 
   // --- Dashboard / Metrics
   active: {
