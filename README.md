@@ -9,6 +9,8 @@ sections: [Disclaimer, Three modes Learn OSS/BSS Optimize Process Documentation,
 
 # OSS/BSS Order-to-Activate Simulator
 
+> 🔗 **Live demo:** [cola500.github.io/telecom-flow-simulator](https://cola500.github.io/telecom-flow-simulator/) — kör direkt i webbläsaren, ingen installation behövs.
+
 Ett interaktivt lärverktyg för att förstå hur en kundorder vandrar genom en telekomoperatörs IT-system tills tjänsten är aktiverad och fakturering startar.
 
 Simulatorn hjälper dig att se:
