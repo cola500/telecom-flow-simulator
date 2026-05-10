@@ -31,8 +31,12 @@
       <div class="row oss" id="row-oss"></div>
     </div>
 
-    <div class="panel learn-only" id="theory-journey">
-      <h2>Från kundorder till aktiverad tjänst</h2>
+    <details class="panel learn-only collapsible" id="theory-journey" open>
+      <summary>
+        <h2>Från kundorder till aktiverad tjänst</h2>
+        <span class="summary-hint">8-stegs teoriresa om Order-to-Activate</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
       <p class="journey-intro">
         En guidad resa i åtta steg som visar hur en kund som beställer en tjänst — fiber eller mobil — får den levererad och fakturerad. Modellen är medvetet förenklad och lyfter fram <em>varför</em> OSS/BSS-stacken är uppdelad som den är.
       </p>
@@ -174,10 +178,14 @@
         </li>
 
       </ol>
-    </div>
+    </details>
 
-    <div class="panel learn-only" id="decomp-panel">
-      <h2>Ordernedbrytning (Order decomposition)</h2>
+    <details class="panel learn-only collapsible" id="decomp-panel">
+      <summary>
+        <h2>Ordernedbrytning (Order decomposition)</h2>
+        <span class="summary-hint">Teknisk nedbrytning av Fiber och Mobile</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
       <p class="decomp-intro">
         En kundorder är inte ett enda arbetsobjekt — den dekomponeras till en service order, flera resource orders och en uppsättning aktiveringsuppgifter. <em>Olika produkter dekomponeras olika.</em> Klicka på en nivå för att läsa mer i learning-panelen.
       </p>
@@ -194,7 +202,7 @@
       <div id="decomp-tree-host"></div>
       <div id="decomp-failures-host"></div>
       <div id="decomp-example-host"></div>
-    </div>
+    </details>
 
     <div class="panel">
       <h2>Simulering</h2>

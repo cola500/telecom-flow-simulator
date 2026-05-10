@@ -93,6 +93,24 @@ header .intro .intro-hint {
   margin: 0 auto;
 }
 
+/* Sticky learning sidebar on desktop/tablet so the explanation panel stays
+   visible while user scrolls through the long Learn/Optimize sections.
+   align-self:start is required — without it the grid stretches the aside to
+   the row height and position:sticky has nothing to stick to. The internal
+   max-height + overflow-y lets the panel scroll itself when content gets
+   tall (e.g. long pattern bodies on short viewports). Mobile (≤ 900px) keeps
+   the natural stacked layout — see the breakpoint that flips .layout to
+   single-column further down. */
+@media (min-width: 901px) {
+  .layout > aside {
+    position: sticky;
+    top: 16px;
+    align-self: start;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+  }
+}
+
 .panel {
   background: #fff;
   border-radius: 10px;
@@ -489,6 +507,60 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   background: #d8f5e3;
   color: #1f7a47;
   border-color: #2da66a;
+}
+
+/* Collapsible Learn-mode panels (theory-journey, decomp-panel).
+   Built on native <details>/<summary> for free a11y + keyboard support.
+   Default marker is hidden in favor of a custom chevron. */
+details.collapsible > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+  padding: 0;
+}
+details.collapsible > summary::-webkit-details-marker { display: none; }
+details.collapsible > summary > h2 {
+  margin: 0;
+  flex: 0 0 auto;
+}
+details.collapsible > summary > .summary-hint {
+  display: none;
+  font-size: 12px;
+  color: #8a93a6;
+  font-style: italic;
+  flex: 1;
+  min-width: 0;
+}
+details.collapsible:not([open]) > summary > .summary-hint {
+  display: inline-block;
+}
+details.collapsible > summary > .chevron {
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #8a93a6;
+  border-bottom: 2px solid #8a93a6;
+  transform: rotate(45deg);
+  transition: transform 0.18s ease;
+  flex: 0 0 auto;
+}
+details.collapsible:not([open]) > summary > .chevron {
+  transform: rotate(-45deg);
+}
+details.collapsible > summary:hover > .chevron,
+details.collapsible > summary:focus-visible > .chevron {
+  border-color: #4a6cf7;
+}
+details.collapsible > summary:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+details.collapsible[open] > summary {
+  margin-bottom: 12px;
 }
 
 /* Theory journey — guided 8-step walkthrough in Learn OSS/BSS */

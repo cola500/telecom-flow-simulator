@@ -93,3 +93,19 @@ document.getElementById("btn-fail-resource").addEventListener("click",
 document.getElementById("btn-fail-prov").addEventListener("click",
   () => runFlow(failProvFor(currentProductId), "ActivationRejected", "prov"));
 document.getElementById("btn-reset").addEventListener("click", fullReset);
+
+// --- Collapsible Learn-mode panels ------------------------------------------
+// Persist open/closed state per panel id i localStorage. Om localStorage är
+// otillgängligt (private mode etc.) faller vi tillbaka på HTML-defaulten.
+document.querySelectorAll("details.collapsible[id]").forEach(d => {
+  const key = `collapsed:${d.id}`;
+  try {
+    const stored = localStorage.getItem(key);
+    if (stored === "open") d.setAttribute("open", "");
+    else if (stored === "closed") d.removeAttribute("open");
+  } catch (e) { /* localStorage unavailable — keep HTML default */ }
+  d.addEventListener("toggle", () => {
+    try { localStorage.setItem(key, d.open ? "open" : "closed"); }
+    catch (e) { /* ignore */ }
+  });
+});
