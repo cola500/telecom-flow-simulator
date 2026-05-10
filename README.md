@@ -34,6 +34,13 @@ Learning-panelen (höger sidopanel) och Systemkartan är synliga i Learn och Opt
 
 Det är samma underliggande simulator-engine i alla lägena — bara olika UI-fokus för att minska kognitiv belastning.
 
+**Single-order metrics och system metrics är två olika vyer av samma flöde.**
+
+- *Order metrics* (Metrics-panelen) visar en enskild orders resa genom systemet — total lead time, tid i handoffs, längsta steg, antal handoffs och failed events. Bra för att förstå *var tiden går* för en specifik kund. Dyker upp när du klickar **1 order** eller ett fail-scenario.
+- *System metrics (batch run)* (Belastnings-dashboard) visar hur systemet beter sig över en hel batch — average lead time, queue depth, system throughput, batch incidents. Bra för att förstå hur flödet skalas vid load. Dyker upp när du klickar **5 orders** eller **20 orders**.
+
+Båda mäter samma flöde, men ur olika perspektiv. En enskild order kan se snabb ut samtidigt som systemet i stort byggt upp en kö som påverkar nästa order.
+
 ## Vad simulatorn lär ut
 
 - **Var** de centrala domänerna sitter i en stack och vilken sida (BSS vs OSS) de tillhör.

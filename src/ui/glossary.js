@@ -117,13 +117,13 @@ const GLOSSARY = {
     why: "Hellre långsam respons uppströms än cascading failures nedströms. Klassisk lösning på överbelastning."
   },
   throughput: {
-    title: "Throughput",
-    body: "Hur många ordrar systemet klarar av per tidsenhet. Begränsas av bottleneckens kapacitet.",
+    title: "System throughput",
+    body: "Hur många ordrar systemet klarar av per tidsenhet (mätt i sim-sekunder). Begränsas av bottleneckens kapacitet.",
     why: "Throughput och lead time är inte samma sak. Du kan ha hög throughput och hög lead time samtidigt — köfabriken."
   },
   lead_time: {
-    title: "Lead time",
-    body: "Total tid från det kunden lägger order tills tjänsten är aktiv och fakturering startar. Värdeskapande tid + väntetid.",
+    title: "Lead time (per order)",
+    body: "Total tid från det kunden lägger order tills tjänsten är aktiv och fakturering startar. Värdeskapande tid + väntetid. I batch-vyn visas *Average lead time* — genomsnittet över alla orders.",
     why: "Tumregel i tjänsteflöden: väntetiden är 5–10× längre än värdeskapande tid. Att halvera väntan ger mycket större effekt än att halvera arbete."
   },
   flow_efficiency: {
@@ -159,24 +159,36 @@ const GLOSSARY = {
     why: "Köteorin: variation är minst lika viktig drivare av kötid som utilization. *Variation is the enemy of flow.*"
   },
 
+  // --- Panel-level metrics-perspektiv
+  system_metrics: {
+    title: "System metrics (batch run)",
+    body: "These metrics describe the system during the whole simulation run, not a single order. Average lead time, queue depth och throughput aggregeras över alla orders i batchen.",
+    why: "I produktion kör operatörens flöden tusentals orders parallellt. För att förstå om systemet håller — eller om det skapar köer och incidents — behöver man system-vy, inte bara enskild-order-vy."
+  },
+  order_metrics: {
+    title: "Order metrics",
+    body: "These metrics describe a single order's journey through the flow — total lead time, time spent in handoffs, slowest step. Visas efter att du klickar 1 order eller ett fail-scenario.",
+    why: "Order-nivå är bra för att förstå *var* tiden går för en enskild kund. System-nivå (batch) är bra för att förstå hur flödet skalas."
+  },
+
   // --- Dashboard / Metrics
   active: {
     title: "Active orders",
     body: "Ordrar som just nu processas (in_progress eller in_transit mellan steg).",
-    why: "Tillsammans med queue-värdet visar det systemets aktuella belastning."
+    why: "Tillsammans med kö-värdet visar det systemets aktuella belastning."
   },
   queued: {
-    title: "Queued orders",
-    body: "Ordrar som väntar på ett begränsat system (typiskt Resource Inventory eller Provisioning).",
+    title: "Queue depth",
+    body: "Antal ordrar som väntar på ett begränsat system (typiskt Resource Inventory eller Provisioning).",
     why: "Växande kö är första tecknet på att bottlenecken inte hinner med flödet."
   },
   completed: {
     title: "Completed orders",
     body: "Ordrar som har gått hela vägen till BillingStartRequested (verifierad aktivering + billing-trigger).",
-    why: "Bara verifierade orders räknas som klara — det är samma disciplin som riktiga operatörer behöver tillämpa."
+    why: "Bara verifierade orders räknas som klara — samma disciplin som riktiga operatörer behöver tillämpa."
   },
   incidents: {
-    title: "Incidents",
+    title: "Batch incidents",
     body: "Antal failures under batchen — typiskt ActivationRejected från överbelastad Provisioning.",
     why: "Incidents är inte slumpmässiga: fail-sannolikheten ökar när Provisionings kö växer. Hög load → mer fall-out → fler retries → ännu högre load."
   },

@@ -19,14 +19,14 @@
 <div class="layout">
   <main>
     <div class="panel parallel-only optimize-only">
-      <h2>Belastnings-dashboard</h2>
+      <h2>System metrics (batch run)<button type="button" class="info-icon" data-info="system_metrics" aria-label="Förklara System metrics" aria-expanded="false">i</button></h2>
       <div class="dashboard">
         <div class="dash-card"><div class="label">Active<button type="button" class="info-icon" data-info="active" aria-label="Förklara Active orders" aria-expanded="false">i</button></div><div class="value" id="d-active">0</div></div>
-        <div class="dash-card"><div class="label">Queued<button type="button" class="info-icon" data-info="queued" aria-label="Förklara Queued orders" aria-expanded="false">i</button></div><div class="value" id="d-queued">0</div></div>
+        <div class="dash-card"><div class="label">Queue depth<button type="button" class="info-icon" data-info="queued" aria-label="Förklara Queue depth" aria-expanded="false">i</button></div><div class="value" id="d-queued">0</div></div>
         <div class="dash-card"><div class="label">Completed<button type="button" class="info-icon" data-info="completed" aria-label="Förklara Completed orders" aria-expanded="false">i</button></div><div class="value" id="d-completed">0</div></div>
-        <div class="dash-card"><div class="label">Avg lead time<button type="button" class="info-icon" data-info="lead_time" aria-label="Förklara Lead time" aria-expanded="false">i</button></div><div class="value" id="d-lead">—</div></div>
-        <div class="dash-card"><div class="label">Throughput (sim)<button type="button" class="info-icon" data-info="throughput" aria-label="Förklara Throughput" aria-expanded="false">i</button></div><div class="value" id="d-throughput">—</div></div>
-        <div class="dash-card" id="d-incidents-card"><div class="label">Incidents<button type="button" class="info-icon" data-info="incidents" aria-label="Förklara Incidents" aria-expanded="false">i</button></div><div class="value" id="d-incidents">0</div></div>
+        <div class="dash-card"><div class="label">Average lead time<button type="button" class="info-icon" data-info="lead_time" aria-label="Förklara Average lead time" aria-expanded="false">i</button></div><div class="value" id="d-lead">—</div></div>
+        <div class="dash-card"><div class="label">System throughput (sim)<button type="button" class="info-icon" data-info="throughput" aria-label="Förklara System throughput" aria-expanded="false">i</button></div><div class="value" id="d-throughput">—</div></div>
+        <div class="dash-card" id="d-incidents-card"><div class="label">Batch incidents<button type="button" class="info-icon" data-info="incidents" aria-label="Förklara Batch incidents" aria-expanded="false">i</button></div><div class="value" id="d-incidents">0</div></div>
       </div>
       <div class="dash-busy">Busiest system: <strong id="d-busiest">—</strong><span id="d-bp-status"></span></div>
     </div>
@@ -197,7 +197,7 @@
     </div>
 
     <div class="panel">
-      <h2>Metrics</h2>
+      <h2>Order metrics<button type="button" class="info-icon" data-info="order_metrics" aria-label="Förklara Order metrics" aria-expanded="false">i</button></h2>
       <div class="metrics" id="metrics">
         <div class="metric"><div class="label">Total lead time<button type="button" class="info-icon" data-info="lead_time" aria-label="Förklara Lead time" aria-expanded="false">i</button></div><div class="value" id="m-total">—</div><div class="sub">från order till klart</div></div>
         <div class="metric"><div class="label">Tid i handoffs<button type="button" class="info-icon" data-info="handoff_time" aria-label="Förklara Tid i handoffs" aria-expanded="false">i</button></div><div class="value" id="m-handoff">—</div><div class="sub" id="m-handoff-sub">väntetid mellan system</div></div>
