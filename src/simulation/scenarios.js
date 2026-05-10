@@ -58,6 +58,113 @@ const SYSTEMS = {
   }
 };
 
+// Product-specific decomposition data. Drives the Order Decomposition view —
+// does NOT touch the simulator's HAPPY_PATH/engine. Two products keep the
+// pedagogical contrast tight: same BSS-side flow, very different OSS-side
+// resources and activation tasks.
+const PRODUCTS = {
+  fiber: {
+    label: "Fiber 500 Mbps",
+    customer: {
+      title: "Customer Order",
+      desc: "Det kunden faktiskt beställer (t.ex. <em>\"Fiber 500 Mbps\"</em>). Kommersiella villkor, kontaktperson, kampanj.",
+      o2a: "<code>OrderCreated</code> · CRM / Order Management",
+      pattern: "customer_order"
+    },
+    service: {
+      title: "Service Order: Broadband Access",
+      desc: "Den tjänst som ska skapas i nätet — bredbandsuppkoppling med fiber-access. Kundagnostisk mall, parametriseras per order.",
+      o2a: "<code>FeasibilityChecked</code> · Service Inventory",
+      pattern: "service_order"
+    },
+    resources: [
+      { name: "RO: Fiber access", desc: "Tillgänglig fiberport på OLT + fiberpar fram till adressen", pattern: "resource_order" },
+      { name: "RO: Network profile", desc: "VLAN, QoS, IP ur pool, tjänsteprofil", pattern: "resource_order" },
+      { name: "RO: CPE / Router", desc: "Hårdvara hos kund + initial konfig", pattern: "resource_order" },
+      { name: "RO: Capacity reservation", desc: "Reserverad bandbredd + kapacitet i bakhalsen", pattern: "resource_order" }
+    ],
+    activation: {
+      title: "Activation Tasks",
+      desc: "Konfigurera nätet, binda kund till tjänst, verifiera end-to-end",
+      o2a: "<code>ProvisioningStarted</code> → <code>ServiceActivated</code>"
+    },
+    failureModes: [
+      { name: "Address mismatch", desc: "Order ankom adress som inte finns i adresskatalogen, eller adress stämmer inte mellan CRM och inventory" },
+      { name: "Unavailable access port", desc: "Feasibility lovade en port som enligt inventory finns ledig, men i verkligheten är upptagen (inventory drift)" },
+      { name: "CPE config failed", desc: "Felaktig template för CPE-modellen, eller adapter mot CPE svarar inte" },
+      { name: "Capacity unavailable", desc: "Fiberparet eller bakhalsen är fullt — kapacitetsplanering har inte hängt med rollouten" }
+    ],
+    example: {
+      wants: ["Fiber 500 Mbps, fast IP, månadsvis fakturering"],
+      service: ["Broadband Access (B2C, fiber, 500/500 Mbps, statisk IP)"],
+      resources: [
+        "Tillgänglig fiber-access (port + fiberpar)",
+        "Network profile (VLAN, QoS, IP)",
+        "CPE / router",
+        "Customer service location / adress"
+      ],
+      activation: [
+        "Configure access (NETCONF mot OLT)",
+        "Bind service to customer",
+        "Verify service end-to-end",
+        "Request billing start"
+      ],
+      foot: "En customer order blev fyra parallella resource orders och fyra activation tasks. Allt detta måste lyckas — och verifieras — innan billing får triggas. <em>\"Order active\" ≠ \"service working\".</em>"
+    }
+  },
+  mobile: {
+    label: "Mobile subscription",
+    customer: {
+      title: "Customer Order",
+      desc: "Det kunden faktiskt beställer (t.ex. <em>\"Mobilt abonnemang 50 GB med EU-roaming\"</em>). Kontrakt, kampanj, eventuell portering av befintligt nummer.",
+      o2a: "<code>OrderCreated</code> · CRM / Order Management",
+      pattern: "customer_order"
+    },
+    service: {
+      title: "Service Order: Mobile Connectivity",
+      desc: "Den tjänst som ska skapas i mobilnätet — abonnemangsprofil + datatjänst + ev. röst/SMS. Kundagnostisk mall.",
+      o2a: "<code>FeasibilityChecked</code> · Service Inventory",
+      pattern: "service_order"
+    },
+    resources: [
+      { name: "RO: MSISDN / phone number", desc: "Tilldelat telefonnummer ur nummerserie eller via portering från annan operatör", pattern: "msisdn" },
+      { name: "RO: SIM / eSIM profile", desc: "Fysisk SIM eller eSIM-profil hos OEM/eSIM Remote Service Provider", pattern: "sim_esim" },
+      { name: "RO: IMSI / subscriber identity", desc: "Internationell unik identifierare i HSS/UDM", pattern: "imsi" },
+      { name: "RO: Subscription profile", desc: "Plan, QoS, datapaket, voice/SMS-tillgänglighet", pattern: "resource_order" },
+      { name: "RO: Roaming / data package <em>(optional)</em>", desc: "Roaming-avtal, datapaket, EU-flat", pattern: "resource_order" }
+    ],
+    activation: {
+      title: "Activation Tasks",
+      desc: "Allokera nummer, binda SIM/eSIM till subscriber, aktivera profil i HSS, verifiera registreringsklarhet",
+      o2a: "<code>ProvisioningStarted</code> → <code>ServiceActivated</code>"
+    },
+    failureModes: [
+      { name: "Number allocation failed", desc: "Nummerserie tom på rätt prefix, eller portering till annan operatör pågår" },
+      { name: "SIM/eSIM profile mismatch", desc: "Fel profile för enhetstyp eller operatör; eSIM RSP avvisar download" },
+      { name: "Subscriber profile activation failed", desc: "HSS/UDM-uppdatering avvisad — inkompatibel plan eller race med annan provisioning" },
+      { name: "Roaming/data package mismatch", desc: "Paket otillgängligt i destinationsmarknad, eller avtal med roaming-partner saknas" }
+    ],
+    example: {
+      wants: ["Mobilt abonnemang 50 GB, fri tal, EU-roaming"],
+      service: ["Mobile Connectivity (B2C, 50 GB, voice, EU-roaming)"],
+      resources: [
+        "MSISDN ur nummerpool",
+        "eSIM-profil från RSP",
+        "IMSI i HSS",
+        "Subscription profile (50 GB, voice, EU)"
+      ],
+      activation: [
+        "Allocate MSISDN",
+        "Bind eSIM to IMSI",
+        "Activate subscription profile in HSS/UDM",
+        "Verify registration readiness",
+        "Request billing start"
+      ],
+      foot: "Ingen fysisk fiber, ingen CPE — men <em>fyra logiska resurser i fyra olika system</em> (numbering plan, SIM/eSIM RSP, HSS/UDM, billing). Activation kräver att alla syncar."
+    }
+  }
+};
+
 // More descriptive label for the *activity* that's slow at each system, used
 // in insight text so the explanation reads "Resource reservation / inventory
 // validation is the bottleneck" instead of "Resource Inventory is the
@@ -121,6 +228,26 @@ const PATTERNS = {
   provisioning_activation: {
     title: "Provisioning, activation, and the limits of automation",
     body: "*Provisioning* är att skicka konfiguration till nätet — NETCONF/CLI mot routers, OLT, IMS-core, SBC. *Activation* är att verifiera att tjänsten faktiskt fungerar end-to-end. Det är två olika saker, även om de ofta hanteras av samma system och ibland slås ihop i språkbruket. Skillnaden spelar roll: en config kan accepteras av elementen men tjänsten ändå inte fungera (CPE inte konfigurerad rätt, IP routing mismatch, port aktiverad fel) — det är *partial activation*, en av de dyraste felmoderna eftersom kunden tror att tjänsten är klar. Reservation (Resource Inventory) är *ytterligare* en separat sak: att låsa rätt port/IP/profile *innan* aktiveringen börjar. Reservation utan aktivering ger 'orphaned resources'; aktivering utan reservation ger race conditions där två orders konkurrerar om samma resurs.\n\n*Automation* av provisioning/activation är en klassisk modernisering i operatörer — från manuella ärenden hos NOC, via skript-baserad provisioning, till intent-based aktivering med template-bibliotek och CI/CD för nätconfig. Vinsterna är reella: ledtid sjunker (från timmar/dagar till minuter), variation minskar (samma input → samma output), och team-tid frigörs från repetitivt arbete. Men automation tar inte bort alla fel. Den eliminerar inte:\n\n- *Inventory mismatch* — om templaten utgår från en port som inte finns där den ska, får du fortfarande ActivationRejected.\n- *Nätfel* — element down, fiber broken, EMS unresponsive — automation kan inte trolla fram en fungerande infrastruktur.\n- *Felaktiga produktregler* — en automatiserad mall som översätter customer order fel ger fortfarande fel tjänst, bara snabbare.\n- *Partial activation-risken* — automation kan trycka config snabbt, men om du inte automatiserat *verifieringen* har du bara automatiserat halva problemet.\n\nDärför ska *Billing trigger* aldrig kopplas till orderstatus eller config-acceptans — den ska kopplas till verifierad aktivering. Strategy & Enablement: är vår automation *intent-based* (vi beskriver önskat sluttillstånd, systemet räknar ut config) eller *imperativ* (vi skickar specifika kommandon)? Det första kräver mer mogen inventory men ger bättre rollback och mindre custom-templating per produkt."
+  },
+  msisdn: {
+    title: "What is MSISDN?",
+    body: "*MSISDN* (Mobile Station International Subscriber Directory Number) är det publika telefonnumret — det som syns för andra när du ringer eller SMS:ar. Strukturen följer ITU-standarden E.164: landskod + nationell prefix + abonnentnummer (t.ex. +46 70 123 4567). Operatören har en *numbering plan* per marknad där fria nummer hålls i en pool, och vid aktivering av en mobiltjänst allokeras ett MSISDN ur poolen och kopplas till abonnentens IMSI i HSS/UDM. Två viktiga skillnader mot fast adress: (1) *MSISDN är portabelt* — kunden kan ta med sitt nummer till en annan operatör (number portability), vilket kräver synk mellan operatörer via Mobile Number Portability-systemet och kan ta från minuter till dygn. (2) *Nummerserien är en begränsad resurs* — varje land har en regulator (i Sverige: PTS) som tilldelar nummerserier, och en operatör kan teoretiskt få slut på rätt typ av nummer (t.ex. specifika prefix). Vanlig fel-källa: order kommer in, MSISDN allokeras tentativt, men porteringen från annan operatör drar ut på tiden eller faller — då måste numret återlämnas och hela aktiveringen vänta."
+  },
+  imsi: {
+    title: "What is IMSI?",
+    body: "*IMSI* (International Mobile Subscriber Identity) är abonnentens *interna* identitet i mobilnätet — det operatören använder för att identifiera vem du är när din telefon registrerar sig. Strukturen är 15 siffror: MCC (landskod, 3 siffror) + MNC (nätoperatörskod, 2-3 siffror) + MSIN (abonnent, 9-10 siffror). IMSI lagras i SIM-kortet (eller eSIM-profilen) och i operatörens HSS (Home Subscriber Server) eller UDM (Unified Data Management i 5G). När telefonen slås på och söker efter nät, skickar den sin IMSI till basstationen — som frågar HSS *\"känns den här igen?\"*. Är svaret ja, registreras telefonen och får tillgång till tjänster.\n\nNyckelpoäng: *MSISDN är publikt, IMSI är internt*. Du visar aldrig din IMSI för någon — men nätet använder den hela tiden. *MSISDN ↔ IMSI-mappningen* sker i HSS/UDM och kan ändras (t.ex. när du byter SIM behåller du MSISDN men får ny IMSI). I 5G använder telefonen oftast en krypterad version (SUCI/SUPI) av IMSI för att skydda integriteten — gammal 2G/3G skickade IMSI i klartext, vilket var en känd säkerhetsbrist. Vanlig fel-källa: aktivering misslyckas i HSS för att IMSI redan är allokerad till annan abonnent (databas-state out-of-sync mellan inventory och HSS)."
+  },
+  sim_esim: {
+    title: "What is SIM/eSIM provisioning?",
+    body: "*SIM* (Subscriber Identity Module) är det fysiska kortet som lagrar abonnentens IMSI och autentiseringsnycklar (Ki/K). När du köper ett mobilabonnemang får du historiskt ett SIM-kort posten eller i butiken — kortet tillverkas av en SIM-leverantör (Gemalto, IDEMIA, m.fl.) och innehåller redan IMSI och nycklar som operatörens HSS också har en kopia av. Vid aktivering kopplas SIM-kortets IMSI till MSISDN och subscription profile.\n\n*eSIM* (embedded SIM) är samma sak men som mjukvaruprofil i en chip i telefonen — ingen fysisk leverans behövs. Provisioneringen sker via en eSIM RSP (Remote Service Provider, GSMA-standardiserad) som tar emot operatörens beställning och pushar profilen till telefonen via QR-kod eller in-app-flöde. Vinsterna: ingen logistik, snabbare aktivering, möjlighet att ha flera profiler i samma enhet (en personlig + en jobb-eSIM). Komplikationerna: profilen är låst till device-modellen, RSP är en extern part i flödet, och fel kan vara svåra att felsöka eftersom de spänner över operatör + RSP + device-OEM.\n\nVanliga fel-modes: profile mismatch (fel typ för enhetsmodellen), RSP timeout, kunden hinner inte aktivera QR-koden inom giltighetsfönstret, eller IMSI:n redan tilldelad i HSS från en tidigare order som inte städats upp."
+  },
+  fiber_vs_mobile: {
+    title: "Why fiber and mobile decompose differently",
+    body: "Customer order *kan* se nästan identisk ut på BSS-sidan: kund + produkt + kontrakt + faktureringsmodell. Men på OSS-sidan dekomponeras de till helt olika världar.\n\n*Fiber* är fysisk-domän: en specifik fiberport på en specifik OLT vid en specifik adress, en CPE i kundens hem, ett fiberpar fysiskt blåst i marken. Resource orders är geografiskt bundna och rumsligt unika. Activation handlar om att konfigurera ett fåtal kända element (OLT + CPE) och verifiera att paketen tar sig från kund till bakhalsen.\n\n*Mobile* är logisk-domän: ett MSISDN ur en pool, en SIM/eSIM-profil från en RSP, en IMSI i HSS, en subscription profile. Resurserna är inte geografiskt bundna — de följer kunden vart hen än reser. Activation handlar om att synka tre+ system (numbering plan, RSP, HSS/UDM) som var och en kan misslyckas oberoende, och verifiera att telefonen kan registrera sig på nätet.\n\nKonsekvenser: (1) *Olika failure modes* — fiber-fel är fysiska (port full, fiber av), mobile-fel är data-synk-fel (IMSI dubbelallokerad, RSP timeout). (2) *Olika ledtider* — fiber kan kräva fältbesök (dagar/veckor), mobile kan vara minuter. (3) *Olika inventory* — fiber-inventory är geografisk och behöver discovery mot fysiska element; mobile-inventory är logisk och behöver synk med RSP/HSS. (4) *Olika produktregler* — fiber-produkter beror på vad nätet täcker; mobile-produkter beror på vilka roaming-avtal och nummerserier som finns.\n\nDet är därför *Product Catalog* är ett centralt OSS/BSS-system — det är där reglerna för hur en customer order översätts till service + resource orders bor, per produktfamilj. Utan en bra product catalog hamnar dekompositions-logik utspridd i Order Management och blir omöjlig att underhålla."
+  },
+  common_across_products: {
+    title: "What stays the same across products?",
+    body: "Trots att fiber och mobile dekomponeras väldigt olika på OSS-sidan, är det förvånansvärt mycket som är *gemensamt* i flödet. Det här är värt att se tydligt eftersom det är vad som motiverar generiska OSS/BSS-plattformar: bygg ramverket en gång, parametrisera per produkt.\n\n**Vad som är gemensamt:**\n\n- *Order-to-Activate-flödet på hög nivå.* OrderCreated → FeasibilityChecked → ResourcesReserved → ProvisioningStarted → ServiceActivated → BillingStartRequested gäller båda produkterna, även om innehållet i varje steg skiljer sig.\n- *Domänansvar.* CRM äger kund. Order Management driver flödet. Service Inventory äger tjänsten. Resource Inventory äger resurserna. Provisioning aktiverar. Assurance bevakar. Samma domäner, samma ansvarsfördelning.\n- *KPI-strukturen.* End-to-end lead time, fall-out rate per steg, truly-touchless-andel, inventory accuracy — relevant för båda produkterna.\n- *Bottleneck-mönster.* Begränsade resurser och kö-driven failure-prob fungerar likadant — bara att begränsningen är olika (fysisk fiberport vs eSIM RSP-genomströmning).\n- *Billing-disciplin.* Trigger ska komma efter verifierad aktivering, oberoende av produkt.\n- *Decomposition-strukturen.* Customer Order → Service Order → Resource Orders → Activation Tasks är samma struktur — bara innehållet varierar.\n\n**Vad som varierar (och hör hemma i Product Catalog):**\n\n- Vilka resource orders skapas\n- Vilka activation tasks som krävs\n- Vilka systemen som ska konsulteras (HSS vs OLT)\n- Specifika failure modes och retry-strategier\n- Sannolikheten att olika steg blir manuella (mobile är ofta mer automatiserat än fiber)\n\nLärdomen: *bygg flödesmotorn produktagnostiskt, lägg produktreglerna i katalogen.* Det är därför TM Forum SID-modellen separerar Customer Facing Service (CFS) från Resource Facing Service (RFS) — för att kunna återanvända samma kommersiella mall över olika tekniska implementationer."
   }
 };
 

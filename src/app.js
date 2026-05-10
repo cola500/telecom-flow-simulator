@@ -5,7 +5,7 @@
 
 renderSystems();
 showLearningEmpty();
-syncProvModeBadge();
+renderDecomposition("fiber"); // initial product — wirar noder + syncar badge
 
 // --- Automation toggle -------------------------------------------------------
 automationToggle.addEventListener("change", () => {
@@ -43,12 +43,15 @@ backpressureToggle.addEventListener("change", () => {
   backpressureEnabled = backpressureToggle.checked;
 });
 
-// --- Order decomposition tree -----------------------------------------------
-// Klick på en nod öppnar motsvarande learning-pattern i höger sidopanel.
-document.querySelectorAll("#decomp-panel .decomp-node").forEach(node => {
-  node.addEventListener("click", () => {
-    const key = node.dataset.pattern;
-    if (key) showLearningPattern(key);
+// --- Order decomposition: product selector ----------------------------------
+// Klick på en produktknapp re-renderar trädet/exemplet/failure-modes.
+// Frysning under run är inte nödvändig (decomp påverkar inte engine), men
+// vi följer mönstret från capacity-buttons för konsekvens.
+document.querySelectorAll("#product-buttons .cap-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#product-buttons .cap-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderDecomposition(btn.dataset.product);
   });
 });
 

@@ -23,6 +23,14 @@ function patternList() {
       <button class="pattern-link" data-pattern="activation">What is Activation?</button>
       <button class="pattern-link" data-pattern="provisioning_activation">Provisioning, activation, and the limits of automation</button>
       <button class="pattern-link" data-pattern="decomposition_why">Why decomposition matters</button>
+    </div>
+    <div class="pattern-list">
+      <h4>Product-specific concepts</h4>
+      <button class="pattern-link" data-pattern="fiber_vs_mobile">Why fiber and mobile decompose differently</button>
+      <button class="pattern-link" data-pattern="msisdn">What is MSISDN?</button>
+      <button class="pattern-link" data-pattern="imsi">What is IMSI?</button>
+      <button class="pattern-link" data-pattern="sim_esim">What is SIM/eSIM provisioning?</button>
+      <button class="pattern-link" data-pattern="common_across_products">What stays the same across products?</button>
     </div>`;
 }
 

@@ -16,13 +16,100 @@ const improvementEl = document.getElementById("improvement");
 const automationToggle = document.getElementById("automation-toggle");
 const provAutomationToggle = document.getElementById("prov-automation-toggle");
 const backpressureToggle = document.getElementById("backpressure-toggle");
-const decompProvModeEl = document.getElementById("decomp-prov-mode");
 
+// Decomp-prov-mode-elementet skapas av renderDecomposition() och måste slås
+// upp dynamiskt — inte cachas — eftersom det återskapas vid produktbyte.
 function syncProvModeBadge() {
-  if (!decompProvModeEl) return;
+  const el = document.getElementById("decomp-prov-mode");
+  if (!el) return;
   const automated = !!provAutomationEnabled;
-  decompProvModeEl.textContent = automated ? "Automated activation" : "Manual / semi-automated";
-  decompProvModeEl.classList.toggle("automated", automated);
+  el.textContent = automated ? "Automated activation" : "Manual / semi-automated";
+  el.classList.toggle("automated", automated);
+}
+
+// --- Decomposition view (data-driven from PRODUCTS) -------------------------
+let currentProductId = "fiber";
+
+function renderDecomposition(productId) {
+  const product = PRODUCTS[productId];
+  if (!product) return;
+  currentProductId = productId;
+  document.getElementById("decomp-tree-host").innerHTML = buildDecompTree(product);
+  document.getElementById("decomp-failures-host").innerHTML = buildDecompFailures(product);
+  document.getElementById("decomp-example-host").innerHTML = buildDecompExample(product);
+  // Re-wire klick på noder + sync prov-badge (badge-noden återskapades).
+  document.querySelectorAll("#decomp-panel .decomp-node").forEach(node => {
+    node.addEventListener("click", () => {
+      const key = node.dataset.pattern;
+      if (key) showLearningPattern(key);
+    });
+  });
+  syncProvModeBadge();
+}
+
+function buildDecompTree(p) {
+  const c = p.customer, s = p.service, a = p.activation;
+  const resources = p.resources.map(r => `
+    <div class="decomp-node decomp-resource" data-pattern="${r.pattern}">
+      <div class="decomp-head"><span class="layer-tag oss">OSS</span><strong>${r.name}</strong></div>
+      <div class="decomp-body">${r.desc}</div>
+      <div class="decomp-link">↳ Resource Inventory</div>
+    </div>`).join("");
+  return `
+    <div class="decomp-tree">
+      <div class="decomp-node decomp-customer" data-pattern="${c.pattern}">
+        <div class="decomp-head"><span class="layer-tag bss">BSS</span><strong>${c.title}</strong></div>
+        <div class="decomp-body">${c.desc}</div>
+        <div class="decomp-link">↳ O2A: ${c.o2a}</div>
+      </div>
+      <div class="decomp-arrow" aria-hidden="true">▼</div>
+      <div class="decomp-node decomp-service" data-pattern="${s.pattern}">
+        <div class="decomp-head"><span class="layer-tag oss">OSS</span><strong>${s.title}</strong></div>
+        <div class="decomp-body">${s.desc}</div>
+        <div class="decomp-link">↳ O2A: ${s.o2a}</div>
+      </div>
+      <div class="decomp-arrow" aria-hidden="true">▼</div>
+      <div class="decomp-row">
+        ${resources}
+        <div class="decomp-node decomp-activation" data-pattern="activation">
+          <div class="decomp-head"><span class="layer-tag oss">OSS</span><strong>${a.title}</strong></div>
+          <div class="decomp-body">${a.desc}</div>
+          <div class="decomp-link">↳ ${a.o2a}</div>
+          <div class="decomp-mode-badge" id="decomp-prov-mode">Manual / semi-automated</div>
+        </div>
+      </div>
+      <div class="decomp-arrow" aria-hidden="true">▼</div>
+      <div class="decomp-node decomp-billing" data-pattern="decomposition_why">
+        <div class="decomp-head"><span class="layer-tag bss">BSS</span><strong>Billing trigger (efter verifierad aktivering)</strong></div>
+        <div class="decomp-body">Charging-systemet börjar beräkna förbrukning. Triggas <em>inte</em> på orderstatus — på verifierad service.</div>
+        <div class="decomp-link">↳ O2A: <code>BillingStartRequested</code> · Billing Trigger</div>
+      </div>
+    </div>`;
+}
+
+function buildDecompFailures(p) {
+  const items = p.failureModes.map(f => `<li><strong>${f.name}</strong> — ${f.desc}</li>`).join("");
+  return `
+    <div class="decomp-failures">
+      <h3>Typiska failure modes — <em>${p.label}</em></h3>
+      <ul>${items}</ul>
+    </div>`;
+}
+
+function buildDecompExample(p) {
+  const ex = p.example;
+  const li = arr => arr.map(x => `<li>${x}</li>`).join("");
+  return `
+    <div class="decomp-example">
+      <h3>Konkret exempel — <em>${p.label}</em></h3>
+      <div class="decomp-example-grid">
+        <div class="decomp-example-cell"><h4>Customer wants</h4><ul>${li(ex.wants)}</ul></div>
+        <div class="decomp-example-cell"><h4>Service</h4><ul>${li(ex.service)}</ul></div>
+        <div class="decomp-example-cell"><h4>Resources</h4><ul>${li(ex.resources)}</ul></div>
+        <div class="decomp-example-cell"><h4>Activation</h4><ul>${li(ex.activation)}</ul></div>
+      </div>
+      <p class="decomp-example-foot"><strong>Notera:</strong> ${ex.foot}</p>
+    </div>`;
 }
 
 // --- System map -------------------------------------------------------------

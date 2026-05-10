@@ -4,7 +4,7 @@ description: Lokal browser-baserad lärsimulator för en förenklad telekom-stac
 category: learning-tool
 status: in-progress
 last_updated: 2026-05-09
-sections: [Disclaimer, Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
+sections: [Disclaimer, Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
 ---
 
 # OSS/BSS Order-to-Activate Simulator
@@ -140,6 +140,29 @@ Billing trigger       BSS — först efter verifierad aktivering
 3. *Order active ≠ service working* — customer order kan vara "completed" i CRM medan tjänsten ännu inte fungerar i nätet. Du behöver olika status per nivå för att kunna svara på frågan *"vad har egentligen gått fel?"* när något inte stämmer.
 
 Klicka på en nivå i "Order Decomposition"-panelen för att läsa mer i learning-mode (Customer Order, Service Order, Resource Order, Activation, eller "Why decomposition matters").
+
+## Same flow, different product decomposition
+
+Order Decomposition-panelen har en produktväljare: **Fiber 500 Mbps** eller **Mobile subscription**. Skifta mellan dem och du ser att resource orders och activation tasks ändras kraftigt — men det överordnade flödet är samma.
+
+**BSS-flödet kan se nästan likadant ut.** Customer Order, kontrakt, fakturering, kampanj — affärssidan har en produktagnostisk struktur. Det är i Product Catalog som reglerna för översättning till tekniska ordrar bor.
+
+**OSS-dekompositionen varierar kraftigt.** Fiber är fysisk-domän: en specifik port på en specifik OLT vid en specifik adress, en CPE i kundens hem. Mobile är logisk-domän: ett MSISDN ur en pool, en SIM/eSIM-profil från en RSP, en IMSI i HSS, en subscription profile. Olika resource inventory, olika activation-flöden, olika failure modes.
+
+**Därför blir Product Catalog, Inventory och Activation centrala i telekom.** Dessa tre system är de som skiljer sig mest mellan produktfamiljer:
+
+- *Product Catalog* — definierar vilka resource orders och activation tasks som ska skapas per customer order. Utan en bra katalog hamnar dekompositions-logik utspridd i Order Management.
+- *Inventory* — fiber kräver geografisk inventory mot fysiska element, mobile kräver synk med RSP/HSS/numbering plan. Olika datamodell, olika konsistens-utmaningar.
+- *Activation* — fiber-aktivering = NETCONF mot ett fåtal element. Mobile-aktivering = synk mellan flera externa system (RSP, HSS, billing). Olika fel-modes, olika retry-strategier, olika automationsmöjligheter.
+
+Det är därför TM Forums SID-modell separerar *Customer Facing Service* (CFS, det kunden köper) från *Resource Facing Service* (RFS, det som körs i nätet) — för att samma kommersiella mall ska kunna återanvändas över olika tekniska implementationer.
+
+**Pedagogisk experiment-loop:**
+
+1. Välj **Fiber 500 Mbps** i produktväljaren. Notera resource orders, activation tasks och failure modes.
+2. Växla till **Mobile subscription**. Notera vilka resurser som försvinner (fiber port, CPE), vilka som tillkommer (MSISDN, IMSI, SIM/eSIM, subscription profile).
+3. Klicka på <em>Why fiber and mobile decompose differently</em> i learning-panelen för att förstå *varför* de skiljer sig så mycket på OSS-sidan.
+4. Klicka på <em>What stays the same across products?</em> för att se vad som motiverar generiska OSS/BSS-plattformar — samma ramverk, parametriserat per produkt.
 
 ## Hur hänger Order-to-Activate ihop?
 
