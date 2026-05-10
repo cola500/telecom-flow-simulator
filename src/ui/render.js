@@ -14,7 +14,16 @@ const timelineEl = document.getElementById("timeline");
 const insightEl = document.getElementById("insight");
 const improvementEl = document.getElementById("improvement");
 const automationToggle = document.getElementById("automation-toggle");
+const provAutomationToggle = document.getElementById("prov-automation-toggle");
 const backpressureToggle = document.getElementById("backpressure-toggle");
+const decompProvModeEl = document.getElementById("decomp-prov-mode");
+
+function syncProvModeBadge() {
+  if (!decompProvModeEl) return;
+  const automated = !!provAutomationEnabled;
+  decompProvModeEl.textContent = automated ? "Automated activation" : "Manual / semi-automated";
+  decompProvModeEl.classList.toggle("automated", automated);
+}
 
 // --- System map -------------------------------------------------------------
 function renderSystems() {
@@ -194,6 +203,7 @@ function updateParallelUI() {
     bpText = sim.deferredEvents > 0 ? ` · Backpressure pausade ${sim.deferredEvents} spawn${sim.deferredEvents === 1 ? "" : "s"}` : "";
   }
   if (sim.variabilityUsed) bpText += ` · Variation ±${sim.variabilityUsed}%`;
+  bpText += ` · Provisioning ${sim.provAutomationUsed ? "automated" : "manual"}`;
   bpEl.textContent = bpText;
 
   updateQueuePanel();

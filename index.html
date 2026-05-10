@@ -77,6 +77,7 @@
             <div class="decomp-head"><span class="layer-tag oss">OSS</span><strong>Activation Tasks</strong></div>
             <div class="decomp-body">Konfigurera nät, binda kund till tjänst, verifiera end-to-end</div>
             <div class="decomp-link">↳ <code>ProvisioningStarted</code> → <code>ServiceActivated</code></div>
+            <div class="decomp-mode-badge" id="decomp-prov-mode">Manual / semi-automated</div>
           </div>
         </div>
 
@@ -134,6 +135,14 @@
           <span class="text">Automatisera resource reservation</span>
         </label>
         <span class="exp-hint">När på: ResourcesReserved 5.0s → 2.5s. Kör scenariot med och utan toggle för att se diff.</span>
+      </div>
+      <div class="experiment-row">
+        <label class="toggle">
+          <input type="checkbox" id="prov-automation-toggle">
+          <span class="track"><span class="thumb"></span></span>
+          <span class="text">Automated provisioning / activation</span>
+        </label>
+        <span class="exp-hint">När på: ProvisioningStarted 3.0s → 1.8s, ServiceActivated 1.0s → 0.7s, fail-prob × 0.5. Verifieringen finns kvar — automation tar inte bort inventory mismatch eller nätfel.</span>
       </div>
       <div class="experiment-row">
         <span class="exp-label">Resource Inventory workers:</span>

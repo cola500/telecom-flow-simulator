@@ -387,6 +387,24 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   border-radius: 3px;
   font-size: 10px;
 }
+.decomp-mode-badge {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: #fff4cc;
+  color: #8a6500;
+  border: 1px solid #f5b400;
+}
+.decomp-mode-badge.automated {
+  background: #d8f5e3;
+  color: #1f7a47;
+  border-color: #2da66a;
+}
 .decomp-arrow {
   text-align: center;
   color: #8a93a6;

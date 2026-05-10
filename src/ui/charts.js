@@ -108,6 +108,7 @@ function summarizeRun(r) {
   if (r.automation) tags.push("automated");
   if (r.backpressure) tags.push("backpressure");
   if (r.variability) tags.push(`±${r.variability}% var`);
+  if (r.provAutomation) tags.push("prov auto");
   return tags.join(" · ");
 }
 
@@ -149,7 +150,8 @@ function updateRunCompare() {
     curSummary = `${sim.batchSize} orders · ${workersPerSystem.ri}w` +
       (automationEnabled ? " · automated" : "") +
       ((sim.backpressureUsed || backpressureEnabled) ? " · backpressure" : "") +
-      (sim.variabilityUsed ? ` · ±${sim.variabilityUsed}% var` : "");
+      (sim.variabilityUsed ? ` · ±${sim.variabilityUsed}% var` : "") +
+      (sim.provAutomationUsed ? " · prov auto" : "");
     const leads = sim.completedOrders.map(o => o.completedAt - o.createdAt);
     if (leads.length > 0) curLead = leads.reduce((a,b)=>a+b, 0) / leads.length;
     curIncidents = sim.incidents;

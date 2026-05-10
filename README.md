@@ -4,7 +4,7 @@ description: Lokal browser-baserad lärsimulator för en förenklad telekom-stac
 category: learning-tool
 status: in-progress
 last_updated: 2026-05-09
-sections: [Disclaimer, Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
+sections: [Disclaimer, Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
 ---
 
 # OSS/BSS Order-to-Activate Simulator
@@ -335,6 +335,29 @@ Som tumregel:
 Det är därför rätt kapacitetsmål är 60–80% utilization i bottleneck (inte högre), och varför *att slå dollar för dollar i mer load utan att öka kapacitet är ett av de vanligaste sätten att göra ett system instabilt*.
 
 I simulatorn ser du det när du kör 20 orders: Resource Inventory blir kraftigt rödfärgad (load-high) och dess kö växer. Lead time ökar inte med 20× — den ökar mer.
+
+### Provisioning / Activation automation
+
+Det andra automationsläget i simulatorn — toggle **Automated provisioning / activation** — adresserar nästa bottleneck efter Resource Inventory: själva *aktiveringssteget* i nätet.
+
+**Vad gör automatiseringen?**
+
+- `ProvisioningStarted`: 3.0s → 1.8s simtid (~40% snabbare config-push).
+- `ServiceActivated`: 1.0s → 0.7s simtid (verifieringen är *kvar*, bara snabbare).
+- Fail-prob i Provisioning multipliceras med 0.5 (5% → 2.5%, 15% → 7.5%, 30% → 15%).
+
+**Vad lär sig användaren här?**
+
+- *Provisioning* är inte samma som *activation*. Provisioning = att skicka konfig till nätet. Activation = att verifiera att tjänsten faktiskt fungerar end-to-end. Att slå ihop dem ger *partial activation*, en av de dyraste felmoderna.
+- *Reservation* (Resource Inventory) och *activation* (Provisioning) är olika problem. Reservation utan activation ger orphaned resources; activation utan reservation ger race conditions.
+- Automation kortar ledtid och minskar variation — men eliminerar inte inventory mismatch, nätfel eller felaktiga produktregler. Modellen visar detta genom att fail-prob multipliceras, inte nollställs.
+- *Billing trigger* (`BillingStartRequested`) går fortfarande bara efter `ServiceActivated` — automation flyttar inte den ordningen. Att trigga billing på orderstatus eller på config-acceptans (utan verifiering) är ett av de klassiska sätten att fakturera icke-levererade tjänster.
+
+**Pedagogisk experiment-loop:**
+
+1. Reset, lämna prov-automation **AV**, kör 20 orders. Notera avg lead time, incidents, slowest step.
+2. Slå **PÅ** prov-automation, kör 20 orders direkt efter (utan reset, så ghost-trace + run comparison visas).
+3. Jämför korten: lead time bör sjunka, incidents bör sjunka — men inte till noll. Resource Inventory kan fortfarande vara bottleneck (5s reservation > 1.8s + 0.7s prov), vilket är poängen: *att automatisera nedströms från bottlenecken hjälper inte total throughput*. Höj också `Resource Inventory workers` till 2 och kör om — då flyttar bottlenecken och prov-automationen får full effekt.
 
 ### Variation is the enemy of flow
 

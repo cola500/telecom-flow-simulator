@@ -16,6 +16,9 @@ let backpressureEnabled = false;
 
 let variabilityPct = 0;
 
+let provAutomationEnabled = false;
+const PROV_FAIL_MULTIPLIER = 0.5; // automation halverar fail-prob — eliminerar inte, för automation tar inte bort inventory mismatch eller nätfel.
+
 // --- Parallel simulation constants ------------------------------------------
 const TICK_REAL_MS = 50;
 const SIM_PER_TICK = 100;          // 2x speed
@@ -173,6 +176,7 @@ function startParallel(batchSize) {
     deferredEvents: 0,
     backpressureUsed: backpressureEnabled,
     variabilityUsed: variabilityPct,
+    provAutomationUsed: provAutomationEnabled,
     intervalId: null
   };
   for (const sysId of Object.keys(SYSTEMS)) {
@@ -309,9 +313,14 @@ function processSystemQueue(sysId) {
 
 function failProb(sysId, queueLen) {
   if (sysId !== "prov") return 0;
-  if (queueLen >= 3) return FAIL_QUEUE_3;
-  if (queueLen >= 1) return FAIL_QUEUE_1;
-  return FAIL_BASE;
+  let base;
+  if (queueLen >= 3) base = FAIL_QUEUE_3;
+  else if (queueLen >= 1) base = FAIL_QUEUE_1;
+  else base = FAIL_BASE;
+  // Provisioning-automation minskar variation, men inventory mismatch och
+  // nätfel finns kvar — vi multiplicerar bara, eliminerar inte.
+  if (provAutomationEnabled) base *= PROV_FAIL_MULTIPLIER;
+  return base;
 }
 
 function advanceOrder(order) {
@@ -385,6 +394,7 @@ function finalizeParallel() {
     automation: automationEnabled,
     backpressure: sim.backpressureUsed,
     variability: sim.variabilityUsed,
+    provAutomation: sim.provAutomationUsed,
     avgLead,
     incidents: sim.incidents,
     maxQueue: sim.maxQueue,
@@ -406,7 +416,11 @@ function finalizeParallel() {
   let parts = [];
   const bpLabel = sim.backpressureUsed ? `, backpressure <strong>på</strong> (${sim.deferredEvents} pausade spawns)` : "";
   const varLabel = sim.variabilityUsed ? `, variation <strong>±${sim.variabilityUsed}%</strong>` : "";
-  parts.push(`<strong>Batch klar.</strong> ${completed} klara, ${failed} failed, ${sim.incidents} incidents. Resource Inventory: <strong>${workersPerSystem.ri} worker${workersPerSystem.ri > 1 ? "s" : ""}</strong>${bpLabel}${varLabel}.`);
+  const provLabel = `, provisioning <strong>${sim.provAutomationUsed ? "automated" : "manual/semi-auto"}</strong>`;
+  parts.push(`<strong>Batch klar.</strong> ${completed} klara, ${failed} failed, ${sim.incidents} incidents. Resource Inventory: <strong>${workersPerSystem.ri} worker${workersPerSystem.ri > 1 ? "s" : ""}</strong>${bpLabel}${varLabel}${provLabel}.`);
+  if (sim.provAutomationUsed) {
+    parts.push(`<strong>Provisioning automation:</strong> activation-steget gick snabbare och misslyckades mer sällan (fail-prob × ${PROV_FAIL_MULTIPLIER}). Men automatiseringen tar inte bort inventory mismatch eller nätfel — fel kan fortfarande uppstå, och billing triggas fortfarande först efter <code>ServiceActivated</code>.`);
+  }
   parts.push(`Avg lead time: ${fmtMs(avgLead)} · Längsta: ${fmtMs(maxLead)} · 1-order baseline: ${fmtMs(baseline)}.`);
   if (sim.backpressureUsed) {
     parts.push(`<strong>Backpressure-effekt:</strong> Order Management pausades ${sim.deferredEvents} gånger när RI:s kö nådde tröskeln. Lead time för enskilda ordrar minskar (de väntar mindre i RI), men totala batch-tiden kan öka eftersom inflödet saktas ner. Trade-offen är medveten — vi byter <em>orderns kötid</em> mot <em>real-tid till alla klara</em>. Strategin gör mest nytta när nedströms-fel (incidents) är dyrare än uppströms-fördröjning.`);

@@ -5,10 +5,17 @@
 
 renderSystems();
 showLearningEmpty();
+syncProvModeBadge();
 
 // --- Automation toggle -------------------------------------------------------
 automationToggle.addEventListener("change", () => {
   automationEnabled = automationToggle.checked;
+});
+
+// --- Provisioning automation toggle -----------------------------------------
+provAutomationToggle.addEventListener("change", () => {
+  provAutomationEnabled = provAutomationToggle.checked;
+  syncProvModeBadge();
 });
 
 // --- Resource Inventory capacity --------------------------------------------
