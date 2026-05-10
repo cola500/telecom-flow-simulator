@@ -4,6 +4,32 @@
 
 const learningEl = document.getElementById("learning");
 
+// Mini-formatter för PATTERNS-bodies. Texterna är hårdkodade i scenarios.js
+// (ingen user-input → ingen XSS-risk) och använder en liten markdown-dialekt:
+//   - dubbla newlines = nya stycken
+//   - rader som börjar med "- " = bullet list
+//   - **text** = bold, *text* = emphasis
+function formatPatternBody(body) {
+  return body
+    .split(/\n{2,}/)
+    .map(block => {
+      const lines = block.split("\n");
+      if (lines.length > 1 && lines.every(l => l.startsWith("- "))) {
+        const items = lines.map(l => `<li>${formatInline(l.slice(2))}</li>`).join("");
+        return `<ul>${items}</ul>`;
+      }
+      return `<p>${formatInline(block.replace(/\n/g, " "))}</p>`;
+    })
+    .join("");
+}
+
+function formatInline(s) {
+  // Order matters: ** before * to avoid greedy match.
+  return s
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>");
+}
+
 function patternList() {
   return `
     <div class="pattern-list">
@@ -62,7 +88,7 @@ function showLearningPattern(key) {
   learningEl.innerHTML = `
     <a class="back" id="back-link">← Tillbaka</a>
     <h3>${p.title}</h3>
-    <section><p>${p.body}</p></section>
+    <section>${formatPatternBody(p.body)}</section>
     ${patternList()}`;
   wirePatterns();
   document.getElementById("back-link").addEventListener("click", showLearningEmpty);
