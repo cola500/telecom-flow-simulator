@@ -951,6 +951,14 @@ body.mode-parallel .parallel-only { display: block; }
   .order-row .obar { display: none; }
 }
 
+/* Analysis area ("vad hände efter körningen?") -------------------------------
+   Vertikal stack: först system-vy, sen order-detalj. Inte två likvärdiga
+   dashboards bredvid varandra. Panelernas vanliga margin-bottom sköter
+   spacing; .panel:last-child-regeln tar bort margin på sista panelen. */
+.analysis-area {
+  margin-bottom: 16px;
+}
+
 /* Info-icon (kontextuella popover-knappar) ---------------------------------- */
 .info-icon {
   display: inline-flex;
