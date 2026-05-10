@@ -430,7 +430,7 @@ function finalizeParallel() {
   }
   parts.push(`Avg lead time: ${fmtMs(avgLead)} · Längsta: ${fmtMs(maxLead)} · 1-order baseline: ${fmtMs(baseline)}.`);
   if (sim.backpressureUsed) {
-    parts.push(`<strong>Backpressure-effekt:</strong> Order Management pausades ${sim.deferredEvents} gånger när RI:s kö nådde tröskeln. Lead time för enskilda ordrar minskar (de väntar mindre i RI), men totala batch-tiden kan öka eftersom inflödet saktas ner. Trade-offen är medveten — vi byter <em>orderns kötid</em> mot <em>real-tid till alla klara</em>. Strategin gör mest nytta när nedströms-fel (incidents) är dyrare än uppströms-fördröjning.`);
+    parts.push(`<strong>Backpressure-effekt:</strong> Order Management pausades ${sim.deferredEvents} gånger när RI:s kö nådde tröskeln. Lead time för enskilda ordrar minskar (de väntar mindre i RI), men totala batch-tiden kan öka eftersom inflödet saktas ner. Trade-offen är medveten — <em>orderns kötid</em> byts mot <em>real-tid till alla klara</em>. Strategin gör mest nytta när nedströms-fel (incidents) är dyrare än uppströms-fördröjning.`);
   }
 
   if (topQueueSys && topQueueSys.wait > 0) {
@@ -452,6 +452,6 @@ function finalizeParallel() {
   if (sim.incidents > 0) {
     parts.push(`Incidents är inte slumpmässiga — sannolikheten för Provisioning-fel ökade när dess kö växte. Överbelastning skapar mer arbete (varje fail kan generera en retry-order som ökar load ytterligare).`);
   }
-  parts.push(`Klicka på "Queueing theory på 60 sekunder" eller "Resource efficiency vs flow efficiency" i Learning mode för att läsa mer.`);
+  parts.push(`Klicka på "Queueing theory på 60 sekunder" eller "Resource efficiency vs flow efficiency" i learning-panelen till höger för att läsa mer.`);
   insightEl.innerHTML = parts.join("<br><br>");
 }

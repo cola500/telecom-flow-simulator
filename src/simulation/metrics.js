@@ -47,8 +47,8 @@ function finalize(queue, scenarioId, label) {
 
     insightEl.classList.remove("hidden");
     insightEl.innerHTML =
-      `<strong>${detail}</strong> är flödets flaskhals — ${pct}% av total lead time spenderades här (${fmtMs(bottleneck.duration)} av ${fmtMs(total)}). ` +
-      `Handoffs stod för ytterligare ${Math.round((handoffTime/total)*100)}%. Strategy & Enablement: är den långsamma tiden här ` +
+      `<strong>${detail}</strong> är denna körnings långsammaste steg — ${pct}% av total lead time spenderades här (${fmtMs(bottleneck.duration)} av ${fmtMs(total)}). ` +
+      `Handoffs stod för ytterligare ${Math.round((handoffTime/total)*100)}%. Bra fråga att fundera på: är den långsamma tiden här ` +
       `processrelaterad (manuella godkännanden, batchjobb), datarelaterad (inventory accuracy), eller integrationsrelaterad (synkrona API-kedjor)?`;
   }
 
@@ -111,16 +111,16 @@ function showImprovement(slots, label) {
 
   let insight;
   if (delta > 0) {
-    insight = `Automation reduced total lead time by ${pct.toFixed(1)}%.`;
+    insight = `Automation kortade total lead time med ${pct.toFixed(1)} %.`;
     if (moved) {
-      insight += ` Bottleneck moved from ${mDetail} to ${aDetail} — det är nästa förbättringsmål.`;
+      insight += ` Långsammaste steget flyttade från ${mDetail} till ${aDetail} — det är nästa förbättringsmål.`;
     } else if (m.bottleneck) {
-      insight += ` Bottleneck är fortfarande ${mDetail} — automation räckte inte för att flytta begränsningen.`;
+      insight += ` Långsammaste steget är fortfarande ${mDetail} — automation räckte inte för att flytta begränsningen.`;
     }
   } else if (delta === 0) {
     insight = `Ingen mätbar effekt — automation påverkade inte lead time i detta scenario (möjligen för att flödet inte når reservation-steget).`;
   } else {
-    insight = `Regression: lead time ökade med ${Math.abs(pct).toFixed(1)}%. Något i automation gjorde flödet långsammare.`;
+    insight = `Lead time ökade med ${Math.abs(pct).toFixed(1)} % — något i automation gjorde flödet långsammare i denna körning.`;
   }
   document.getElementById("imp-insight").textContent = insight;
 
