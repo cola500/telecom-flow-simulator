@@ -6,7 +6,7 @@ const SYSTEMS = {
     role: "Vem är kunden?",
     what: "Håller kundinformation, kontrakt, kontaktytor och säljinteraktioner.",
     why: "Utan en sann kundvy kan order, fakturering och support inte kopplas till rätt person eller företag.",
-    problems: "Dubbletter i kunddatabasen, manuell kunduppdatering, sales-order-data tappar bort sig på vägen till order management. Strategy & Enablement-frågor: Hur unik är vår kund-id-modell mellan B2B/B2C? Hur sköts master data?"
+    problems: "Dubbletter i kunddatabasen, manuell kunduppdatering, sales-order-data tappar bort sig på vägen till order management. Bra frågor att ställa: Hur unik är kund-id-modellen mellan B2B/B2C? Hur sköts master data?"
   },
   om: {
     layer: "bss",
@@ -14,7 +14,7 @@ const SYSTEMS = {
     role: "Tar emot och driver ordern",
     what: "Validerar, dekomponerar och styr ordern genom hela livscykeln tills tjänsten är aktiv.",
     why: "Översätter en kommersiell beställning till tekniska steg som OSS-domänerna kan utföra. Är 'taktpinnen' i order-to-activate.",
-    problems: "Manuella handpåläggningar, otydlig dekomponering till tekniska delordrar, brist på end-to-end status. Strategy & Enablement-frågor: Hur hög är truly-touchless-andelen? Var fastnar ordrar mest?"
+    problems: "Manuella handpåläggningar, otydlig dekomponering till tekniska delordrar, brist på end-to-end status. Bra frågor att ställa: Hur hög är truly-touchless-andelen (orderpassering helt utan handpåläggning)? Var fastnar ordrar mest?"
   },
   billing: {
     layer: "bss",
@@ -22,7 +22,7 @@ const SYSTEMS = {
     role: "Skickar trigger till charging",
     what: "Tar emot signal när tjänsten faktiskt aktiverats och skickar trigger till charging-systemet — som i sin tur producerar fakturan. Det här systemet *triggar* alltså fakturering, det fakturerar inte själv.",
     why: "Om triggern kommer för sent eller fel tappas intäkt; kommer den för tidigt fakturerar vi för icke-levererat.",
-    problems: "Drift mellan teknisk aktivering och billing-event, saknade trigger-event vid fel-handling. Strategy & Enablement-frågor: Hur lång är ledtiden mellan ServiceActivated och BillingStartRequested? Triggar vi på verifierad leverans eller bara på orderstatus?"
+    problems: "Drift mellan teknisk aktivering och billing-event, saknade trigger-event vid fel-handling. Bra frågor att ställa: Hur lång är ledtiden mellan `ServiceActivated` och `BillingStartRequested`? Triggar vi på verifierad leverans eller bara på orderstatus?"
   },
   si: {
     layer: "oss",
@@ -30,7 +30,7 @@ const SYSTEMS = {
     role: "Vad har kunden?",
     what: "Speglar tjänster som är beställda, planerade eller aktiva — den logiska tjänstenivån.",
     why: "Behövs för feasibility-check, ändringar, felhantering och för att förstå vad fakturering ska gälla.",
-    problems: "Service inventory är ur synk med verkligheten ('inventory drift'). Strategy & Enablement-frågor: Hur ofta avstäms inventory mot nätet? Vem äger kvaliteten?"
+    problems: "Service inventory är ur synk med verkligheten ('inventory drift'). Bra frågor att ställa: Hur ofta avstäms inventory mot nätet? Vem äger kvaliteten?"
   },
   ri: {
     layer: "oss",
@@ -38,7 +38,7 @@ const SYSTEMS = {
     role: "Vilka resurser finns?",
     what: "Håller fysiska och logiska resurser: portar, IP-adresser, fiberpar, slots, licenser.",
     why: "Order management måste reservera rätt resurser innan provisioning kan starta. Är källan när vi gör feasibility.",
-    problems: "Stale data, dubbelreserverade portar, gap mellan inventory och faktiskt nät. Strategy & Enablement-frågor: Vad är vår inventory accuracy? Hur snabbt syns nya resurser efter rollout?"
+    problems: "Stale data, dubbelreserverade portar, gap mellan inventory och faktiskt nät. Bra frågor att ställa: Vad är inventory accuracy? Hur snabbt syns nya resurser efter rollout?"
   },
   prov: {
     layer: "oss",
@@ -46,7 +46,7 @@ const SYSTEMS = {
     role: "Konfigurerar nätet",
     what: "Översätter ordern till konkreta konfigurationskommandon mot nätelement (router, OLT, core, IMS).",
     why: "Det är här tjänsten faktiskt 'tänds'. Misslyckas detta är ordern inte värd något.",
-    problems: "Felaktiga templates, rollback-svårigheter, leverantörsspecifika adapters. Strategy & Enablement-frågor: Hur många provisioning-mallar har vi och hur testas de? Är vi declarative (intent-based) eller imperativa?"
+    problems: "Felaktiga templates, rollback-svårigheter, leverantörsspecifika adapters. Bra frågor att ställa: Hur många provisioning-mallar finns och hur testas de? Är aktiveringsmodellen declarative (intent-based) eller imperativ?"
   },
   assur: {
     layer: "oss",
@@ -54,7 +54,7 @@ const SYSTEMS = {
     role: "Övervakar och åtgärdar",
     what: "Övervakar tjänster post-aktivering, korrelerar larm, skapar incidenter, eskalerar.",
     why: "En tjänst kan vara aktiverad men inte fungera. Assurance verifierar leverans och fångar driftstörningar.",
-    problems: "Larmstormar utan korrelation, oklart vilka larm som motsvarar kundupplevd störning. Strategy & Enablement-frågor: Hur många incidenter är 'self-detected' vs. anmälda av kund?"
+    problems: "Larmstormar utan korrelation, oklart vilka larm som motsvarar kundupplevd störning. Bra frågor att ställa: Hur stor andel av incidenterna är 'self-detected' kontra anmälda av kund?"
   }
 };
 
@@ -229,7 +229,7 @@ const PATTERNS = {
   activation: {
     group: "concepts",
     title: "What is Activation?",
-    body: "*Activation* är de faktiska tekniska aktiviteterna som gör tjänsten levande i nätet — det som översätter resource orders till konfiguration mot nätelementen. Konkreta steg: skicka NETCONF/CLI-kommandon till routers, OLT, IMS-core, SBC; uppdatera VLAN och QoS; binda kund-id till tjänsteinstans; uppdatera service inventory till state 'active'; verifiera end-to-end att tjänsten faktiskt fungerar.\n\nHär ligger en av de viktigaste skillnaderna i mogen telekom: *provisioning* (config push) och *activation* (verifierad funktion) är ofta separerade. En config kan accepteras av elementen men tjänsten fungerar ändå inte — det är *partial activation*, en av de dyraste felmoderna. En mogen aktiveringsprocess har post-activation tester innan billing triggas.\n\nStrategy & Enablement: är vår aktiveringsmodell *intent-based* (vi beskriver önskad sluttillstånd, systemet räknar ut config) eller *imperativ* (vi skickar specifika kommandon)? Det första är mer modernt men kräver bättre data."
+    body: "*Activation* är de faktiska tekniska aktiviteterna som gör tjänsten levande i nätet — det som översätter resource orders till konfiguration mot nätelementen. Konkreta steg: skicka NETCONF/CLI-kommandon till routers, OLT, IMS-core, SBC; uppdatera VLAN och QoS; binda kund-id till tjänsteinstans; uppdatera service inventory till state 'active'; verifiera end-to-end att tjänsten faktiskt fungerar.\n\nHär ligger en av de viktigaste skillnaderna i mogen telekom: *provisioning* (config push) och *activation* (verifierad funktion) är ofta separerade. En config kan accepteras av elementen men tjänsten fungerar ändå inte — det är *partial activation*, en av de dyraste felmoderna. En mogen aktiveringsprocess har post-activation tester innan billing triggas.\n\nEn bra fråga att fundera på: är aktiveringsmodellen *intent-based* (man beskriver önskat sluttillstånd, systemet räknar ut config) eller *imperativ* (man skickar specifika kommandon)? Det första är mer modernt men kräver bättre data."
   },
   decomposition_why: {
     group: "concepts",
@@ -385,6 +385,6 @@ function failProvFor(productId) {
     fail: true,
     duration: 3000,
     domain: "Nätelementet (eller dess EMS/NMS-adapter) avvisar konfigurationen — fel template, syntax-mismatch, eller ett element som inte svarar.",
-    teach: "Lär dig: utan rollback hamnar vi i 'partial activation' — config finns delvis i nätet, service inventory tror det är aktivt, men kunden får inte tjänsten. Strategy & Enablement: hur ser vår rollback-strategi ut, och verifierar vi tjänsten post-activation?"
+    teach: "Lär dig: utan rollback hamnar man i 'partial activation' — config finns delvis i nätet, service inventory tror det är aktivt, men kunden får inte tjänsten. Bra frågor att ställa: hur ser rollback-strategin ut, och verifieras tjänsten post-activation?"
   }];
 }
