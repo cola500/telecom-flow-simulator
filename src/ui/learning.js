@@ -48,6 +48,7 @@ function patternList() {
       <button class="pattern-link" data-pattern="resource_order">What is a Resource Order?</button>
       <button class="pattern-link" data-pattern="activation">What is Activation?</button>
       <button class="pattern-link" data-pattern="provisioning_activation">Provisioning, activation, and the limits of automation</button>
+      <button class="pattern-link" data-pattern="provisioning_capacity">Provisioning capacity vs automation</button>
       <button class="pattern-link" data-pattern="decomposition_why">Why decomposition matters</button>
     </div>
     <div class="pattern-list">

@@ -391,6 +391,7 @@ function finalizeParallel() {
   lastParallelRun = {
     batchSize: sim.batchSize,
     workers: workersPerSystem.ri,
+    workersProv: workersPerSystem.prov,
     automation: automationEnabled,
     backpressure: sim.backpressureUsed,
     variability: sim.variabilityUsed,
@@ -417,7 +418,7 @@ function finalizeParallel() {
   const bpLabel = sim.backpressureUsed ? `, backpressure <strong>på</strong> (${sim.deferredEvents} pausade spawns)` : "";
   const varLabel = sim.variabilityUsed ? `, variation <strong>±${sim.variabilityUsed}%</strong>` : "";
   const provLabel = `, provisioning <strong>${sim.provAutomationUsed ? "automated" : "manual/semi-auto"}</strong>`;
-  parts.push(`<strong>Batch klar.</strong> ${completed} klara, ${failed} failed, ${sim.incidents} incidents. Resource Inventory: <strong>${workersPerSystem.ri} worker${workersPerSystem.ri > 1 ? "s" : ""}</strong>${bpLabel}${varLabel}${provLabel}.`);
+  parts.push(`<strong>Batch klar.</strong> ${completed} klara, ${failed} failed, ${sim.incidents} incidents. Capacity: RI <strong>${workersPerSystem.ri}w</strong> · Prov <strong>${workersPerSystem.prov}w</strong>${bpLabel}${varLabel}${provLabel}.`);
   if (sim.provAutomationUsed) {
     parts.push(`<strong>Provisioning automation:</strong> activation-steget gick snabbare och misslyckades mer sällan (fail-prob × ${PROV_FAIL_MULTIPLIER}). Men automatiseringen tar inte bort inventory mismatch eller nätfel — fel kan fortfarande uppstå, och billing triggas fortfarande först efter <code>ServiceActivated</code>.`);
   }
@@ -429,11 +430,14 @@ function finalizeParallel() {
   if (topQueueSys && topQueueSys.wait > 0) {
     const sysName = SYSTEMS[topQueueSys.sysId].name;
     const detail = BOTTLENECK_DETAIL[topQueueSys.sysId] || sysName;
-    parts.push(`Mest kötid totalt: <strong>${detail}</strong> (${fmtMs(topQueueSys.wait)} ackumulerat över ${topQueueSys.count} kötillfällen).`);
-    if (topQueueSys.sysId !== "ri" && workersPerSystem.ri > 1) {
-      parts.push(`<strong>Bottlenecken har flyttat.</strong> Med ${workersPerSystem.ri} workers i Resource Inventory är ${detail} nu det steg där mest tid spenderas i kö. Det är Theory of Constraints i praktiken: när du förbättrar bottlenecken försvinner den inte — den hittar en ny plats i flödet. Nästa fråga: är det värt att höja kapaciteten i ${detail} också, eller har vi nått en punkt där handoffs och fel dominerar?`);
-    } else if (topQueueSys.sysId === "ri" && workersPerSystem.ri === 1) {
-      parts.push(`${detail} är fortfarande bottlenecken med 1 worker. Prova att höja capacity till 2 eller 3 och kör om — du ser hur bottlenecken flyttar till Provisioning.`);
+    const riW = workersPerSystem.ri, provW = workersPerSystem.prov;
+    parts.push(`Mest kötid totalt: <strong>${detail}</strong> (${fmtMs(topQueueSys.wait)} ackumulerat över ${topQueueSys.count} kötillfällen). Capacity i denna körning: RI=${riW}, Prov=${provW}.`);
+    if (topQueueSys.sysId === "ri" && riW === 1) {
+      parts.push(`${detail} är bottlenecken med 1 worker. Prova att höja Resource Inventory capacity till 2 eller 3 och kör om — du ser hur bottlenecken flyttar nedströms.`);
+    } else if (topQueueSys.sysId === "prov" && provW === 1) {
+      parts.push(`${detail} är bottlenecken med 1 activation worker. Prova att höja Provisioning capacity till 2 eller 3 — eller slå på Automated provisioning. <em>Capacity</em> påverkar parallellism, <em>automation</em> påverkar duration och felrisk.`);
+    } else if (topQueueSys.sysId !== "ri" && riW > 1) {
+      parts.push(`<strong>Bottlenecken har flyttat.</strong> Med ${riW} workers i Resource Inventory är ${detail} nu det steg där mest tid spenderas i kö. Det är Theory of Constraints i praktiken: när du förbättrar bottlenecken försvinner den inte — den hittar en ny plats i flödet.`);
     }
   }
   if (stretchPct > 50) {

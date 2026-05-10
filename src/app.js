@@ -28,6 +28,16 @@ document.querySelectorAll("#capacity-buttons .cap-btn").forEach(btn => {
   });
 });
 
+// --- Provisioning / Activation capacity -------------------------------------
+document.querySelectorAll("#prov-capacity-buttons .cap-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (parallelSim && parallelSim.intervalId) return; // freeze during run
+    document.querySelectorAll("#prov-capacity-buttons .cap-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    workersPerSystem.prov = parseInt(btn.dataset.workers, 10);
+  });
+});
+
 // --- Variability slider -----------------------------------------------------
 document.querySelectorAll("#variability-buttons .cap-btn").forEach(btn => {
   btn.addEventListener("click", () => {

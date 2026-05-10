@@ -104,7 +104,8 @@ function summarizeRun(r) {
   if (!r) return "—";
   const tags = [];
   tags.push(`${r.batchSize} orders`);
-  tags.push(`${r.workers}w`);
+  // Visa båda capacities så Prov-kapacitet syns i jämförelsen
+  tags.push(`RI:${r.workers}w/Prov:${r.workersProv ?? 1}w`);
   if (r.automation) tags.push("automated");
   if (r.backpressure) tags.push("backpressure");
   if (r.variability) tags.push(`±${r.variability}% var`);
@@ -147,7 +148,7 @@ function updateRunCompare() {
 
   let curSummary, curLead = null, curIncidents = null, curMaxQueue = null, curTput = null;
   if (sim) {
-    curSummary = `${sim.batchSize} orders · ${workersPerSystem.ri}w` +
+    curSummary = `${sim.batchSize} orders · RI:${workersPerSystem.ri}w/Prov:${workersPerSystem.prov}w` +
       (automationEnabled ? " · automated" : "") +
       ((sim.backpressureUsed || backpressureEnabled) ? " · backpressure" : "") +
       (sim.variabilityUsed ? ` · ±${sim.variabilityUsed}% var` : "") +

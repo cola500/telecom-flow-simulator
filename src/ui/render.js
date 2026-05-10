@@ -291,6 +291,9 @@ function updateParallelUI() {
   }
   if (sim.variabilityUsed) bpText += ` · Variation ±${sim.variabilityUsed}%`;
   bpText += ` · Provisioning ${sim.provAutomationUsed ? "automated" : "manual"}`;
+  // Visa capacity när någon är höjd från default 1 — annars håller vi raden ren
+  const ri = workersPerSystem.ri, prov = workersPerSystem.prov;
+  if (ri !== 1 || prov !== 1) bpText += ` · Cap RI:${ri} Prov:${prov}`;
   bpEl.textContent = bpText;
 
   updateQueuePanel();

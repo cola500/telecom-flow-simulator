@@ -4,7 +4,7 @@ description: Lokal browser-baserad lärsimulator för en förenklad telekom-stac
 category: learning-tool
 status: in-progress
 last_updated: 2026-05-09
-sections: [Disclaimer, Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
+sections: [Disclaimer, Vad simulatorn lär ut, Kör den, Kodstruktur, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Strategy & Enablement, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Activation capacity, Variation is the enemy of flow, Felscenarier, Begränsningar, Lägga till nya pedagogiska slices, Nästa slice]
 ---
 
 # OSS/BSS Order-to-Activate Simulator
@@ -381,6 +381,29 @@ Det andra automationsläget i simulatorn — toggle **Automated provisioning / a
 1. Reset, lämna prov-automation **AV**, kör 20 orders. Notera avg lead time, incidents, slowest step.
 2. Slå **PÅ** prov-automation, kör 20 orders direkt efter (utan reset, så ghost-trace + run comparison visas).
 3. Jämför korten: lead time bör sjunka, incidents bör sjunka — men inte till noll. Resource Inventory kan fortfarande vara bottleneck (5s reservation > 1.8s + 0.7s prov), vilket är poängen: *att automatisera nedströms från bottlenecken hjälper inte total throughput*. Höj också `Resource Inventory workers` till 2 och kör om — då flyttar bottlenecken och prov-automationen får full effekt.
+
+### Activation capacity
+
+Utöver `Resource Inventory workers` finns nu också `Provisioning / Activation capacity` (1–3). Två separata kapacitetsknappar, två oberoende ratt:
+
+- **Resource Inventory workers** styr hur många reservationer som kan göras parallellt (5s-steget).
+- **Provisioning / Activation capacity** styr hur många activation-jobb som kan köras parallellt (1.8–3.0s-steget).
+
+I simulatorn är "workers" en förenklad mental modell för parallell teknisk aktiveringskapacitet — *inte* personer. I en verklig OSS-stack kan kapacitet motsvara fler adapter-instanser, parallell orchestration, eller bättre köhantering.
+
+**Capacity vs automation** — två olika förbättringar:
+
+- *Capacity* påverkar **parallellism** (hur många orders i flykt samtidigt).
+- *Automation* påverkar **duration och felrisk per order** (hur snabbt och pålitligt en enskild aktivering går).
+
+Att höja capacity flyttar bottleneck men löser inte inventory mismatch eller nätfel. Att slå på automation snabbar upp men tar inte bort partial activation-risken. Och oavsett vilket: `BillingStartRequested` får fortfarande bara triggas efter `ServiceActivated`.
+
+**Experiment att prova:**
+
+1. RI=3, Prov=1 → Provisioning blir bottleneck.
+2. RI=1, Prov=3 → Resource Inventory är fortfarande bottleneck (5s reservation dominerar).
+3. Båda=3 → mindre kö, bottleneck flyttar nedströms eller försvinner.
+4. Båda=3 + Automated provisioning → kortare lead time + färre incidents, men inte noll.
 
 ### Variation is the enemy of flow
 

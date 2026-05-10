@@ -79,7 +79,16 @@
           <button class="cap-btn" data-workers="2">2</button>
           <button class="cap-btn" data-workers="3">3</button>
         </div>
-        <span class="exp-hint">Hur många reservationer som kan göras parallellt. Höj kapaciteten — se var bottlenecken hamnar härnäst.</span>
+        <span class="exp-hint">Hur många reservationer som kan göras parallellt. Representerar parallell kapacitet — inte nödvändigtvis personer.</span>
+      </div>
+      <div class="experiment-row">
+        <span class="exp-label">Provisioning / Activation capacity:</span>
+        <div class="capacity-buttons" id="prov-capacity-buttons">
+          <button class="cap-btn active" data-workers="1">1</button>
+          <button class="cap-btn" data-workers="2">2</button>
+          <button class="cap-btn" data-workers="3">3</button>
+        </div>
+        <span class="exp-hint">Hur många activation-jobb som kan köras parallellt. Representerar adapterinstanser, parallel orchestration eller bättre köhantering — <em>inte</em> personer. Capacity och automation är separata begrepp.</span>
       </div>
       <div class="experiment-row">
         <span class="exp-label">Variation i betjäningstid:</span>
