@@ -33,10 +33,10 @@ function formatInline(s) {
 // Mappar pattern-grupp → vilket mode den hör till + display-rubrik. Vid
 // mode-byte filtreras patternList så bara grupper för aktivt mode visas.
 const GROUP_LABEL = {
-  concepts: "OSS/BSS concepts",
-  product: "Product-specific concepts",
-  process: "Process patterns",
-  automation: "Provisioning & activation"
+  concepts: "OSS/BSS-begrepp",
+  product: "Produktspecifika begrepp",
+  process: "Processmönster",
+  automation: "Provisionering och aktivering"
 };
 const GROUP_MODE = {
   concepts: "learn",

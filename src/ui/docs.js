@@ -9,7 +9,7 @@
 
 const DOCS = [
   { id: "readme",  title: "README",        path: "README.md" },
-  { id: "realism", title: "Realism Notes", path: "REALISM_NOTES.md" }
+  { id: "realism", title: "Realism och förenklingar", path: "REALISM_NOTES.md" }
 ];
 
 const docsCache = {};

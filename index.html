@@ -32,7 +32,7 @@
     </div>
 
     <div class="panel learn-only" id="decomp-panel">
-      <h2>Order Decomposition</h2>
+      <h2>Ordernedbrytning (Order decomposition)</h2>
       <p class="decomp-intro">
         En kundorder är inte ett enda arbetsobjekt — den dekomponeras till en service order, flera resource orders och en uppsättning aktiveringsuppgifter. <em>Olika produkter dekomponeras olika.</em> Klicka på en nivå för att läsa mer i learning-panelen.
       </p>
@@ -113,7 +113,7 @@
         <button id="btn-batch-20" class="primary optimize-only">20 orders</button>
         <button id="btn-fail-resource" class="danger">Simulera ResourceUnavailable</button>
         <button id="btn-fail-prov" class="danger">Simulera ActivationRejected</button>
-        <button id="btn-reset">Reset</button>
+        <button id="btn-reset">Återställ</button>
       </div>
       <div class="status-row">
         <strong>Order:</strong>
@@ -125,19 +125,19 @@
     </div>
 
     <div class="panel singel-only">
-      <h2>Timeline</h2>
+      <h2>Tidslinje</h2>
       <div id="timeline" class="timeline">
         <div class="timeline-empty">Kör en simulering för att se var tid spenderas. Streckmönstrade staplar = handoffs mellan domäner.</div>
       </div>
     </div>
 
     <div class="panel parallel-only optimize-only">
-      <h2>Köer (single-proc systems)</h2>
+      <h2>Köer (system med begränsad kapacitet)</h2>
       <div class="queue-panel" id="queue-panel"></div>
     </div>
 
     <div class="panel parallel-only optimize-only">
-      <h2>Throughput &amp; system pressure over time</h2>
+      <h2>Throughput och systembelastning över tid</h2>
       <div id="chart-wrap">
         <div class="chart-empty" id="chart-empty">Kör en batch — grafen ritar sig själv under tiden.</div>
         <svg id="chart" class="chart" viewBox="0 0 600 160" preserveAspectRatio="none" style="display:none;"></svg>
@@ -149,14 +149,14 @@
         <span class="leg leg-incidents"><span class="dot"></span>Incidents <span class="val" id="leg-incidents-val">0</span></span>
       </div>
       <div class="chart-runs hidden" id="chart-runs">
-        <span class="run-prev">Previous run</span>
-        <span class="run-cur">Current run</span>
+        <span class="run-prev">Föregående körning</span>
+        <span class="run-cur">Nuvarande körning</span>
       </div>
       <div class="run-compare hidden" id="run-compare">
-        <h4>Jämförelse · Previous vs Current</h4>
+        <h4>Jämförelse · Föregående vs Nuvarande</h4>
         <div class="cmp-settings">
-          <div><span class="cmp-tag prev">Previous</span><span id="cmp-prev-summary">—</span></div>
-          <div><span class="cmp-tag cur">Current</span><span id="cmp-cur-summary">—</span></div>
+          <div><span class="cmp-tag prev">Föregående</span><span id="cmp-prev-summary">—</span></div>
+          <div><span class="cmp-tag cur">Nuvarande</span><span id="cmp-cur-summary">—</span></div>
         </div>
         <div class="cmp-grid">
           <div class="cmp-cell">
@@ -191,7 +191,7 @@
     <div class="analysis-area">
 
     <div class="panel parallel-only optimize-only">
-      <h2>System metrics (batch run)<button type="button" class="info-icon" data-info="system_metrics" aria-label="Förklara System metrics" aria-expanded="false">i</button></h2>
+      <h2>Systemmått (batch-körning)<button type="button" class="info-icon" data-info="system_metrics" aria-label="Förklara Systemmått" aria-expanded="false">i</button></h2>
       <div class="dashboard">
         <div class="dash-card"><div class="label">Active<button type="button" class="info-icon" data-info="active" aria-label="Förklara Active orders" aria-expanded="false">i</button></div><div class="value" id="d-active">0</div></div>
         <div class="dash-card"><div class="label">Queue depth<button type="button" class="info-icon" data-info="queued" aria-label="Förklara Queue depth" aria-expanded="false">i</button></div><div class="value" id="d-queued">0</div></div>
@@ -204,7 +204,7 @@
     </div>
 
     <div class="panel">
-      <h2>Order metrics<button type="button" class="info-icon" data-info="order_metrics" aria-label="Förklara Order metrics" aria-expanded="false">i</button></h2>
+      <h2>Ordermått<button type="button" class="info-icon" data-info="order_metrics" aria-label="Förklara Ordermått" aria-expanded="false">i</button></h2>
       <div class="metrics" id="metrics">
         <div class="metric"><div class="label">Total lead time<button type="button" class="info-icon" data-info="lead_time" aria-label="Förklara Lead time" aria-expanded="false">i</button></div><div class="value" id="m-total">—</div><div class="sub">från order till klart</div></div>
         <div class="metric"><div class="label">Tid i handoffs<button type="button" class="info-icon" data-info="handoff_time" aria-label="Förklara Tid i handoffs" aria-expanded="false">i</button></div><div class="value" id="m-handoff">—</div><div class="sub" id="m-handoff-sub">väntetid mellan system</div></div>
@@ -216,8 +216,8 @@
       <div class="improvement hidden" id="improvement">
         <h4>Förbättringsexperiment — <span id="imp-scenario"></span></h4>
         <div class="imp-grid">
-          <div class="imp-cell"><div class="imp-label">Manual</div><div class="imp-value" id="imp-manual">—</div></div>
-          <div class="imp-cell"><div class="imp-label">Automated</div><div class="imp-value" id="imp-auto">—</div></div>
+          <div class="imp-cell"><div class="imp-label">Manuellt</div><div class="imp-value" id="imp-manual">—</div></div>
+          <div class="imp-cell"><div class="imp-label">Automatiserat</div><div class="imp-value" id="imp-auto">—</div></div>
           <div class="imp-cell"><div class="imp-label">Förbättring</div><div class="imp-value imp-big" id="imp-delta">—</div></div>
         </div>
         <div class="imp-bottleneck" id="imp-bottleneck"></div>
@@ -228,11 +228,11 @@
     </div><!-- /.analysis-area -->
 
     <div class="panel docs-only" id="docs-panel">
-      <h2>Documentation</h2>
+      <h2>Dokumentation</h2>
       <p class="docs-disclaimer">This documentation describes the simulator as a learning model, not a canonical telecom architecture.</p>
       <div class="docs-tabs">
         <button class="docs-tab active" data-doc="readme">README</button>
-        <button class="docs-tab" data-doc="realism">Realism Notes</button>
+        <button class="docs-tab" data-doc="realism">Realism och förenklingar</button>
       </div>
       <div class="docs-layout">
         <aside class="docs-toc" id="docs-toc" aria-label="Table of contents"></aside>
@@ -245,7 +245,7 @@
 
   <aside>
     <div class="panel" style="margin-bottom:0;">
-      <h2>Learning mode</h2>
+      <h2>Begrepp och mönster</h2>
       <div id="learning"></div>
     </div>
   </aside>
