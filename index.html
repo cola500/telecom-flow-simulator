@@ -31,6 +31,151 @@
       <div class="row oss" id="row-oss"></div>
     </div>
 
+    <div class="panel learn-only" id="theory-journey">
+      <h2>Från kundorder till aktiverad tjänst</h2>
+      <p class="journey-intro">
+        En guidad resa i åtta steg som visar hur en kund som beställer en tjänst — fiber eller mobil — får den levererad och fakturerad. Modellen är medvetet förenklad och lyfter fram <em>varför</em> OSS/BSS-stacken är uppdelad som den är.
+      </p>
+
+      <ol class="journey-list">
+
+        <li class="journey-step">
+          <span class="step-num">1</span>
+          <div class="step-card">
+            <div class="step-head">
+              <h3>Kunden beställer något</h3>
+              <span class="layer-chip bss">BSS</span>
+            </div>
+            <p>En kund — privatperson eller företag — väljer en produkt ur produktkatalogen. Kanske <em>Fiber 500 Mbps</em> hem, eller ett mobilabonnemang. Ordern fångas i CRM och Order Management och kopplas till kund, produkt och avtal.</p>
+            <p class="step-why"><strong>Varför spelar det roll?</strong> Kunden köper en <em>kommersiell produkt</em>, inte teknik. Det är därför BSS äger kundrelationen — språket som sälj, support och fakturering pratar är ett annat än näten pratar.</p>
+            <div class="step-related">
+              <span>Centrala begrepp:</span>
+              <button type="button" class="info-icon" data-info="customer_order" aria-label="Förklara Customer Order" aria-expanded="false">i</button><span>Customer Order</span>
+              <button type="button" class="info-icon" data-info="crm" aria-label="Förklara CRM" aria-expanded="false">i</button><span>CRM</span>
+              <button type="button" class="info-icon" data-info="om" aria-label="Förklara Order Management" aria-expanded="false">i</button><span>Order Management</span>
+            </div>
+          </div>
+        </li>
+
+        <li class="journey-step">
+          <span class="step-num">2</span>
+          <div class="step-card">
+            <div class="step-head">
+              <h3>Produkten översätts till en tjänst</h3>
+              <span class="layer-chip bridge">BSS ↔ OSS</span>
+            </div>
+            <p>En produkt är inte samma sak som den tekniska tjänsten den ger. <em>Fiber 500 Mbps</em> är ett kommersiellt löfte; den underliggande tjänsten är en internetaccess med viss bandbredd. Customer Order bryts ner till en Service Order — den första bryggan mellan BSS och OSS.</p>
+            <p class="step-why"><strong>Varför spelar det roll?</strong> Samma kommersiella produkt kan ofta levereras med olika tekniker (fiber, koppar, radiolänk). Att skilja produkt från tjänst gör det möjligt att byta teknik utan att röra säljkatalogen.</p>
+            <div class="step-related">
+              <span>Centrala begrepp:</span>
+              <button type="button" class="info-icon" data-info="service_order" aria-label="Förklara Service Order" aria-expanded="false">i</button><span>Service Order</span>
+              <button type="button" class="info-icon" data-info="si" aria-label="Förklara Service Inventory" aria-expanded="false">i</button><span>Service Inventory</span>
+            </div>
+          </div>
+        </li>
+
+        <li class="journey-step">
+          <span class="step-num">3</span>
+          <div class="step-card">
+            <div class="step-head">
+              <h3>Tjänsten bryts ner till resurser</h3>
+              <span class="layer-chip oss">OSS</span>
+            </div>
+            <p>Service Order delas upp i en uppsättning resource orders — de fysiska och logiska byggstenarna. För fiber: en accesspunkt, en port på en switch, en CPE/router, en konfigurationsprofil. För mobil: ett MSISDN-nummer, en SIM eller eSIM, ett IMSI och en subscription profile.</p>
+            <p class="step-why"><strong>Varför spelar det roll?</strong> Här syns det tydligt att olika produkter dekomponeras helt olika på OSS-sidan, även när BSS-flödet ser likadant ut. Det är ett av skälen till att OSS behöver byggas produktagnostiskt och parametriseras via produktkatalogen.</p>
+            <div class="step-related">
+              <span>Centrala begrepp:</span>
+              <button type="button" class="info-icon" data-info="resource_order" aria-label="Förklara Resource Order" aria-expanded="false">i</button><span>Resource Order</span>
+              <button type="button" class="info-icon" data-info="msisdn" aria-label="Förklara MSISDN" aria-expanded="false">i</button><span>MSISDN</span>
+              <button type="button" class="info-icon" data-info="sim_esim" aria-label="Förklara SIM/eSIM" aria-expanded="false">i</button><span>SIM/eSIM</span>
+            </div>
+          </div>
+        </li>
+
+        <li class="journey-step">
+          <span class="step-num">4</span>
+          <div class="step-card">
+            <div class="step-head">
+              <h3>Inventory kontrolleras</h3>
+              <span class="layer-chip oss">OSS</span>
+            </div>
+            <p>Innan resurserna kan tilldelas behöver vi veta vad som faktiskt finns och vad som är ledigt. Service Inventory håller reda på vilka tjänster som existerar. Resource Inventory håller reda på fysiska och logiska resurser — porttillgång, IP-pooler, nummerplaner, SIM-pooler.</p>
+            <p class="step-why"><strong>Varför spelar det roll?</strong> Inventory-data är sällan 100 % korrekt mot verkligheten. <em>Inventory drift</em> — när data säger att en port är ledig fast den används — är en av branschens vanligaste rotorsaker till fall-out och manuella ärenden.</p>
+            <div class="step-related">
+              <span>Centrala begrepp:</span>
+              <button type="button" class="info-icon" data-info="si" aria-label="Förklara Service Inventory" aria-expanded="false">i</button><span>Service Inventory</span>
+              <button type="button" class="info-icon" data-info="ri" aria-label="Förklara Resource Inventory" aria-expanded="false">i</button><span>Resource Inventory</span>
+            </div>
+          </div>
+        </li>
+
+        <li class="journey-step">
+          <span class="step-num">5</span>
+          <div class="step-card">
+            <div class="step-head">
+              <h3>Provisionering och aktivering sker</h3>
+              <span class="layer-chip oss">OSS</span>
+            </div>
+            <p>När resurserna är reserverade konfigurerar provisioning-systemet de tekniska elementen — OLT:er och switchar för fiber, RSP/HSS för mobil. Reservation är att markera en resurs som upptagen; activation är att faktiskt sätta tjänsten i drift.</p>
+            <p class="step-why"><strong>Varför spelar det roll?</strong> Skillnaden mellan reservation och activation är inte semantik utan timing. Reservera tidigt, aktivera när allt annat är på plats — annars riskerar man <em>partial activation</em> där konfigen finns delvis i nätet och tjänsten är halvtänd.</p>
+            <div class="step-related">
+              <span>Centrala begrepp:</span>
+              <button type="button" class="info-icon" data-info="prov" aria-label="Förklara Provisioning" aria-expanded="false">i</button><span>Provisioning / Activation</span>
+            </div>
+          </div>
+        </li>
+
+        <li class="journey-step">
+          <span class="step-num">6</span>
+          <div class="step-card">
+            <div class="step-head">
+              <h3>Tjänsten verifieras</h3>
+              <span class="layer-chip oss">OSS</span>
+            </div>
+            <p>"Aktiverad" borde inte bara betyda att ett kommando skickades. Det borde betyda att tjänsten faktiskt fungerar — att en testkommunikation går igenom, att bandbredden mäts, att SIM:et registreras mot HSS.</p>
+            <p class="step-why"><strong>Varför spelar det roll?</strong> Utan verifiering döljer flödet sina egna fel. Kunden ringer in, supporten ser "service active" i systemen, assurance ser inga element-larm — och felet kan ta dagar att lokalisera.</p>
+            <div class="step-related">
+              <span>Centrala begrepp:</span>
+              <button type="button" class="info-icon" data-info="prov" aria-label="Förklara Verifiering" aria-expanded="false">i</button><span>Verifiering</span>
+            </div>
+          </div>
+        </li>
+
+        <li class="journey-step">
+          <span class="step-num">7</span>
+          <div class="step-card">
+            <div class="step-head">
+              <h3>Fakturering kan starta</h3>
+              <span class="layer-chip bridge">BSS ↔ OSS</span>
+            </div>
+            <p>När tjänsten är verifierat aktiv skickas <em>BillingStartRequested</em> tillbaka till BSS. Billing-systemet börjar räkna debitering från det datumet. Triggern är densamma oavsett om produkten är fiber, mobil eller något annat.</p>
+            <p class="step-why"><strong>Varför spelar det roll?</strong> Triggas billing för tidigt — på orderstatus istället för verifierad leverans — får kunder fakturor för tjänster som inte fungerar. Det är dyrt i credits, support och förtroende.</p>
+            <div class="step-related">
+              <span>Centrala begrepp:</span>
+              <button type="button" class="info-icon" data-info="billing" aria-label="Förklara Billing" aria-expanded="false">i</button><span>Billing</span>
+            </div>
+          </div>
+        </li>
+
+        <li class="journey-step">
+          <span class="step-num">8</span>
+          <div class="step-card">
+            <div class="step-head">
+              <h3>Assurance tar vid om något går fel</h3>
+              <span class="layer-chip bridge">OSS ↔ BSS</span>
+            </div>
+            <p>Efter aktivering byter ansvar från fulfillment till assurance. Assurance bevakar tjänster och resurser med larm, korrelerar fel mot kundpåverkan och driver felavhjälpning. Customer Service möter samma incidenter från kundens sida.</p>
+            <p class="step-why"><strong>Varför spelar det roll?</strong> Fel som slipper genom fulfillment skapar ofta arbete i assurance flera dagar senare. <em>Partial activation</em> från steg 5–6 dyker upp som "tjänsten fungerar inte" från kund. Bra fulfillment minskar belastning i assurance.</p>
+            <div class="step-related">
+              <span>Centrala begrepp:</span>
+              <button type="button" class="info-icon" data-info="assur" aria-label="Förklara Assurance" aria-expanded="false">i</button><span>Assurance</span>
+            </div>
+          </div>
+        </li>
+
+      </ol>
+    </div>
+
     <div class="panel learn-only" id="decomp-panel">
       <h2>Ordernedbrytning (Order decomposition)</h2>
       <p class="decomp-intro">

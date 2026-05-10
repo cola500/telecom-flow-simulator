@@ -28,7 +28,7 @@ Du behöver inte ha jobbat med telekom tidigare. Allt förklaras stegvis i appen
 
 Simulatorn har tre lägen, valbara via tabs i headern:
 
-- **Learn OSS/BSS** (default) — fokus på domänen. Systemkartan, Order Decomposition (fiber/mobile), eventflödet vid en enskild order, Timeline, och Learning-panelen är synliga. Optimeringskontroller och belastnings-paneler är dolda.
+- **Learn OSS/BSS** (default) — fokus på domänen. Systemkartan, en guidad teoriresa från kundorder till aktiverad tjänst, Order Decomposition (fiber/mobile), eventflödet vid en enskild order, Timeline, och Learning-panelen är synliga. Optimeringskontroller och belastnings-paneler är dolda.
 - **Optimize Process** — fokus på experiment och metrics. Belastnings-dashboard, kö-panel, throughput-chart, run comparison och alla optimeringskontroller (capacity, automation, variability, backpressure, batch-knappar) är synliga. Order Decomposition är dold.
 - **Documentation** — läser `README.md` och `REALISM_NOTES.md` direkt i appen via en minimal markdown-renderare. Båda dokumenten kan fortfarande läsas i repot (du gör det just nu); Documentation-vyn är ett bekvämt sätt att slå upp koncept utan att lämna appen.
 
