@@ -23,12 +23,20 @@
 
 <div class="layout">
   <main>
-    <div class="panel">
-      <h2>Systemkarta</h2>
-      <div class="layer-label">BSS — Business Support Systems<button type="button" class="info-icon" data-info="bss" aria-label="Förklara BSS" aria-expanded="false">i</button></div>
-      <div class="row bss" id="row-bss"></div>
-      <div class="layer-label">OSS — Operational Support Systems<button type="button" class="info-icon" data-info="oss" aria-label="Förklara OSS" aria-expanded="false">i</button></div>
-      <div class="row oss" id="row-oss"></div>
+    <div class="panel concept-flow" aria-label="Order-to-Activate på en rad">
+      <ol class="flow-row">
+        <li class="flow-step">Kund</li>
+        <li class="flow-arrow" aria-hidden="true">→</li>
+        <li class="flow-step">Order</li>
+        <li class="flow-arrow" aria-hidden="true">→</li>
+        <li class="flow-step">Tjänst</li>
+        <li class="flow-arrow" aria-hidden="true">→</li>
+        <li class="flow-step">Resurser</li>
+        <li class="flow-arrow" aria-hidden="true">→</li>
+        <li class="flow-step">Aktivering</li>
+        <li class="flow-arrow" aria-hidden="true">→</li>
+        <li class="flow-step">Fakturering</li>
+      </ol>
     </div>
 
     <details class="panel learn-only collapsible" id="theory-journey" open>
@@ -204,8 +212,12 @@
       <div id="decomp-example-host"></div>
     </details>
 
-    <div class="panel">
-      <h2>Simulering</h2>
+    <details class="panel collapsible" id="sim-panel" open>
+      <summary>
+        <h2>Simulering</h2>
+        <span class="summary-hint">Knappar för att köra ordrar</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
       <div class="experiment-row optimize-only">
         <label class="toggle">
           <input type="checkbox" id="automation-toggle">
@@ -273,24 +285,55 @@
         <span id="order-id">—</span>
         <span class="status-pill" id="status-pill">Idle</span>
       </div>
-      <h2>Eventlogg</h2>
-      <div class="log" id="log"></div>
-    </div>
+    </details>
 
-    <div class="panel singel-only">
-      <h2>Tidslinje</h2>
+    <details class="panel collapsible" id="sysmap-panel" open>
+      <summary>
+        <h2>Systemkarta</h2>
+        <span class="summary-hint">Domäner i BSS och OSS</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
+      <div class="layer-label">BSS — Business Support Systems<button type="button" class="info-icon" data-info="bss" aria-label="Förklara BSS" aria-expanded="false">i</button></div>
+      <div class="row bss" id="row-bss"></div>
+      <div class="layer-label">OSS — Operational Support Systems<button type="button" class="info-icon" data-info="oss" aria-label="Förklara OSS" aria-expanded="false">i</button></div>
+      <div class="row oss" id="row-oss"></div>
+    </details>
+
+    <details class="panel collapsible" id="eventlog-panel" open>
+      <summary>
+        <h2>Eventlogg</h2>
+        <span class="summary-hint">Händelser från senaste körning</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
+      <div class="log" id="log"></div>
+    </details>
+
+    <details class="panel singel-only collapsible" id="timeline-panel" open>
+      <summary>
+        <h2>Tidslinje</h2>
+        <span class="summary-hint">Visualisering av eventflödet</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
       <div id="timeline" class="timeline">
         <div class="timeline-empty">Kör en simulering för att se var tid spenderas. Streckmönstrade staplar = handoffs mellan domäner.</div>
       </div>
-    </div>
+    </details>
 
-    <div class="panel parallel-only optimize-only">
-      <h2>Köer (system med begränsad kapacitet)</h2>
+    <details class="panel parallel-only optimize-only collapsible" id="queues-panel" open>
+      <summary>
+        <h2>Köer (system med begränsad kapacitet)</h2>
+        <span class="summary-hint">Aktuella köer per system</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
       <div class="queue-panel" id="queue-panel"></div>
-    </div>
+    </details>
 
-    <div class="panel parallel-only optimize-only">
-      <h2>Throughput och systembelastning över tid</h2>
+    <details class="panel parallel-only optimize-only collapsible" id="throughput-panel" open>
+      <summary>
+        <h2>Throughput och systembelastning över tid</h2>
+        <span class="summary-hint">Genomströmning och kö över batch-körningen</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
       <div id="chart-wrap">
         <div class="chart-empty" id="chart-empty">Kör en batch — grafen ritar sig själv under tiden.</div>
         <svg id="chart" class="chart" viewBox="0 0 600 160" preserveAspectRatio="none" style="display:none;"></svg>
@@ -334,17 +377,25 @@
           </div>
         </div>
       </div>
-    </div>
+    </details>
 
-    <div class="panel parallel-only optimize-only">
-      <h2>Ordrar</h2>
+    <details class="panel parallel-only optimize-only collapsible" id="orders-panel" open>
+      <summary>
+        <h2>Ordrar</h2>
+        <span class="summary-hint">Orderlista för batch-körningen</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
       <div class="order-list" id="order-list"></div>
-    </div>
+    </details>
 
     <div class="analysis-area">
 
-    <div class="panel parallel-only optimize-only">
-      <h2>Systemmått (batch-körning)<button type="button" class="info-icon" data-info="system_metrics" aria-label="Förklara Systemmått" aria-expanded="false">i</button></h2>
+    <details class="panel parallel-only optimize-only collapsible" id="sysmetrics-panel" open>
+      <summary>
+        <h2>Systemmått (batch-körning)<button type="button" class="info-icon" data-info="system_metrics" aria-label="Förklara Systemmått" aria-expanded="false">i</button></h2>
+        <span class="summary-hint">Mätetal för hela batch-körningen</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
       <div class="dashboard">
         <div class="dash-card"><div class="label">Active<button type="button" class="info-icon" data-info="active" aria-label="Förklara Active orders" aria-expanded="false">i</button></div><div class="value" id="d-active">0</div></div>
         <div class="dash-card"><div class="label">Queue depth<button type="button" class="info-icon" data-info="queued" aria-label="Förklara Queue depth" aria-expanded="false">i</button></div><div class="value" id="d-queued">0</div></div>
@@ -354,10 +405,14 @@
         <div class="dash-card" id="d-incidents-card"><div class="label">Batch incidents<button type="button" class="info-icon" data-info="incidents" aria-label="Förklara Batch incidents" aria-expanded="false">i</button></div><div class="value" id="d-incidents">0</div></div>
       </div>
       <div class="dash-busy">Busiest system: <strong id="d-busiest">—</strong><span id="d-bp-status"></span></div>
-    </div>
+    </details>
 
-    <div class="panel">
-      <h2>Ordermått<button type="button" class="info-icon" data-info="order_metrics" aria-label="Förklara Ordermått" aria-expanded="false">i</button></h2>
+    <details class="panel collapsible" id="ordermetrics-panel" open>
+      <summary>
+        <h2>Ordermått<button type="button" class="info-icon" data-info="order_metrics" aria-label="Förklara Ordermått" aria-expanded="false">i</button></h2>
+        <span class="summary-hint">Mätetal och insikter för enskild order</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
       <div class="metrics" id="metrics">
         <div class="metric"><div class="label">Total lead time<button type="button" class="info-icon" data-info="lead_time" aria-label="Förklara Lead time" aria-expanded="false">i</button></div><div class="value" id="m-total">—</div><div class="sub">från order till klart</div></div>
         <div class="metric"><div class="label">Tid i handoffs<button type="button" class="info-icon" data-info="handoff_time" aria-label="Förklara Tid i handoffs" aria-expanded="false">i</button></div><div class="value" id="m-handoff">—</div><div class="sub" id="m-handoff-sub">väntetid mellan system</div></div>
@@ -376,7 +431,7 @@
         <div class="imp-bottleneck" id="imp-bottleneck"></div>
         <p class="imp-insight" id="imp-insight"></p>
       </div>
-    </div>
+    </details>
 
     </div><!-- /.analysis-area -->
 
