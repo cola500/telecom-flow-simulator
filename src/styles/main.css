@@ -1027,6 +1027,34 @@ body.mode-parallel .parallel-only { display: block; }
   .info-popover { width: 260px; }
 }
 
+/* App footer (attribution) ---------------------------------------------------
+   Diskret rad längst ner med skapar-namn + LinkedIn. Låg visuell tyngd:
+   muted text, prickad understrykning på länken som blir blå vid hover. */
+.app-footer {
+  text-align: center;
+  padding: 20px 16px 28px;
+  margin-top: 16px;
+  border-top: 1px solid #e2e6ee;
+  color: #8a93a6;
+  font-size: 12px;
+  background: transparent;
+}
+.app-footer strong {
+  color: #5b6478;
+  font-weight: 500;
+}
+.app-footer a {
+  color: #8a93a6;
+  text-decoration: none;
+  border-bottom: 1px dotted #cdd3df;
+  padding-bottom: 1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.app-footer a:hover {
+  color: #4a6cf7;
+  border-bottom-color: #4a6cf7;
+}
+
 /* Mode-tabs show/hide-regler — placerade sist så de vinner kaskaden mot
    body.mode-parallel .parallel-only (samma specificity, sista vinner).
    Konsekvens: i Learn-mode döljs alla optimize-only-paneler även om en
