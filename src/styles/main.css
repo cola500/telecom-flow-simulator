@@ -2022,6 +2022,82 @@ body.mode-docs .layout { grid-template-columns: 1fr; }
   }
 }
 
+/* Page navigation helpers — back-to-top FAB and expand/collapse-all utility
+   row. Diskret stil som passar projektets vit-på-mörkblå header och vita
+   panel-content. */
+.panel-controls {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.panel-controls .util-btn {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.25);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.panel-controls .util-btn:hover {
+  background: rgba(255,255,255,0.18);
+}
+.panel-controls .util-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 1px;
+}
+
+.back-to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #d8dde8;
+  background: #fff;
+  color: #1c2330;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s, border-color 0.15s;
+  z-index: 80;
+  font-family: inherit;
+}
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.back-to-top:hover {
+  background: #f3f6ff;
+  border-color: #4a6cf7;
+  color: #2c3da3;
+}
+.back-to-top:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .back-to-top {
+    right: 12px;
+    bottom: 76px; /* över ev. system controls + footer på smala viewports */
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+  }
+}
+
 /* Mobile readability — increase font-size and line-height for text-heavy
    surfaces so 11–12 px utility text becomes comfortable on small screens.
    Desktop is unaffected. Touch targets for primary buttons are bumped to

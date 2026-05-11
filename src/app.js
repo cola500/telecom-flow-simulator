@@ -111,3 +111,30 @@ document.querySelectorAll("details.collapsible[id]").forEach(d => {
     catch (e) { /* ignore */ }
   });
 });
+
+// --- Page navigation helpers ------------------------------------------------
+// Back-to-top: floating button som dyker upp efter att användaren scrollat
+// förbi ~400 px. Expand/Collapse all: togglar alla details.collapsible[id]
+// samtidigt (bra när långa sektioner gör sidan oöverblickbar).
+const backToTopBtn = document.getElementById("back-to-top");
+if (backToTopBtn) {
+  let ticking = false;
+  window.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      backToTopBtn.classList.toggle("visible", window.scrollY > 400);
+      ticking = false;
+    });
+  }, { passive: true });
+  backToTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
+document.getElementById("btn-expand-all")?.addEventListener("click", () => {
+  document.querySelectorAll("details.collapsible[id]").forEach(d => d.setAttribute("open", ""));
+});
+document.getElementById("btn-collapse-all")?.addEventListener("click", () => {
+  document.querySelectorAll("details.collapsible[id]").forEach(d => d.removeAttribute("open"));
+});
