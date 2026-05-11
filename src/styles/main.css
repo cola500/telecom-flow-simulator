@@ -2021,3 +2021,85 @@ body.mode-docs .layout { grid-template-columns: 1fr; }
     background: #fafbfd;
   }
 }
+
+/* Mobile readability — increase font-size and line-height for text-heavy
+   surfaces so 11–12 px utility text becomes comfortable on small screens.
+   Desktop is unaffected. Touch targets for primary buttons are bumped to
+   the 40 px minimum. */
+@media (max-width: 640px) {
+  /* Learning panel (right-hand aside content) */
+  #learning section p,
+  #learning section ul li { font-size: 14px; line-height: 1.6; }
+  #learning section h4 { font-size: 12px; }
+  #learning .empty { font-size: 14px; line-height: 1.6; }
+
+  /* Reflection cards */
+  .reflection-intro { font-size: 13px; line-height: 1.6; }
+  .reflection-q { font-size: 14px; line-height: 1.5; }
+  .reflection-a { font-size: 13px; line-height: 1.6; padding: 10px 12px; }
+  .reflection-toggle { font-size: 12px; padding: 6px 12px; min-height: 32px; }
+
+  /* Operational impact cards */
+  .impact-card .impact-label { font-size: 11px; }
+  .impact-card .impact-value { font-size: 20px; }
+  .impact-card .impact-sub { font-size: 12px; line-height: 1.5; }
+  .impact-card .impact-why { font-size: 12px; line-height: 1.5; }
+  .impact-intro { font-size: 13px; line-height: 1.6; }
+
+  /* Theory journey cards */
+  .journey-intro { font-size: 14px; line-height: 1.6; }
+  .step-card p { font-size: 14px; line-height: 1.6; }
+  .step-related { font-size: 12px; }
+
+  /* Fulfillment vs Assurance panel */
+  #fulfillment-assurance .journey-intro { font-size: 14px; line-height: 1.6; }
+  #fulfillment-assurance .fa-flow-caption { font-size: 13px; line-height: 1.55; }
+  #fulfillment-assurance .fa-example,
+  #fulfillment-assurance .fa-links { font-size: 14px; line-height: 1.65; }
+  #fulfillment-assurance .fa-takeaway { font-size: 13px; line-height: 1.55; }
+  #fulfillment-assurance .fa-compare th,
+  #fulfillment-assurance .fa-compare td { font-size: 12px; line-height: 1.55; padding: 8px; }
+
+  /* Event log (timeline events) */
+  .event .tech { font-size: 13px; }
+  .event .domain { font-size: 12px; line-height: 1.45; }
+  .event .timing { font-size: 11px; }
+
+  /* Insights and improvement panel */
+  .insight { font-size: 13px; line-height: 1.6; }
+  .improvement .imp-insight { font-size: 13px; line-height: 1.55; }
+
+  /* Search dropdown */
+  .search-result-title { font-size: 14px; line-height: 1.4; }
+  .search-result-snippet { font-size: 13px; line-height: 1.55; }
+  .search-empty { font-size: 14px; padding: 18px 12px; }
+  .search-count { font-size: 11px; }
+
+  /* Documentation body — extra läsbarhet, känsla av artikel */
+  .docs-content { line-height: 1.7; }
+  .docs-content p { font-size: 15px; line-height: 1.7; }
+  .docs-content li { font-size: 15px; line-height: 1.65; }
+  .docs-content h1 { font-size: 22px; }
+  .docs-content h2 { font-size: 18px; }
+  .docs-content h3 { font-size: 16px; }
+  .docs-toc a { padding: 8px 10px; min-height: 36px; display: flex; align-items: center; }
+  .docs-toc .toc-l3 a { padding-left: 26px; font-size: 13px; }
+
+  /* Concept flow row chips */
+  .flow-row .flow-step { font-size: 13px; padding: 5px 12px; }
+
+  /* Order decomposition descriptions */
+  .decomp-node { font-size: 13px; }
+  .decomp-body { font-size: 12px; line-height: 1.5; }
+  .decomp-link { font-size: 11px; }
+
+  /* Touch targets — primary action buttons should hit ~40 px */
+  .controls button,
+  .cap-btn,
+  .docs-tab { min-height: 40px; padding: 8px 12px; }
+
+  /* Slightly tighter panel padding so the extra text size doesn't push
+     content off-screen. Net effect: more readable text, same total panel area. */
+  .panel { padding: 14px; }
+  details.collapsible[open] > summary { margin-bottom: 14px; }
+}
