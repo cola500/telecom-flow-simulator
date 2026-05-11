@@ -80,6 +80,9 @@ function finalize(queue, scenarioId, label) {
     supportLoad: failed.length > 0 ? 1 : 0
   });
 
+  // Reflection-frågor byts baserat på vilket scenario som senast körts.
+  if (typeof updateReflectionFor === "function") updateReflectionFor(scenarioId || "happy");
+
   if (scenarioId) {
     const variant = automationEnabled ? "automated" : "manual";
     runHistory[scenarioId][variant] = {

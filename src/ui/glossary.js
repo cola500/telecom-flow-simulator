@@ -205,6 +205,11 @@ const GLOSSARY = {
     body: "Uppskattat antal kundinteraktioner som körningen genererar — frågor, klagomål, eskaleringar. Härlett från failed orders och SLA-late orders enligt en grov pedagogisk modell.",
     why: "Customer Service är ofta första som upptäcker att något i fulfillment fail:at — kunden ringer 'tjänsten fungerar inte' fast systemen säger 'aktiv'. Varje samtal är 5–15 minuter agent-tid plus efterföljande utredning. Hög fall-out i fulfillment översätts direkt till bemanningskostnader i en annan del av organisationen."
   },
+  reflection_questions: {
+    title: "Reflektion",
+    body: "Korta frågor som visas efter en körning. Frågorna byts baserat på vad du senast simulerat (happy path, fail-scenario, eller batch) och varje fråga har en kort hint som förklarar vad metricsen och händelserna betyder. Det är inte ett quiz med rätt eller fel — det är en pedagogisk prompt.",
+    why: "Inspirerat av experiential learning: vi lär oss djupare genom att formulera en hypotes innan vi får förklaringen, och genom att reflektera över vad vi just sett. Frågorna är frivilliga, lokala (ingen profil, inga poäng) och tänker som en facilitator skulle: 'vad såg du? vad förvånade dig? vad skulle du testa härnäst?'"
+  },
 
   // --- Dashboard / Metrics
   active: {

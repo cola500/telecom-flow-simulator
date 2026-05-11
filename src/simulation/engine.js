@@ -470,4 +470,6 @@ function finalizeParallel() {
     delayedBilling: failed,
     supportLoad: failed + Math.floor(slaAtRiskBatch / 4)
   });
+
+  if (typeof updateReflectionFor === "function") updateReflectionFor("batch");
 }
