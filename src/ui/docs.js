@@ -8,8 +8,11 @@
 // orörda (våra docs är trusted källor).
 
 const DOCS = [
-  { id: "readme",  title: "README",        path: "README.md" },
-  { id: "realism", title: "Realism och förenklingar", path: "REALISM_NOTES.md" }
+  { id: "readme",     title: "README",                    path: "README.md" },
+  { id: "telecom",    title: "Telecom-domänen",           path: "docs/telecom-theory.md" },
+  { id: "flow",       title: "Flow och systems thinking", path: "docs/flow-systems-thinking.md" },
+  { id: "pedagogy",   title: "Pedagogisk filosofi",       path: "docs/learning-philosophy.md" },
+  { id: "realism",    title: "Realism och förenklingar",  path: "REALISM_NOTES.md" }
 ];
 
 const docsCache = {};
