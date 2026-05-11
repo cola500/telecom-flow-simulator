@@ -3,8 +3,8 @@ title: Realism Notes
 description: Vad i simulatorn speglar verklig telekom-OSS/BSS, vad är pedagogiskt förenklat, vilka antaganden gör modellen, och vilka namn-/textändringar som skulle öka trovärdigheten utan att göra appen komplex.
 category: learning-tool
 status: draft
-last_updated: 2026-05-10
-sections: [Syfte, Vad är realistiskt, Vad är pedagogiskt förenklat, Explicita antaganden, Implicita antaganden, Product-specific flow realism, Föreslagna namn- och textändringar, Nästa rimliga steg, Vad vi medvetet undviker]
+last_updated: 2026-05-11
+sections: [Syfte, Vad är realistiskt, Vad är pedagogiskt förenklat, Explicita antaganden, Implicita antaganden, Product-specific flow realism, Order decomposition trade-offs, Föreslagna namn- och textändringar, Nästa rimliga steg, Vad vi medvetet undviker]
 ---
 
 # Realism Notes
@@ -154,6 +154,79 @@ Om du arbetar mot en specifik operatör eller plattform, förvänta dig:
 - *Olika kapacitetsbegränsningar* — vad som är "begränsat" varierar (vissa har manual approvals som bottleneck, andra har integration adapters, andra har fysisk dispatch).
 
 Modellen är en *pedagogisk simulator för att förklara mönstret*, inte en arkitekturreferens. Använd den för att introducera koncept, inte för att designa eller felsöka en faktisk plattform.
+
+## Order decomposition trade-offs
+
+Ordernedbrytning-panelen i Learn-mode har produkt-specifika happy paths och produkt-specifika resource-patterns för både fiber och mobile. Den här sektionen klargör vad modellen *avsiktligt fördjupar* och vad den lika avsiktligt utelämnar — så användaren inte bygger en falsk känsla av att decomposition-trädet är en operatörsreferens.
+
+### Avsikten med decomposition-vyn
+
+Fiber 500 Mbps och Mobile subscription är valda som *pedagogiska kontraster*, inte som en komplett produktkatalog. Målet är att visa att:
+
+- Customer Order-mönstret är produktagnostiskt — kund → kontrakt → leverans-promise gäller båda.
+- Service Order-nivån parametriseras per tjänsttyp men håller samma form.
+- *Resource Order-nivån är där produkterna divergerar dramatiskt* — fiber bryts ner till fysiska/geografiska resurser, mobile bryts ner till logiska/synkroniserade identiteter.
+- Activation- och verification-stegen följer samma processstruktur men har helt olika tekniskt innehåll.
+
+Det är just det här mönstret — *"same shape, different content"* — som motiverar varför mogna OSS/BSS-plattformar byggs som en gemensam orchestration-engine + en Product Catalog som parametriserar per produktfamilj. Det är också den enda strukturella poäng decomposition-vyn försöker göra. Allt annat är illustrativt.
+
+### Vad vi fördjupar
+
+För båda produkter finns produktspecifika learning patterns (klick på en resurs i decomp-trädet öppnar den i learning-panelen):
+
+**Fiber:**
+
+- *Fiber access* (port + fiberpar) — fysiskt begränsad resurs, adress-driven feasibility, inventory drift som vanligaste fel-källa.
+- *Network profile* (VLAN, QoS, IP) — konfigurationspaketet som styr vad kunden faktiskt får av sin access; där "service active men kunden får ingen IP" uppstår.
+- *CPE / Router* — hårdvara hos kund, pre-staging vs zero-touch provisioning, var kunden själv har inflytande på felsökning.
+
+**Mobile:**
+
+- *MSISDN* — publikt telefonnummer, E.164-struktur, nummerportabilitet, regulator-tilldelade nummerserier.
+- *SIM / eSIM* — fysisk vs logisk profile-leverans, GSMA RSP-flöden, profile mismatch som vanlig fel-källa.
+- *IMSI* — intern abonnentidentitet i HSS/UDM, MCC+MNC+MSIN-struktur, MSISDN ↔ IMSI-mappning.
+
+Patternsen är formulerade i samma stil för båda produkter — *vad är det, varför är det centralt, vanlig fel-källa* — för att decomposition-djupet ska kännas konsekvent oavsett vilken produkt användaren utforskar.
+
+### Vad vi *inte* går djupt in på
+
+Avsiktligt utelämnade trots att de är viktiga i verklig drift:
+
+- **Full produktkataloglogik** — produkt-attribut, kompatibilitetsregler, prissättningskedjor, kombinationsorders (fiber + TV + telefoni i samma kontrakt). Skulle dubbla domain-content utan att lägga till lärande på flödet.
+- **TM Forum Open API-payloads** — TMF622 (Product Order), TMF641 (Service Order), TMF634 (Service Catalog), TMF638/639 (Service/Resource Inventory), TMF640 (Service Activation). Vi använder TMF-konventioner som inspiration, men inga konkreta payload-scheman.
+- **Exakt orchestration mellan Customer Order, Service Order och Resource Order** — vem som dispatchar, vem som äger state, hur compensation/rollback hanteras mellan nivåer, hur saga-pattern eller workflow-engines implementeras i praktiken.
+- **Full network topology** — vilka OLT-/edge-router-modeller som finns, hur backhaul kapacitetsplaneras, vilka mobile-kärnnodsroller (MME, AMF, SMF, UPF) som är involverade vid aktivering.
+- **Detaljerad OSS-vendor-arkitektur** — Ericsson OSS, Amdocs, Netcracker, Salesforce Communications Cloud, MATRIXX, Blue Planet m.fl. har olika modeller och vi tar inte ställning till någon av dem.
+- **Installation och field service** — fälttekniker-scheduling, dispatch optimization, on-site test, kund-handover-protokoll, no-show-hantering.
+- **Number portability** — MNP-processen mellan operatörer, donor/recipient-flöden, regulator-rapportering, timing windows, error-recovery vid avbruten portering.
+- **Roaming och HLR/HSS/UDM-detaljer** — roaming-avtal, IPX-anslutningar, steering of roaming, lawful intercept, fraud detection i roaming-flöden.
+- **Capacity planning i full skala** — backhaul-planering, peering-strategier, geo-rebalansering av fiber-noder, mobile capacity expansion mot prognoser.
+- **Billing rating och charging** — real-time charging system (OCS), CDR-pipeline, mediation, rating engines, prorating, discounting, dispute-flöden.
+- **Regulatoriska krav och operatörsspecifika processer** — KYC, GDPR-samtyckesflöden, lagrings- och rapporteringsdirektiv, fraud screening, sanctions screening.
+
+Var och en av dessa skulle förtjäna ett eget lärverktyg. Att inkludera dem skulle göra simulatorn ohanterligt bred utan att förbättra *flödesförståelsen* — som är dess kärnvärde.
+
+### Källa och realism-hållning
+
+Simulatorn bygger på *generella OSS/BSS-begrepp och rimliga branschmönster* från publik kunskap och industristandard:
+
+- TM Forum SID/eTOM för domänstruktur och flödesfaser.
+- 3GPP-standarder för mobile-koncept (MSISDN, IMSI, HSS/UDM).
+- GSMA-specifikationer för eSIM (RSP, profile push).
+- ITU-T E.164 för nummerstruktur.
+
+Exakta steg, namn, ordning, durations och failure rates är *pedagogiska förenklingar* — inte uppmätta från en faktisk operatör. Modellen är medvetet kalibrerad för att vara *trovärdig nog att undervisa med*, inte *exakt nog att designa med*.
+
+Om innehållet i simulatorn skulle användas professionellt i en faktisk telekommiljö bör det valideras mot:
+
+- Operatörens interna processdokumentation.
+- Den faktiska systemarkitekturen som körs i miljön.
+- Den aktiva produktkatalogen och dess regler.
+- Den faktiska inventory-modellen och dess accuracy-mätningar.
+- Befintliga provisioning- och activation-flöden inklusive automation-grad.
+- Subject matter experts från order management, fulfillment, OSS-arkitektur och nätoperation.
+
+Tills dess är simulatorn ett *lärverktyg för att introducera mönstret* — inte en arkitekturreferens, inte en beslutsbas för en specifik miljö, och inte en validerad återgivning av någon konkret operatörs flöden.
 
 ## Föreslagna namn- och textändringar
 

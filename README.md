@@ -3,8 +3,8 @@ title: OSS/BSS Order-to-Activate Simulator
 description: Lokal browser-baserad lärsimulator för en förenklad telekom-stack — visar order-to-activate-flödet, lead time, handoffs, bottlenecks och förbättringsfrågor.
 category: learning-tool
 status: in-progress
-last_updated: 2026-05-10
-sections: [Disclaimer, Three modes Learn OSS/BSS Optimize Process Documentation, Vad simulatorn lär ut, Saker att prova, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Same operating pattern different technical flow, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Frågor att ställa per domän, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Activation capacity, Variation is the enemy of flow, Felscenarier, Begränsningar, For developers]
+last_updated: 2026-05-11
+sections: [Disclaimer, Three modes Learn OSS/BSS Optimize Process Documentation, Vad simulatorn lär ut, Saker att prova, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Same operating pattern different technical flow, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Frågor att ställa per domän, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Activation capacity, Variation is the enemy of flow, Felscenarier, Begrepp och förkortningar, Begränsningar, For developers]
 ---
 
 # OSS/BSS Order-to-Activate Simulator
@@ -22,7 +22,7 @@ Simulatorn hjälper dig att se:
 Du behöver inte ha jobbat med telekom tidigare. Allt förklaras stegvis i appens *Learn OSS/BSS*-läge och i denna dokumentation.
 
 > **This is a simplified learning model, not a full telecom architecture.**
-> Domänerna och flödesfaserna är inspirerade av industristandard (TM Forum SID/eTOM), men eventnamn, durations, fail-typer och flöde är kraftigt förenklade för att vara begripliga på 5 minuter. Se [`REALISM_NOTES.md`](REALISM_NOTES.md) för en kalibrering: vad är realistiskt, vad är pedagogiskt förenklat, och vilka antaganden modellen gör.
+> Domänerna och flödesfaserna är inspirerade av industristandard (TM Forum SID/eTOM), men eventnamn, durations, fail-typer och flöde är kraftigt förenklade för att vara begripliga på 5 minuter. Se [`REALISM_NOTES.md`](REALISM_NOTES.md) för en kalibrering: vad är realistiskt, vad är pedagogiskt förenklat, och vilka antaganden modellen gör. För telekomförkortningar (BSS, OSS, IMSI, MSISDN, OLT, RSP, HSS, …) finns en samlad referens i sektionen [Begrepp och förkortningar](#begrepp-och-förkortningar).
 
 ## Three modes: Learn OSS/BSS, Optimize Process, Documentation
 
@@ -511,6 +511,55 @@ Simulatorn modellerar två klassiska fel:
 - **ProvisioningFailed** — adaptern eller nätelementet avvisar konfigurationen. Risken är *partial activation* — tjänsten är halvtänd och billing kanske ändå triggar.
 
 Båda dessa fel pekar på samma underliggande tema: *datakvalitet* och *integration mellan domäner*.
+
+## Begrepp och förkortningar
+
+Central referens för telekom- och OSS/BSS-termer som dyker upp i appen. Använd den för att slå upp en förkortning du stöter på, eller som komplement till de djupare förklaringarna i learning-panelen.
+
+Konvention i resten av dokumentationen: en förkortning förklaras vid första användning i ett dokument (*"IMSI (International Mobile Subscriber Identity)"*), och används som kort form därefter (*"IMSI"*).
+
+- **3GPP** (3rd Generation Partnership Project) — Standardiseringsorgan som tar fram mobilnätsstandarder från 3G till 5G/6G. Källa för IMSI-, HSS- och UDM-koncept i simulatorn.
+- **Activation** — Det tekniska steget där en konfigurerad tjänst görs faktiskt levande i nätet, ofta i flera sub-steg. I simulatorn separerat från *Provisioning* (config push) och *Verification* (test att det fungerar).
+- **Assurance** — Domänen som bevakar tjänster i drift: larm, incidenter, felavhjälpning. Hör hemma på OSS-sidan och är där fall-out från fulfillment landar som arbete.
+- **Backpressure** — Mekanism där uppströms-system tillfälligt pausar inflödet när nedströms-kö passerar en tröskel. Hellre långsam respons än kollaps. Modelleras som en valbar toggle i Optimize-mode.
+- **BSS** (Business Support Systems) — Den kommersiella sidan: CRM, Order Management, Billing. Äger kund, produkt, avtal och fakturering.
+- **CDR** (Call Detail Record) — Datapost som beskriver en kommunikationshändelse. Råmaterial för billing/charging, finns inte modellerat i simulatorn men nämns i Operativ påverkan-kontexten.
+- **CPE** (Customer Premises Equipment) — Hårdvaran hos kunden, typiskt en router som ansluts till fiber-uttaget. En av fiber-flödets resource orders.
+- **CRM** (Customer Relationship Management) — System som äger kund-, avtals- och kontaktinformation. Default-startpunkt för en customer order.
+- **DORA** — Forskningsbaserade mätetal för software delivery performance (Deployment Frequency, Lead Time for Changes, Change Failure Rate, MTTR). Inte aktuellt i telecom-simulatorn men refereras i VISION.md som potentiell future-domain.
+- **EMS** (Element Management System) — System som hanterar enskilda nätelement (t.ex. en OLT-modell). En provisioning-adapter pratar ofta med EMS hellre än elementet direkt.
+- **eSIM** (embedded SIM) — Mjukvaruprofil i ett chip i telefonen. Distribueras via en RSP istället för fysisk SIM-leverans.
+- **eTOM** (enhanced Telecom Operations Map) — TM Forums processramverk som beskriver typiska operatörsprocesser. Simulatorns flödesfaser är inspirerade av eTOM:s fulfillment-domän.
+- **Fall-out** — Order som inte tar sig genom flödet utan kräver manuell handpåläggning. En av branschens centrala KPI:er och drivkraften bakom Operativ påverkan-panelen.
+- **GDPR** (General Data Protection Regulation) — EU:s dataskyddsförordning. Påverkar samtycke, lagring och radering av kunddata i en faktisk operatörsmiljö, men är utelämnad i simulatorn.
+- **GSMA** (GSM Association) — Branschorganisation som standardiserar mobilbranschens samverkan, inklusive eSIM RSP-protokollet.
+- **Handoff** — När arbete byter system eller team. Varje handoff kostar tid genom kö, översättning, informationsförlust och kontextväxling. Simulatorn visualiserar handoffs som streckmönstrade timeline-staplar.
+- **HSS** (Home Subscriber Server) — 3G/4G-centralregister med abonnentdata, autentisering och tjänsteinformation. Aktivering av en mobiltjänst innebär en uppdatering i HSS.
+- **IMS** (IP Multimedia Subsystem) — Arkitektur för IP-baserade telekommunikationstjänster (VoLTE, VoWiFi). Provisioning-adaptern i simulatorn pratar mot "IMS-core" som abstrakt mål.
+- **IMSI** (International Mobile Subscriber Identity) — Intern abonnentidentitet i mobilnätet, 15 siffror. Lagras på SIM/eSIM och i HSS/UDM. Olikt MSISDN — IMSI är intern, MSISDN är publik.
+- **Inventory drift** — När inventory-data inte stämmer med verkligheten i nätet. En av telekomdriftens vanligaste tysta problem och det vi simulerar med ResourceUnavailable-scenariot.
+- **KYC** (Know Your Customer) — Process för att verifiera kundens identitet vid avtalstecknande. Lagkrav i många jurisdiktioner men inte modellerat i simulatorn.
+- **MEF** — Branschorganisation som standardiserar Carrier Ethernet och SD-WAN. Refereras i samband med provisioning-protokoll.
+- **MNP** (Mobile Number Portability) — Process som låter en kund behålla sitt MSISDN vid byte av operatör. Förklaras i MSISDN-pattern men är inte simulerat som scenario.
+- **MSISDN** (Mobile Station International Subscriber Directory Number) — Publika telefonnumret, struktur enligt ITU-T E.164. Allokeras ur en nummerpool vid mobile-aktivering.
+- **NETCONF** — Standardiserat nätverksprotokoll för att konfigurera nätelement. Typisk transportväg från provisioning-systemet till routers, OLT och liknande.
+- **NMS** (Network Management System) — System som ger övergripande syn på och kontroll över hela nätet. Sitter typiskt ovanpå EMS:erna.
+- **NOC** (Network Operations Center) — Operativ enhet som bevakar och hanterar nätet dygnet runt. Manuella escalation från provisioning-fel landar ofta här.
+- **OCS** (Online Charging System) — Realtidssystem för att styra debitering vid användning. Definierat av 3GPP, inte modellerat i simulatorn.
+- **OLT** (Optical Line Terminal) — Aktiv nätutrustning som terminerar fiber mot kunder. En begränsad fysisk resurs — fiber-flödets typiska bottleneck-kandidat tillsammans med fiberpar.
+- **OSS** (Operational Support Systems) — Den tekniska sidan: Service Inventory, Resource Inventory, Provisioning, Assurance. Driver och övervakar nätet.
+- **Partial activation** — När en aktivering accepteras av nätet delvis men inte fungerar end-to-end. Service inventory tror tjänsten är aktiv, men kunden får inte tjänsten. En av de dyraste felmoderna eftersom den hittas långt senare.
+- **Provisioning** — Att skicka konfiguration till nätelement (typiskt via NETCONF/CLI). Skild från activation och verification.
+- **QoS** (Quality of Service) — Policy som styr prioritet, garanterad bandbredd och latens per trafiktyp. En del av en network profile för fiber.
+- **RSP** (Remote SIM Provisioning) — GSMA-standardiserad eSIM-leveransprocess via extern profile-server. Lägger till en extern part i flödet — vanlig fel-källa vid eSIM-aktivering.
+- **SBC** (Session Border Controller) — Nätelement som hanterar signalering och media vid kanten av IP-telefoninät. Provisioning-target för röst-tjänster.
+- **SID** (Service Information Data) — TM Forums datamodell för OSS/BSS-domänerna. Beskriver hur kund, produkt, tjänst, resurs och avtal relaterar.
+- **SIM** (Subscriber Identity Module) — Fysiskt kort som lagrar IMSI och autentiseringsnycklar. Fysisk variant av det eSIM gör som mjukvaruprofil.
+- **SLA** (Service Level Agreement) — Kontrakterad servicenivå, t.ex. leveranstid och tillgänglighet. Bryts om en order tar för lång tid eller fail:ar — vilket landar som credits, eskaleringar eller regulatorisk rapportering.
+- **TM Forum** — Branschorganisation för OSS/BSS-standarder. Producerar SID-datamodellen, eTOM-processramverket och TMF Open APIs.
+- **TMF Open APIs** — Standardiserade REST-API:er för OSS/BSS-domänerna. Exempel: TMF622 (Product Order), TMF641 (Service Order), TMF638/639 (Service/Resource Inventory), TMF640 (Service Activation). Simulatorn använder konventionerna som inspiration utan att implementera schemana.
+- **UDM** (Unified Data Management) — 5G-motsvarigheten till HSS. Centralregister för abonnentdata med uppdaterad arkitektur.
+- **VLAN** (Virtual LAN) — Logisk indelning av nätverk på Layer 2. En del av en network profile som styr vilket logiskt nät en fiberport tillhör.
 
 ## Begränsningar
 
