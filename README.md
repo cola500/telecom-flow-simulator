@@ -4,7 +4,7 @@ description: Lokal browser-baserad lärsimulator för en förenklad telekom-stac
 category: learning-tool
 status: in-progress
 last_updated: 2026-05-11
-sections: [Disclaimer, Three modes Learn OSS/BSS Optimize Process Documentation, Vad simulatorn lär ut, Saker att prova, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Same operating pattern different technical flow, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Frågor att ställa per domän, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Activation capacity, Variation is the enemy of flow, Felscenarier, Begrepp och förkortningar, Begränsningar, For developers]
+sections: [Disclaimer, Three modes Learn OSS/BSS Optimize Process Documentation, Vad simulatorn lär ut, Saker att prova, Vad är BSS, Vad är OSS, From Customer Order to Service and Resource Orders, Same flow different product decomposition, Same operating pattern different technical flow, Order-to-Activate, Lead time, Handoffs, Bottlenecks, Frågor att ställa per domän, Förbättring i agila team, Förbättringsexperiment, Köbildning och belastning, Provisioning / Activation automation, Activation capacity, Variation is the enemy of flow, Felscenarier, Begrepp och förkortningar, Tillgänglighet och läsbarhet, Begränsningar, For developers]
 ---
 
 # OSS/BSS Order-to-Activate Simulator
@@ -560,6 +560,19 @@ Konvention i resten av dokumentationen: en förkortning förklaras vid första a
 - **TMF Open APIs** — Standardiserade REST-API:er för OSS/BSS-domänerna. Exempel: TMF622 (Product Order), TMF641 (Service Order), TMF638/639 (Service/Resource Inventory), TMF640 (Service Activation). Simulatorn använder konventionerna som inspiration utan att implementera schemana.
 - **UDM** (Unified Data Management) — 5G-motsvarigheten till HSS. Centralregister för abonnentdata med uppdaterad arkitektur.
 - **VLAN** (Virtual LAN) — Logisk indelning av nätverk på Layer 2. En del av en network profile som styr vilket logiskt nät en fiberport tillhör.
+
+## Tillgänglighet och läsbarhet
+
+Simulatorn försöker vara behaglig att läsa och navigera även om den inte är fullt WCAG-certifierad. Konkret innebär det:
+
+- Textfärger har minst 4.5:1 kontrast på vit bakgrund (WCAG AA för normal text).
+- Interaktiva element (knappar, länkar, info-ikoner, mode-tabs, sökresultat) har synlig `:focus-visible`-fokusring så tangentbordsanvändare ser var fokus är.
+- En "Hoppa till innehåll"-länk dyker upp vid första Tab så skärmläsar- och tangentbordsanvändare kan förbi headerns mode-tabs och söka.
+- Längre sektioner är collapsible, så användaren själv styr hur mycket innehåll som är öppet — *progressive disclosure* istället för en lång oavbruten sida.
+- Större text och 40 px touch-targets på mobil (≤ 640 px viewport).
+- aria-label på alla ikon-knappar (info-ikoner, ✕ för rensa sök, ↑ för till toppen, panel-toggles).
+
+Det här är inte en accessibility-revision och simulatorn täcker inte alla WCAG-kriterier. Om du upplever en specifik svårighet — t.ex. tangentbordsnavigation som hakar, eller dålig kontrast någonstans — är feedback uppskattad.
 
 ## Begränsningar
 
