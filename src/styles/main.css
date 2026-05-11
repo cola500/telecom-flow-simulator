@@ -206,6 +206,19 @@ header .intro .intro-hint {
 .search-result.search-result-expanded .search-result-snippet {
   white-space: normal;
 }
+
+/* Search target wayfinder — short pulse that draws the eye to the element
+   the user just navigated to. Auto-removed after 2.5 s via JS. Animation
+   re-triggers on repeated clicks by toggling the class with a forced reflow. */
+@keyframes searchTargetPulse {
+  0%   { background-color: #fff4cc; box-shadow: inset 4px 0 0 #f5b400; }
+  80%  { background-color: #fff8e1; box-shadow: inset 4px 0 0 #f5b400; }
+  100% { background-color: transparent; box-shadow: inset 4px 0 0 transparent; }
+}
+.search-target-highlight {
+  animation: searchTargetPulse 2.4s ease-out;
+  border-radius: 6px;
+}
 .search-results mark {
   background: #fff3a8;
   color: inherit;
@@ -1637,6 +1650,56 @@ body.mode-docs .layout { grid-template-columns: 1fr; }
 .docs-toc .toc-l2 a { padding-left: 16px; }
 .docs-toc .toc-l3 a { padding-left: 26px; font-size: 12px; color: #8a93a6; }
 .docs-toc .toc-l3 a.active { color: #1c2330; }
+
+/* Collapsible TOC subsections. H1/H2 = parent groups (always visible), H3 =
+   children under nearest parent. Parents with children get a chevron-toggle.
+   Default expanded. */
+.docs-toc .toc-tree { padding: 0; margin: 0; }
+.docs-toc .toc-group { margin: 0; }
+.docs-toc .toc-group.toc-leaf > a { padding-left: 16px; }
+.docs-toc .toc-l1.toc-leaf > a { padding-left: 0; }
+.docs-toc .toc-row {
+  display: flex;
+  align-items: stretch;
+}
+.docs-toc .toc-row > a {
+  flex: 1;
+  min-width: 0;
+}
+.docs-toc .toc-toggle {
+  width: 18px;
+  flex: 0 0 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #8a93a6;
+  position: relative;
+}
+.docs-toc .toc-toggle::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translate(-50%, -65%) rotate(45deg);
+  transition: transform 0.15s ease;
+}
+.docs-toc .toc-group:not(.expanded) > .toc-row > .toc-toggle::before {
+  transform: translate(-65%, -50%) rotate(-45deg);
+}
+.docs-toc .toc-toggle:hover { color: #4a6cf7; }
+.docs-toc .toc-children {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.docs-toc .toc-group:not(.expanded) > .toc-children {
+  display: none;
+}
 
 .docs-content {
   max-width: 720px;

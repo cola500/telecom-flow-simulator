@@ -260,6 +260,32 @@ function renderSearchResults(results, query) {
   });
 }
 
+// Tillfällig visuell wayfinder efter klick på sökresultat. Pulsar bakgrund +
+// vänsterborder via CSS-animation. Vid upprepade klick på samma element:
+// ta bort klassen → force reflow → lägg på igen så animationen retriggas.
+function highlightSearchTarget(el) {
+  if (!el) return;
+  // Rensa eventuella tidigare highlights på andra element så bara den senaste
+  // träffen pulsar — undviker att två highlights överlappar om användaren
+  // klickar flera resultat i snabb följd.
+  document.querySelectorAll(".search-target-highlight").forEach(other => {
+    if (other === el) return;
+    other.classList.remove("search-target-highlight");
+    if (other._searchHlTimer) {
+      clearTimeout(other._searchHlTimer);
+      other._searchHlTimer = null;
+    }
+  });
+  el.classList.remove("search-target-highlight");
+  void el.offsetWidth; // force reflow så CSS-animation startar om
+  el.classList.add("search-target-highlight");
+  if (el._searchHlTimer) clearTimeout(el._searchHlTimer);
+  el._searchHlTimer = setTimeout(() => {
+    el.classList.remove("search-target-highlight");
+    el._searchHlTimer = null;
+  }, 2500);
+}
+
 function expandGlossaryInline(result, btn) {
   // Replace the clipped snippet with the full body so the user can read the
   // whole definition without leaving the search dropdown. Idempotent: clicking
@@ -286,6 +312,7 @@ function navigateToResult(result, btn) {
       if (typeof showLearningPattern === "function") showLearningPattern(result.key);
       const aside = document.querySelector(".layout > aside");
       if (aside) aside.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => highlightSearchTarget(document.getElementById("learning")), 80);
       hideSearchResults();
       return;
     }
@@ -297,6 +324,10 @@ function navigateToResult(result, btn) {
       if (typeof showLearningSystem === "function") showLearningSystem(result.key);
       const aside = document.querySelector(".layout > aside");
       if (aside) aside.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => {
+        const card = document.getElementById("sys-" + result.key);
+        highlightSearchTarget(card || document.getElementById("learning"));
+      }, 80);
       hideSearchResults();
       return;
     }
@@ -319,9 +350,18 @@ function navigateToResult(result, btn) {
     const scrollWhenReady = (retries = 8) => {
       const target = document.getElementById(result.anchor);
       if (target) {
+        // Säkerställ att TOC-gruppen som innehåller denna anchor är expanderad
+        // så användaren ser var i innehållet target ligger.
+        if (typeof expandTocGroupFor === "function") {
+          expandTocGroupFor(document.getElementById("docs-toc"), result.anchor);
+        }
         target.scrollIntoView({ behavior: "smooth", block: "start" });
+        highlightSearchTarget(target);
       } else if (retries > 0) {
         setTimeout(() => scrollWhenReady(retries - 1), 120);
+      } else {
+        // Anchor saknas — highlighta docs-panelen som container-fallback
+        highlightSearchTarget(document.getElementById("docs-panel"));
       }
     };
     setTimeout(() => scrollWhenReady(), 200);
@@ -356,6 +396,16 @@ function navigateToResult(result, btn) {
   // page when they searched).
   const aside = document.querySelector(".layout > aside");
   if (aside) aside.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  // Visual wayfinder: system → system-card in the map; pattern → learning panel.
+  setTimeout(() => {
+    if (result.type === "system") {
+      const card = document.getElementById("sys-" + result.key);
+      highlightSearchTarget(card || document.getElementById("learning"));
+    } else {
+      highlightSearchTarget(document.getElementById("learning"));
+    }
+  }, 80);
 
   hideSearchResults();
 }

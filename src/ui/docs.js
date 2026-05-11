@@ -166,15 +166,61 @@ function applyHeadingIds(contentEl) {
   });
 }
 
-// Bygg TOC-HTML från content's h1/h2/h3. Indentation per nivå via CSS-klass.
+// Bygg TOC-HTML grupperat: H1/H2 = parents (alltid synliga), H3 = children
+// under närmaste föregående parent. Parents med H3-children får en collapse-
+// toggle. Default expanderat — collapsa är opt-in via toggle-klick.
 function buildToc(contentEl) {
   const headings = contentEl.querySelectorAll("h1, h2, h3");
   if (headings.length === 0) return "";
-  const items = Array.from(headings).map(h => {
+
+  const groups = [];
+  let current = null;
+  headings.forEach(h => {
     const level = parseInt(h.tagName.slice(1), 10);
-    return `<li class="toc-l${level}"><a href="#${h.id}" data-toc-id="${h.id}">${escapeHtml(h.textContent)}</a></li>`;
+    if (level <= 2) {
+      current = { heading: h, level, children: [] };
+      groups.push(current);
+    } else if (current) {
+      current.children.push(h);
+    } else {
+      // H3 utan föregående parent — egen liten grupp utan children
+      groups.push({ heading: h, level, children: [] });
+    }
+  });
+
+  const items = groups.map(g => {
+    const href = `#${g.heading.id}`;
+    const text = escapeHtml(g.heading.textContent);
+    const link = `<a href="${href}" data-toc-id="${g.heading.id}">${text}</a>`;
+    if (g.children.length === 0) {
+      return `<li class="toc-group toc-l${g.level} toc-leaf">${link}</li>`;
+    }
+    const childItems = g.children.map(c =>
+      `<li class="toc-l3"><a href="#${c.id}" data-toc-id="${c.id}">${escapeHtml(c.textContent)}</a></li>`
+    ).join("");
+    return `<li class="toc-group toc-l${g.level} expanded">
+      <span class="toc-row">
+        <button type="button" class="toc-toggle" aria-label="Fäll in/ut underrubriker" aria-expanded="true"></button>
+        ${link}
+      </span>
+      <ul class="toc-children">${childItems}</ul>
+    </li>`;
   }).join("");
-  return `<h4>On this page</h4><ul>${items}</ul>`;
+
+  return `<h4>On this page</h4><ul class="toc-tree">${items}</ul>`;
+}
+
+// Säkerställ att TOC-gruppen som innehåller given anchor är expanderad.
+// Anropas vid TOC-klick på child och vid search-navigation.
+function expandTocGroupFor(tocEl, anchorId) {
+  if (!tocEl || !anchorId) return;
+  const link = tocEl.querySelector(`a[data-toc-id="${anchorId}"]`);
+  if (!link) return;
+  const group = link.closest(".toc-group");
+  if (!group || group.classList.contains("expanded") || group.classList.contains("toc-leaf")) return;
+  group.classList.add("expanded");
+  const toggle = group.querySelector(".toc-toggle");
+  if (toggle) toggle.setAttribute("aria-expanded", "true");
 }
 
 let activeObserver = null;
@@ -200,13 +246,24 @@ function wireActiveSection(contentEl, tocEl) {
 }
 
 // Smooth scroll vid TOC-klick + uppdatera URL-hash utan att lägga till
-// history-entry. Wirar en gång på TOC-elementet (delegering).
+// history-entry. Wirar en gång på TOC-elementet (delegering). Hanterar
+// både toggle-knappar (collapse/expand) och navigation-länkar.
 function wireTocClicks(tocEl) {
   tocEl.addEventListener("click", e => {
+    const toggle = e.target.closest(".toc-toggle");
+    if (toggle) {
+      const group = toggle.closest(".toc-group");
+      if (!group) return;
+      const nowExpanded = !group.classList.contains("expanded");
+      group.classList.toggle("expanded", nowExpanded);
+      toggle.setAttribute("aria-expanded", nowExpanded ? "true" : "false");
+      return;
+    }
     const link = e.target.closest("a[data-toc-id]");
     if (!link) return;
     e.preventDefault();
     const id = link.dataset.tocId;
+    expandTocGroupFor(tocEl, id);
     const target = document.getElementById(id);
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
