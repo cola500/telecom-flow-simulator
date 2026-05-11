@@ -814,6 +814,125 @@ details.collapsible[open] > summary {
   margin-bottom: 12px;
 }
 
+/* Fulfillment vs Assurance — pedagogical panel comparing the two halves of
+   telecom operations. Uses subtle colour coding to mark the handoff between
+   fulfillment (green-blue) and assurance (warm yellow/orange). */
+.fa-flow {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+.fa-flow .fa-step {
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.fa-flow .fa-fulfillment,
+.fa-flow .fa-activation {
+  background: #e8eeff;
+  color: #2c3da3;
+  border-color: #d4ddff;
+}
+.fa-flow .fa-monitoring,
+.fa-flow .fa-incident,
+.fa-flow .fa-restoration {
+  background: #fff4cc;
+  color: #8a6500;
+  border-color: #f5d978;
+}
+.fa-flow .fa-arrow {
+  color: #8a93a6;
+  font-size: 14px;
+  user-select: none;
+}
+.fa-flow-caption {
+  margin: 0 0 16px;
+  font-size: 12px;
+  color: #5b6478;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+#fulfillment-assurance h3 {
+  margin: 16px 0 8px;
+  font-size: 14px;
+  color: #1f2433;
+}
+.fa-compare {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+.fa-compare th,
+.fa-compare td {
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #e2e6ee;
+  line-height: 1.5;
+}
+.fa-compare thead th {
+  background: #fafbfc;
+  font-weight: 600;
+  color: #5b6478;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.fa-compare tbody td:first-child {
+  width: 130px;
+  color: #5b6478;
+  font-size: 11px;
+}
+.fa-compare code {
+  font-size: 11px;
+  background: #f4f6fa;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+.fa-example {
+  margin: 0 0 8px;
+  padding-left: 22px;
+  font-size: 13px;
+  color: #2a3140;
+  line-height: 1.55;
+}
+.fa-example li { margin-bottom: 6px; }
+.fa-example li:last-child { margin-bottom: 0; }
+.fa-takeaway {
+  margin: 0;
+  padding: 10px 12px;
+  background: #fffbe9;
+  border-left: 3px solid #f5b400;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #2a3140;
+}
+.fa-links {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: #2a3140;
+  line-height: 1.55;
+}
+.fa-links li { margin-bottom: 8px; }
+.fa-links li:last-child { margin-bottom: 0; }
+
+@media (max-width: 700px) {
+  .fa-compare th,
+  .fa-compare td { padding: 6px 8px; font-size: 11px; }
+  .fa-compare tbody td:first-child { width: 90px; }
+}
+
 /* Theory journey — guided 8-step walkthrough in Learn OSS/BSS */
 .journey-intro {
   margin: 0 0 16px;

@@ -273,15 +273,52 @@ Låg-risk ändringar som ökar trovärdigheten utan att ändra beteendet. *Event
 
 ## Nästa rimliga steg
 
-Små förändringar som höjer trovärdighet utan att lägga till komplexitet. Status uppdaterad 2026-05-10.
+Pedagogisk grund och publik tillgänglighet är på plats. De fem spåren nedan beskriver var simulatorn rimligen kan utvecklas härnäst — utan att förlora enkelheten som är kärnan. Inget av detta är inplanerat; det är riktningar att kalibrera mot.
 
-1. ~~**Genomför namnändringarna ovan.**~~ ✅ Genomfört.
-2. **Lägg till en synlig disclaimer i UI:t.** En liten footer eller "?" i headern som öppnar en kort förklaring: "This is a learning model. See REALISM_NOTES.md for what's real and what's simplified." Räcker som textändring.
-3. **Skala-tooltip i metrics.** Vid hover på "Total lead time" — visa text om att 16.2s simtid representerar något som i verkligheten är dagar/veckor. Utbildar utan att ändra modellen.
-4. **Förtydliga `teach`-texterna på varje event.** Varje event har redan en kort *teach*-text — den kan användas för att flagga var modellen förenklat (delvis gjort när produkt-specifika flöden lades till).
-5. **Notera explicit i README var TMF-mappningen ligger.** En liten tabell: "Vårt event ↔ Närmsta TMF-event". Bygger broar till industristandard utan att kräva implementation.
-6. **Lägg in en länk till TM Forum SID/eTOM** i learning-panelen för den som vill djupdyka.
-7. **Produkt-specifika failure modes.** Idag delar fiber och mobile samma två fail-typer. Verkligheten har olika fail-modes per produkt (RSP timeout för mobile, dispatch no-show för fiber). Skulle stärka domänlärandet utan stor logikändring.
+### 1. Fördjupa telecom-teorin
+
+Flödesnivån är väl belyst. Domännivån kan bli rikare:
+
+- Fler guidade teoriresor utöver Order-to-Activate — t.ex. *Inventory lifecycle*, *Service assurance*, *Product catalog*.
+- Tydligare distinktion mellan *fulfillment* (få ut tjänsten) och *assurance* (hålla den igång) — idag täcker simulatorn främst fulfillment.
+- En enkel "vårt event ↔ närmaste TMF-event"-mappning för läsare som vill bygga broar till industristandard.
+
+### 2. Öka pedagogisk interaktivitet
+
+Simulatorn är lätt att utforska, men nya användare gissar sig fram. Möjliga förbättringar:
+
+- En interaktiv intro/walkthrough som visar de centrala interaktionerna.
+- "Prova detta"-övningar kopplade till specifika lärtillfällen (t.ex. *"Höj RI-kapacitet till 3 och kör 20 ordrar — vad händer med bottlenecken?"*).
+- Reflektionsfrågor efter en körning som lyfter fram vad mätvärdena egentligen säger.
+- Skala-tooltip på metrics som påminner om att simtid (~16 s) representerar dagar/veckor i verkligheten.
+
+### 3. Scenario library
+
+Idag måste användaren själv komponera ihop kontroller för att skapa intressanta situationer. Ett färdigt bibliotek skulle sänka tröskeln:
+
+- *Inventory mismatch* — körning där fall-out drivs av drift mellan inventory och nätet.
+- *Provisioning bottleneck* — låg activation-kapacitet, hög load.
+- *High load + backpressure* — hur trade-offen mellan kötid och systemkollaps ser ut.
+- *Partial activation* — vad som händer när billing triggas innan verifiering.
+
+Varje scenario skulle bestå av en parameter-uppsättning + en kort förklaring av vad användaren ska titta efter.
+
+### 4. Förbättra realism gradvis
+
+Modellen är pedagogisk, inte verifierad mot någon faktisk operatör (se *Order decomposition trade-offs*). Gradvis kalibrering kan höja trovärdigheten utan att förlora enkelheten:
+
+- Produktspecifika failure modes — fiber har t.ex. fältdispatch som fail-källa, mobile har RSP-timeout och nummerportabilitetsproblem. Idag delar de samma två fel-typer.
+- Validera flödet mot fler öppna källor och, där möjligt, mot ämnesexperter.
+- Fortsätta dokumentera trade-offs explicit istället för att låta modellen *se ut* som en operatörsarkitektur.
+
+### 5. Framtida plattformstanke
+
+Många av flödesmönstren simulatorn lär ut — bottlenecks, kö-effekter, handoffs, fall-out — gäller även utanför telecom (software delivery, supply chain, sjukvård). Det är värt att undersöka:
+
+- Om samma simulatorprincip kan återanvändas för en andra domän (software delivery är en stark kandidat).
+- Vilka delar av motorn och UI:n som är generiska respektive domänspecifika.
+
+Men ordningen är viktig: *telecom first, platform later*. Telecom-simulatorn behöver vara validerad — använd av riktiga målgrupper, med dokumenterade lärtillfällen — innan generaliseringsarbete är meningsfullt. Mer resonemang om detta finns i `VISION.md`.
 
 ## Vad vi medvetet undviker
 

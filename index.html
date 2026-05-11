@@ -199,6 +199,90 @@
       </ol>
     </details>
 
+    <details class="panel learn-only collapsible" id="fulfillment-assurance" open>
+      <summary>
+        <h2>Fulfillment och Assurance</h2>
+        <span class="summary-hint">Två sidor av samma flöde — leverans och drift</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
+
+      <p class="journey-intro">
+        Telekomdrift har två stora delar som ofta blandas ihop. <em>Fulfillment</em> ser till att tjänsten levereras till kund. <em>Assurance</em> ser till att tjänsten fortsätter fungera efter leverans. De äger ofta samma resurser och samma kunder — men har olika ansvar, olika metrics, och olika system. Och de hänger ihop på sätt som inte alltid är uppenbara: fulfillment-fel skapar typiskt assurance-arbete långt senare.
+      </p>
+
+      <ol class="fa-flow" aria-label="Fulfillment till assurance på en rad">
+        <li class="fa-step fa-fulfillment">Fulfillment</li>
+        <li class="fa-arrow" aria-hidden="true">→</li>
+        <li class="fa-step fa-activation">Activation</li>
+        <li class="fa-arrow" aria-hidden="true">→</li>
+        <li class="fa-step fa-monitoring">Monitoring</li>
+        <li class="fa-arrow" aria-hidden="true">→</li>
+        <li class="fa-step fa-incident">Incident</li>
+        <li class="fa-arrow" aria-hidden="true">→</li>
+        <li class="fa-step fa-restoration">Restoration</li>
+      </ol>
+      <p class="fa-flow-caption">
+        Fulfillment lämnar över till assurance vid aktivering. När något går fel i drift startar assurance-loopen: monitoring upptäcker, incident skapas, restoration löser — och tjänsten är tillbaka i normal drift.
+      </p>
+
+      <h3>Vad gör de?</h3>
+      <table class="fa-compare">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Fulfillment</th>
+            <th>Assurance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Mål</strong></td>
+            <td>Få ut tjänsten</td>
+            <td>Hålla tjänsten fungerande</td>
+          </tr>
+          <tr>
+            <td><strong>Typiska system</strong></td>
+            <td>CRM, Order Management, Service/Resource Inventory, Provisioning</td>
+            <td>Network Monitoring, Incident Management, Customer Service</td>
+          </tr>
+          <tr>
+            <td><strong>Typiska events</strong></td>
+            <td><code>OrderCreated</code>, <code>ResourcesReserved</code>, <code>ServiceActivated</code>, <code>BillingStartRequested</code></td>
+            <td>Larm, <code>IncidentRaised</code>, eskalering, <code>ServiceRestored</code></td>
+          </tr>
+          <tr>
+            <td><strong>Typiska metrics</strong></td>
+            <td>Lead time, fall-out rate, truly-touchless-andel</td>
+            <td>MTTR, tillgänglighet, customer impact, antal samtal till support</td>
+          </tr>
+          <tr>
+            <td><strong>Typiska fel</strong></td>
+            <td>Inventory drift, partial activation, ActivationRejected</td>
+            <td>Element down, performance degradation, kundupplevt fel som inte syns i larmen</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Vad händer när fulfillment misslyckas?</h3>
+      <p>Många assurance-incidenter har sin rot långt tidigare — i fulfillment. Här är ett typiskt cascade:</p>
+      <ol class="fa-example">
+        <li><strong>Provisioning misslyckas delvis.</strong> Konfigurationen accepteras av OLT men inte av CPE-adaptern. Service inventory uppdateras ändå till "active".</li>
+        <li><strong>Verifiering saknas eller hoppas över.</strong> Plattformen triggar billing direkt på <code>ServiceActivated</code>, utan ett post-activation-test som hade fångat problemet.</li>
+        <li><strong>Billing startar för tidigt.</strong> Kunden får faktura för en tjänst som inte fungerar.</li>
+        <li><strong>Kunden ringer in.</strong> Customer Service ser "active" i systemen — det är inte uppenbart att något är fel. Felet är osynligt från BSS-sidan.</li>
+        <li><strong>Assurance-flödet startar.</strong> En incident skapas, koordineras med nätoperation, root cause spåras till slut — och hamnar i ett fulfillment-flöde dagar tidigare.</li>
+      </ol>
+      <p class="fa-takeaway"><strong>Sensmoral:</strong> en mogen verifieringsdisciplin i fulfillment (post-activation-tester, billing-trigger på verifierad leverans) är ofta det mest direkta sättet att sänka assurance-belastningen.</p>
+
+      <h3>Var i simulatorn kan du se det här?</h3>
+      <ul class="fa-links">
+        <li><strong>Operativ påverkan</strong>-panelen översätter fulfillment-fel till uppskattat antal manuella undersökningar, supportsamtal och försenade fakturor — det är assurance- och customer service-arbete som genereras av fulfillment-flödet.</li>
+        <li><strong>Incidents</strong>-mätaren i Optimize Process räknar provisioning-fel under en batch. När provisioning-kön växer ökar fail-sannolikheten, och retries kan skapa kaskadeffekter — samma mekanik som driver verkliga incident-spikar.</li>
+        <li><strong>ResourceUnavailable</strong> och <strong>ActivationRejected</strong>-scenarierna visar konkret hur ett fulfillment-fel blir arbete någon annanstans: inventory reconciliation, partial activation, ökad supportbelastning.</li>
+        <li><strong>Verifieringssteget</strong> (<code>ServiceVerified</code>) i happy path är vad som <em>minskar</em> assurance load. Utan det skulle billing trigga på orderstatus istället för på verifierad leverans — och fler partial activations skulle bli kunders problem att hitta.</li>
+      </ul>
+    </details>
+
     <details class="panel learn-only collapsible" id="decomp-panel">
       <summary>
         <h2>Ordernedbrytning (Order decomposition)</h2>
