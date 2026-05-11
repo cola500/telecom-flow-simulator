@@ -19,6 +19,17 @@
     <button class="mode-tab" data-mode="optimize" role="tab">Optimize Process</button>
     <button class="mode-tab" data-mode="docs" role="tab">Documentation</button>
   </div>
+  <div class="search-bar" role="search">
+    <input
+      type="search"
+      id="search-input"
+      placeholder="Sök begrepp, förkortningar och dokumentation…"
+      autocomplete="off"
+      aria-label="Sök begrepp, förkortningar och dokumentation"
+      aria-controls="search-results">
+    <button type="button" id="search-clear" class="search-clear hidden" aria-label="Rensa sökning">×</button>
+    <div class="search-results hidden" id="search-results" role="region" aria-live="polite"></div>
+  </div>
 </header>
 
 <div class="layout">
@@ -521,6 +532,7 @@
 <script src="src/ui/learning.js"></script>
 <script src="src/ui/docs.js"></script>
 <script src="src/ui/glossary.js"></script>
+<script src="src/ui/search.js"></script>
 <script src="src/app.js"></script>
 </body>
 </html>

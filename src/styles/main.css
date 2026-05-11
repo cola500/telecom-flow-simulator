@@ -84,6 +84,149 @@ header .intro .intro-hint {
 /* Mode show/hide-reglerna ligger längst ned i filen så de vinner kaskaden
    även mot body.mode-parallel-reglerna (samma specificity, sista vinner). */
 
+/* Search bar — lives in the header. Result dropdown is position:absolute
+   anchored to the .search-bar wrapper so it floats over page content. */
+.search-bar {
+  position: relative;
+  margin-top: 10px;
+  max-width: 520px;
+}
+.search-bar #search-input {
+  width: 100%;
+  padding: 7px 32px 7px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.95);
+  color: #1c2330;
+  font-size: 13px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.search-bar #search-input::placeholder { color: #8a93a6; }
+.search-bar #search-input:focus {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 1px;
+  background: #fff;
+}
+.search-clear {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: #5b6478;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.search-clear:hover { background: rgba(0,0,0,0.08); color: #1c2330; }
+.search-results {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #d8dde8;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  z-index: 100;
+  color: #1c2330;
+}
+.search-count {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #5b6478;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e2e6ee;
+  background: #fafbfc;
+}
+.search-empty {
+  padding: 16px 12px;
+  text-align: center;
+  font-size: 13px;
+  color: #8a93a6;
+}
+.search-list { display: flex; flex-direction: column; }
+.search-result {
+  text-align: left;
+  background: #fff;
+  border: none;
+  border-bottom: 1px solid #f0f2f6;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  width: 100%;
+}
+.search-result:last-child { border-bottom: none; }
+.search-result:hover,
+.search-result:focus-visible {
+  background: #f3f6ff;
+  outline: none;
+}
+.search-result-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.search-result-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2433;
+  flex: 1;
+  min-width: 0;
+}
+.search-result-type {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8a93a6;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.search-result-snippet {
+  font-size: 12px;
+  color: #4a5263;
+  line-height: 1.45;
+}
+.search-result.search-result-expanded {
+  background: #f3f6ff;
+  border-left: 3px solid #4a6cf7;
+  padding-left: 9px;
+}
+.search-result.search-result-expanded .search-result-snippet {
+  white-space: normal;
+}
+.search-results mark {
+  background: #fff3a8;
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+.search-more {
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #8a93a6;
+  text-align: center;
+  background: #fafbfc;
+  border-top: 1px solid #e2e6ee;
+}
+
+@media (max-width: 700px) {
+  .search-bar { max-width: 100%; }
+  .search-result-head { flex-direction: column; gap: 2px; }
+  .search-result-type { align-self: flex-start; }
+}
+
 .layout {
   display: grid;
   grid-template-columns: 2fr 1fr;
