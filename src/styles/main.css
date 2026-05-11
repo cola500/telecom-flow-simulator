@@ -1942,9 +1942,41 @@ body.mode-docs .layout { grid-template-columns: 1fr; }
   padding: 12px 16px;
   border-radius: 6px;
   overflow-x: auto;
+  max-width: 100%;
+  box-sizing: border-box;
   font-size: 12px;
   line-height: 1.5;
   margin: 0 0 12px;
+}
+/* Long words/URLs in docs body should wrap rather than push the page wider */
+.docs-content p,
+.docs-content li,
+.docs-content td { overflow-wrap: anywhere; }
+.docs-content table { display: block; max-width: 100%; overflow-x: auto; }
+/* Isolate overflow from inner scroll-containers (pre, table) so their
+   scrollWidth doesn't propagate up and create page-level horizontal scroll.
+   clip is preferred over hidden — doesn't create a new scroll/containing block. */
+.docs-content { overflow-x: clip; }
+
+/* Override default .layout padding on mobile — the earlier max-width:900 rule
+   was being overridden by the unconditional .layout rule that appears later
+   in the cascade. Repeating the override here (and after the unconditional
+   rule) makes mobile padding win. */
+@media (max-width: 900px) {
+  .layout {
+    padding-left: 16px;
+    padding-right: 16px;
+    /* minmax(0, 1fr) — default 1fr expanderar till min-content, vilket gör
+       att grid-cellen blir wider än viewport om något inom har stor
+       min-content (t.ex. monospace ASCII-block). minmax(0, 1fr) tillåter
+       cellen att shrinka. */
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Final safety: clip any remaining horizontal overflow on mobile so the
+     page can't scroll sideways. Applied to both html and body — clip on body
+     alone leaves the html viewport scrollable. Doesn't affect position:fixed
+     (back-to-top) or position:absolute (skip-link). */
+  html, body { overflow-x: clip; }
 }
 .docs-content pre code {
   background: transparent;
