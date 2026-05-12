@@ -26,6 +26,11 @@
   const SAMPLE_EVERY_MS = 500;       // sample-snapshots för senare grafer
   const STEPS = ["todo", "analysis", "build", "done"];
   const PROCESSING_STEPS = ["analysis", "build"]; // steg med capacity-limit
+  const TODO_DWELL_MS = 1000;        // items stannar synligt i todo innan
+                                     // promotion till analysis — annars
+                                     // hoppar de magiskt över kolumnen.
+                                     // Räknas som backlog-tid i lead time
+                                     // (samma semantik som Little's Law).
 
   // Baseline-durations per steg (ms simtid). todo är instant — den fungerar som
   // en backlog-kö, inget arbete sker där. done är slutdestination.
@@ -205,6 +210,8 @@
       status: "waiting",      // "waiting" i kö | "processing" tilldelad slot
       stepEnteredAt: state.simTime,
       stepEndAt: null,
+      todoReadyAt: state.simTime + TODO_DWELL_MS,  // promotion-spärr så items
+                                                   // hinner synas i todo.
       completedAt: null,
       history: [{ step: "todo", enteredAt: state.simTime }]
     };
@@ -287,11 +294,17 @@
     }
 
     if (wipBudget > 0) {
-      const todoQueue = state.items.filter(i => i.currentStep === "todo" && i.status === "waiting");
+      // Plocka bara items som suttit i todo minst TODO_DWELL_MS — annars hoppar
+      // de förbi kolumnen visuellt och pedagogiken försvinner.
+      const todoQueue = state.items.filter(i =>
+        i.currentStep === "todo" &&
+        i.status === "waiting" &&
+        state.simTime >= (i.todoReadyAt ?? 0)
+      );
       let pullsLeft = wipBudget;
       for (const item of todoQueue) {
         if (pullsLeft <= 0) break;
-        completeStepFor(item); // promote todo → analysis (instant, ingen processing-tid i todo)
+        completeStepFor(item); // promote todo → analysis
         pullsLeft -= 1;
       }
     }
