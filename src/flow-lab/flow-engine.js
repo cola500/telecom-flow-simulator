@@ -22,7 +22,7 @@
   // --- Konstanter -----------------------------------------------------------
 
   const TICK_REAL_MS = 100;          // realtid mellan ticks
-  const SIM_MS_PER_TICK = 100;       // 1× speed för MVP (kan höjas senare)
+  const SIM_MS_PER_TICK = 200;       // 2× speed (matchar telecom-engine-konventionen)
   const SAMPLE_EVERY_MS = 500;       // sample-snapshots för senare grafer
   const STEPS = ["todo", "analysis", "build", "done"];
   const PROCESSING_STEPS = ["analysis", "build"]; // steg med capacity-limit
@@ -48,7 +48,7 @@
   let state = createEmptyState();
   let intervalId = null;
   let subscribers = [];
-  let verbose = true;             // console-instrumentering — aktiv i commit 2
+  let verbose = false;            // sätt true via FlowLabEngine.setVerbose(true) eller UI-toggle
   let itemCounter = 0;
   let lastSampleAt = 0;
   let lastSpawnDecisionAt = -Infinity;
@@ -57,6 +57,7 @@
     return {
       simTime: 0,
       durationMs: 0,             // total körningslängd, sätts vid start
+      ticks: 0,                  // räknare för att verifiera att loopen kör
       running: false,
       items: [],                 // alla items oavsett steg
       samples: [],               // [{simTime, queues:{step:n}, processing:{step:n}, completed:n}]
@@ -115,11 +116,20 @@
   function getState() {
     return {
       simTime: state.simTime,
+      durationMs: state.durationMs,
+      ticks: state.ticks,
       running: state.running,
       settings: { ...settings },
       counts: countByStep(),
       completed: state.completed,
-      arrivalsPaused: state.arrivalsPaused
+      arrivalsPaused: state.arrivalsPaused,
+      // Lätt projektion av items för render — inga interna fält som history.
+      items: state.items.map(i => ({
+        id: i.id,
+        currentStep: i.currentStep,
+        status: i.status,
+        spawnedAt: i.spawnedAt
+      }))
     };
   }
 
@@ -153,6 +163,7 @@
 
   function tick() {
     state.simTime += SIM_MS_PER_TICK;
+    state.ticks += 1;
 
     maybeSpawn();
     progressItems();
