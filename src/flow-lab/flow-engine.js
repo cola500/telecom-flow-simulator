@@ -98,6 +98,8 @@
       state.running = false;
       const metrics = getMetrics();
       console.info("[FlowLab] stop", { reason, simTime: state.simTime, ...metrics });
+      // Notify så UI byter från "running" → "idle" och visar slutläget.
+      notify();
     }
   }
 
@@ -106,6 +108,8 @@
     state = createEmptyState();
     itemCounter = 0;
     console.info("[FlowLab] reset");
+    // Notify så render rensar kanban/KPI/status — annars står gamla värden kvar.
+    notify();
   }
 
   function updateSettings(partial) {
