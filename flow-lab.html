@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<title>FlowLab (experiment) — Systems Thinking Lab</title>
+<meta name="description" content="Experimentell sidosimulator för att utforska flöde, WIP och variation. Inkubator i OSS/BSS-simulator-repot.">
+<link rel="stylesheet" href="src/styles/main.css" />
+<link rel="stylesheet" href="src/styles/flow-lab.css" />
+</head>
+<body class="fl-body">
+<a class="skip-link" href="#fl-main">Hoppa till innehåll</a>
+
+<header class="fl-header">
+  <div class="fl-header-row">
+    <h1>FlowLab</h1>
+    <span class="fl-experiment-badge" aria-label="Experimentstatus">Experiment · inkubator</span>
+  </div>
+  <p class="fl-intro">
+    Interaktiv lärsimulator för flöde i system. Utforska WIP, kapacitet och variation
+    — och se hur de påverkar ledtid, throughput och kö. Detta är ett pågående experiment
+    i samma repo som OSS/BSS-simulatorn.
+  </p>
+  <a href="index.html" class="fl-back-link" aria-label="Gå tillbaka till OSS/BSS-simulatorn">← Tillbaka till OSS/BSS-simulatorn</a>
+</header>
+
+<main id="fl-main" class="fl-main">
+  <section class="panel">
+    <h2>Skelett laddat</h2>
+    <p>
+      Detta är commit 1 av FlowLab MVP — en bare-bones-sida som verifierar att den separata
+      <code>flow-lab.html</code> kan öppnas, att <code>main.css</code> + <code>flow-lab.css</code>
+      laddas, och att FlowLab-JS körs i eget scope utan att röra OSS/BSS-simulatorn.
+    </p>
+    <p id="fl-boot-status" class="fl-boot-status">Initialiserar…</p>
+    <p class="fl-note">
+      Kommande commits lägger till sliders (arrival rate, capacity, WIP, variation, bottleneck),
+      kanban-flöde, KPI-cards, observationer, reflektion och textrad-jämförelse mot förra körningen.
+    </p>
+  </section>
+</main>
+
+<footer class="app-footer">
+  Created by <strong>Johan Lindengard</strong>
+  · <a href="https://www.linkedin.com/in/johan-lindengard/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  · <a href="index.html">OSS/BSS-simulator</a>
+</footer>
+
+<script src="src/flow-lab/flow-app.js"></script>
+</body>
+</html>
