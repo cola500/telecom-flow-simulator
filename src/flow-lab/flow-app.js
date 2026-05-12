@@ -5,7 +5,7 @@
 // Ansvar:
 //   - initiera render (subscribar på engine)
 //   - synca slidervärden med engine-defaults vid sidladdning
-//   - wira reglage-knappar (cap-btn-rader), kör/stop/reset, presets, verbose
+//   - wira reglage-knappar (cap-btn-rader), kör/stop/reset, presets
 //   - signalera bootstrap-status till consolen
 
 (function FlowLabApp() {
@@ -120,15 +120,9 @@
     window.FlowLabEngine.reset();
   });
 
-  // --- Verbose-toggle -------------------------------------------------------
-
-  const verboseToggle = document.getElementById("fl-verbose-toggle");
-  if (verboseToggle) {
-    verboseToggle.checked = false;
-    verboseToggle.addEventListener("change", () => {
-      window.FlowLabEngine.setVerbose(verboseToggle.checked);
-    });
-  }
+  // Devs som vill ha detaljerade loggar slår på via devtools-consolen:
+  //   FlowLabEngine.setVerbose(true)
+  // Inget UI för det — togglen tog plats utan användarvärde.
 
   // --- Initial sync ---------------------------------------------------------
   // Säkerställer single-source-of-truth: sliders speglar engine.getDefaults().

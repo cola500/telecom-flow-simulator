@@ -110,7 +110,7 @@
   line-height: 1.5;
 }
 
-/* --- Kontroller (knappar + verbose-toggle) --------------------------------- */
+/* --- Kontroller (knappar + presets) --------------------------------------- */
 
 .fl-controls {
   display: flex;
@@ -129,20 +129,6 @@
   text-transform: uppercase;
   border-left: 1px solid #d6dbe5;
   padding-left: 12px;
-}
-
-.fl-verbose-toggle {
-  margin-left: auto;
-  font-size: 12px;
-  color: #555;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  user-select: none;
-}
-
-.fl-verbose-toggle input {
-  margin: 0;
 }
 
 /* --- Engine status / debug-rad -------------------------------------------- */
@@ -322,9 +308,6 @@
 @media (max-width: 720px) {
   .fl-kanban {
     grid-template-columns: 1fr 1fr;
-  }
-  .fl-verbose-toggle {
-    margin-left: 0;
   }
 }
 
