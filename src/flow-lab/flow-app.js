@@ -4,7 +4,8 @@
 //
 // Ansvar:
 //   - initiera render (subscribar på engine)
-//   - wira preset-knapparna och verbose-toggle
+//   - synca slidervärden med engine-defaults vid sidladdning
+//   - wira reglage-knappar (cap-btn-rader), kör/stop/reset, presets, verbose
 //   - signalera bootstrap-status till consolen
 
 (function FlowLabApp() {
@@ -24,55 +25,102 @@
     return;
   }
 
-  // 1) Bind render till engine via subscribe.
+  // 1) Bind render till engine.
   window.FlowLabRender.init();
-  console.info("[FlowLab] API ready —",
-    "engine:", Object.keys(window.FlowLabEngine).join(", "));
+  console.info("[FlowLab] API ready — engine:",
+    Object.keys(window.FlowLabEngine).join(", "));
 
-  // 2) Preset-knappar. Värden hardcodade här tills commit 4 introducerar sliders.
+  // --- Reglage --------------------------------------------------------------
+  // Mönstret är samma som telecom: cap-btn-grupp där klick togglar .active och
+  // skickar värdet till engine via updateSettings. Mid-run-ändringar är OK —
+  // engine läser settings färskt i varje tick.
 
-  const calmBtn = document.getElementById("fl-btn-run-calm");
-  if (calmBtn) {
-    calmBtn.addEventListener("click", () => {
-      window.FlowLabEngine.reset();
-      window.FlowLabEngine.updateSettings({
-        arrivalRatePerMin: 2,
-        capacity: 1,
-        wipLimit: 5,
-        variationPct: 0,
-        bottleneck: null
+  function wireGroup(groupId, dataKey, parseValue, settingKey) {
+    const buttons = document.querySelectorAll(`#${groupId} .cap-btn`);
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        buttons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const value = parseValue(btn.dataset[dataKey]);
+        window.FlowLabEngine.updateSettings({ [settingKey]: value });
       });
-      window.FlowLabEngine.start(30);
     });
   }
 
-  const loadBtn = document.getElementById("fl-btn-run-load");
-  if (loadBtn) {
-    loadBtn.addEventListener("click", () => {
-      window.FlowLabEngine.reset();
-      window.FlowLabEngine.updateSettings({
-        arrivalRatePerMin: 10,
-        capacity: 1,
-        wipLimit: 5,
-        variationPct: 25,
-        bottleneck: "build"
-      });
-      window.FlowLabEngine.start(60);
+  const asInt = v => parseInt(v, 10);
+  const wipParser = v => v === "inf" ? Infinity : parseInt(v, 10);
+  const bottleneckParser = v => v === "none" ? null : v;
+
+  wireGroup("fl-arrival-buttons",    "rate",       asInt,           "arrivalRatePerMin");
+  wireGroup("fl-capacity-buttons",   "cap",        asInt,           "capacity");
+  wireGroup("fl-wip-buttons",        "wip",        wipParser,       "wipLimit");
+  wireGroup("fl-variation-buttons",  "variation",  asInt,           "variationPct");
+  wireGroup("fl-bottleneck-buttons", "bottleneck", bottleneckParser,"bottleneck");
+
+  // --- Sync hjälpare för presets -------------------------------------------
+  // Flippar slider-active-klasserna utan att trigga klick-event, så engine-
+  // settings inte uppdateras dubbelt. Vi anropar updateSettings explicit
+  // i applyPreset.
+
+  function setActiveButton(groupId, predicate) {
+    document.querySelectorAll(`#${groupId} .cap-btn`).forEach(btn => {
+      btn.classList.toggle("active", predicate(btn));
     });
   }
 
-  const stopBtn = document.getElementById("fl-btn-stop");
-  if (stopBtn) {
-    stopBtn.addEventListener("click", () => window.FlowLabEngine.stop("user"));
+  function syncSliders(s) {
+    setActiveButton("fl-arrival-buttons",
+      b => parseInt(b.dataset.rate, 10) === s.arrivalRatePerMin);
+    setActiveButton("fl-capacity-buttons",
+      b => parseInt(b.dataset.cap, 10) === s.capacity);
+    setActiveButton("fl-wip-buttons", b => {
+      if (s.wipLimit === Infinity || s.wipLimit == null) return b.dataset.wip === "inf";
+      return parseInt(b.dataset.wip, 10) === s.wipLimit;
+    });
+    setActiveButton("fl-variation-buttons",
+      b => parseInt(b.dataset.variation, 10) === s.variationPct);
+    setActiveButton("fl-bottleneck-buttons", b => {
+      const v = b.dataset.bottleneck;
+      if (v === "none") return s.bottleneck == null;
+      return v === s.bottleneck;
+    });
   }
 
-  const resetBtn = document.getElementById("fl-btn-reset");
-  if (resetBtn) {
-    resetBtn.addEventListener("click", () => window.FlowLabEngine.reset());
+  // --- Presets --------------------------------------------------------------
+
+  const PRESET_CALM = {
+    arrivalRatePerMin: 2, capacity: 1, wipLimit: 5, variationPct: 0, bottleneck: null
+  };
+  const PRESET_LOAD = {
+    arrivalRatePerMin: 8, capacity: 1, wipLimit: 5, variationPct: 25, bottleneck: "build"
+  };
+
+  function applyPreset(settings, durationSec) {
+    window.FlowLabEngine.reset();
+    window.FlowLabEngine.updateSettings(settings);
+    syncSliders(settings);
+    window.FlowLabEngine.start(durationSec);
   }
 
-  // 3) Verbose-toggle. Default off (matchar engine-default). När på får man
-  //    samma rika instrumentering som commit 2 hade default.
+  document.getElementById("fl-btn-preset-calm")
+    ?.addEventListener("click", () => applyPreset(PRESET_CALM, 30));
+  document.getElementById("fl-btn-preset-load")
+    ?.addEventListener("click", () => applyPreset(PRESET_LOAD, 60));
+
+  // --- Huvudkontroller ------------------------------------------------------
+
+  document.getElementById("fl-btn-run")?.addEventListener("click", () => {
+    window.FlowLabEngine.reset();
+    window.FlowLabEngine.start(60);
+  });
+  document.getElementById("fl-btn-stop")?.addEventListener("click", () => {
+    window.FlowLabEngine.stop("user");
+  });
+  document.getElementById("fl-btn-reset")?.addEventListener("click", () => {
+    window.FlowLabEngine.reset();
+  });
+
+  // --- Verbose-toggle -------------------------------------------------------
 
   const verboseToggle = document.getElementById("fl-verbose-toggle");
   if (verboseToggle) {
@@ -81,4 +129,11 @@
       window.FlowLabEngine.setVerbose(verboseToggle.checked);
     });
   }
+
+  // --- Initial sync ---------------------------------------------------------
+  // Säkerställer single-source-of-truth: sliders speglar engine.getDefaults().
+  // Om HTML-default och engine-default någonsin glider isär märks det vid
+  // sidladdning istället för i en mystisk körning.
+
+  syncSliders(window.FlowLabEngine.getState().settings);
 })();

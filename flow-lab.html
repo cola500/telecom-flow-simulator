@@ -27,14 +27,70 @@
   <section class="panel" id="fl-controls-panel">
     <h2>Kör simulering</h2>
     <p class="fl-note">
-      Reglage för arrival rate, capacity, WIP-limit, variation och bottleneck kommer i kommande commits.
-      Tills dess: två preset-knappar nedan + <code>FlowLabEngine.updateSettings({…})</code> i devtools.
+      Justera reglagen och klicka <em>Kör</em>. Mid-run-ändringar fungerar också —
+      flytta WIP eller capacity medan körningen pågår och se effekten direkt.
     </p>
+
+    <div class="experiment-row">
+      <span class="exp-label">Arrival rate (items/min):</span>
+      <div class="capacity-buttons" id="fl-arrival-buttons">
+        <button class="cap-btn" data-rate="1">1</button>
+        <button class="cap-btn active" data-rate="2">2</button>
+        <button class="cap-btn" data-rate="3">3</button>
+        <button class="cap-btn" data-rate="5">5</button>
+        <button class="cap-btn" data-rate="8">8</button>
+      </div>
+      <span class="exp-hint">Hur ofta nya items strömmar in i todo-backloggen.</span>
+    </div>
+
+    <div class="experiment-row">
+      <span class="exp-label">Capacity per processing-steg:</span>
+      <div class="capacity-buttons" id="fl-capacity-buttons">
+        <button class="cap-btn active" data-cap="1">1</button>
+        <button class="cap-btn" data-cap="2">2</button>
+        <button class="cap-btn" data-cap="3">3</button>
+      </div>
+      <span class="exp-hint">Antal parallella jobb i analysis och build. Inte personer — kapacitet.</span>
+    </div>
+
+    <div class="experiment-row">
+      <span class="exp-label">WIP-limit (analysis + build):</span>
+      <div class="capacity-buttons" id="fl-wip-buttons">
+        <button class="cap-btn" data-wip="3">3</button>
+        <button class="cap-btn active" data-wip="5">5</button>
+        <button class="cap-btn" data-wip="8">8</button>
+        <button class="cap-btn" data-wip="inf">∞</button>
+      </div>
+      <span class="exp-hint">Max antal items i analysis och build samtidigt. Vid limit pausas todo→analysis.</span>
+    </div>
+
+    <div class="experiment-row">
+      <span class="exp-label">Variation i processingtid:</span>
+      <div class="capacity-buttons" id="fl-variation-buttons">
+        <button class="cap-btn active" data-variation="0">0%</button>
+        <button class="cap-btn" data-variation="25">±25%</button>
+        <button class="cap-btn" data-variation="50">±50%</button>
+      </div>
+      <span class="exp-hint">Slumpar varje stegs duration kring sitt medelvärde. <em>Variation is the enemy of flow.</em></span>
+    </div>
+
+    <div class="experiment-row">
+      <span class="exp-label">Bottleneck-steg:</span>
+      <div class="capacity-buttons" id="fl-bottleneck-buttons">
+        <button class="cap-btn active" data-bottleneck="none">Ingen</button>
+        <button class="cap-btn" data-bottleneck="analysis">Analysis</button>
+        <button class="cap-btn" data-bottleneck="build">Build</button>
+      </div>
+      <span class="exp-hint">Det valda steget får dubbel duration. Bra för att se var köer bildas.</span>
+    </div>
+
     <div class="fl-controls">
-      <button type="button" id="fl-btn-run-calm" class="primary">Kör (lugn, 30 s sim)</button>
-      <button type="button" id="fl-btn-run-load" class="primary">Kör (hög load, 60 s sim)</button>
+      <button type="button" id="fl-btn-run" class="primary">Kör 60 s sim</button>
       <button type="button" id="fl-btn-stop">Stoppa</button>
       <button type="button" id="fl-btn-reset">Återställ</button>
+      <span class="fl-preset-label">Snabbscenarier:</span>
+      <button type="button" id="fl-btn-preset-calm">Lugn</button>
+      <button type="button" id="fl-btn-preset-load">Hög load</button>
       <label class="fl-verbose-toggle">
         <input type="checkbox" id="fl-verbose-toggle"> Verbose console
       </label>
