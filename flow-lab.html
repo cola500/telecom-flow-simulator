@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<title>FlowLab (experiment) — Systems Thinking Lab</title>
+<meta name="description" content="Experimentell sidosimulator för att utforska flöde, WIP och variation. Inkubator i OSS/BSS-simulator-repot.">
+<link rel="stylesheet" href="src/styles/main.css" />
+<link rel="stylesheet" href="src/styles/flow-lab.css" />
+</head>
+<body class="fl-body">
+<a class="skip-link" href="#fl-main">Hoppa till innehåll</a>
+
+<header class="fl-header">
+  <div class="fl-header-row">
+    <h1>FlowLab</h1>
+    <span class="fl-experiment-badge" aria-label="Experimentstatus">Experiment · inkubator</span>
+  </div>
+  <p class="fl-intro">
+    Interaktiv lärsimulator för flöde i system. Utforska WIP, kapacitet och variation
+    — och se hur de påverkar ledtid, throughput och kö. Detta är ett pågående experiment
+    i samma repo som OSS/BSS-simulatorn.
+  </p>
+  <a href="index.html" class="fl-back-link" aria-label="Gå tillbaka till OSS/BSS-simulatorn">← Tillbaka till OSS/BSS-simulatorn</a>
+</header>
+
+<main id="fl-main" class="fl-main">
+  <section class="panel" id="fl-controls-panel">
+    <h2>Kör simulering</h2>
+    <p class="fl-note">
+      Justera reglagen och klicka <em>Kör</em>. Mid-run-ändringar fungerar också —
+      flytta WIP eller capacity medan körningen pågår och se effekten direkt.
+    </p>
+
+    <div class="experiment-row">
+      <span class="exp-label">Arrival rate (items/min):</span>
+      <div class="capacity-buttons" id="fl-arrival-buttons">
+        <button class="cap-btn" data-rate="1">1</button>
+        <button class="cap-btn active" data-rate="2">2</button>
+        <button class="cap-btn" data-rate="3">3</button>
+        <button class="cap-btn" data-rate="5">5</button>
+        <button class="cap-btn" data-rate="8">8</button>
+      </div>
+      <span class="exp-hint">Hur ofta nya items strömmar in i todo-backloggen.</span>
+    </div>
+
+    <div class="experiment-row">
+      <span class="exp-label">Capacity per processing-steg:</span>
+      <div class="capacity-buttons" id="fl-capacity-buttons">
+        <button class="cap-btn active" data-cap="1">1</button>
+        <button class="cap-btn" data-cap="2">2</button>
+        <button class="cap-btn" data-cap="3">3</button>
+      </div>
+      <span class="exp-hint">Antal parallella jobb i analysis och build. Inte personer — kapacitet.</span>
+    </div>
+
+    <div class="experiment-row">
+      <span class="exp-label">WIP-limit (analysis + build):</span>
+      <div class="capacity-buttons" id="fl-wip-buttons">
+        <button class="cap-btn" data-wip="3">3</button>
+        <button class="cap-btn active" data-wip="5">5</button>
+        <button class="cap-btn" data-wip="8">8</button>
+        <button class="cap-btn" data-wip="inf">∞</button>
+      </div>
+      <span class="exp-hint">Max antal items i analysis och build samtidigt. Vid limit pausas todo→analysis.</span>
+    </div>
+
+    <div class="experiment-row">
+      <span class="exp-label">Variation i processingtid:</span>
+      <div class="capacity-buttons" id="fl-variation-buttons">
+        <button class="cap-btn active" data-variation="0">0%</button>
+        <button class="cap-btn" data-variation="25">±25%</button>
+        <button class="cap-btn" data-variation="50">±50%</button>
+      </div>
+      <span class="exp-hint">Slumpar varje stegs duration kring sitt medelvärde. <em>Variation is the enemy of flow.</em></span>
+    </div>
+
+    <div class="experiment-row">
+      <span class="exp-label">Bottleneck-steg:</span>
+      <div class="capacity-buttons" id="fl-bottleneck-buttons">
+        <button class="cap-btn active" data-bottleneck="none">Ingen</button>
+        <button class="cap-btn" data-bottleneck="analysis">Analysis</button>
+        <button class="cap-btn" data-bottleneck="build">Build</button>
+      </div>
+      <span class="exp-hint">Det valda steget får dubbel duration. Bra för att se var köer bildas.</span>
+    </div>
+
+    <div class="fl-controls">
+      <button type="button" id="fl-btn-run" class="primary">Kör 60 s sim</button>
+      <button type="button" id="fl-btn-stop">Stoppa</button>
+      <button type="button" id="fl-btn-reset">Återställ</button>
+      <span class="fl-preset-label">Snabbscenarier:</span>
+      <button type="button" id="fl-btn-preset-calm">Lugn</button>
+      <button type="button" id="fl-btn-preset-load">Hög load</button>
+    </div>
+    <div class="fl-status-row" id="fl-status-row" aria-live="polite" aria-atomic="true">
+      <span><strong>Engine:</strong> <span id="fl-status-engine">idle</span></span>
+      <span><strong>simT:</strong> <span id="fl-status-simtime">0.0s / —</span></span>
+      <span><strong>Ticks:</strong> <span id="fl-status-ticks">0</span></span>
+      <span><strong>Spawned:</strong> <span id="fl-status-items">0</span></span>
+      <span><strong>Completed:</strong> <span id="fl-status-completed">0</span></span>
+      <span><strong>WIP gate:</strong> <span id="fl-status-wipgate">open</span></span>
+    </div>
+  </section>
+
+  <section class="panel" id="fl-flow-panel">
+    <h2>Flöde</h2>
+    <div class="fl-kanban" aria-label="Kanban: items per steg">
+      <div class="fl-column" id="fl-col-todo">
+        <div class="fl-column-head">
+          <span class="fl-column-title">To Do</span>
+          <span class="fl-column-count" id="fl-count-todo">0</span>
+        </div>
+        <div class="fl-cards" id="fl-cards-todo"></div>
+      </div>
+      <div class="fl-column" id="fl-col-analysis">
+        <div class="fl-column-head">
+          <span class="fl-column-title">Analysis</span>
+          <span class="fl-column-count" id="fl-count-analysis">0</span>
+        </div>
+        <div class="fl-cards" id="fl-cards-analysis"></div>
+      </div>
+      <div class="fl-column" id="fl-col-build">
+        <div class="fl-column-head">
+          <span class="fl-column-title">Build</span>
+          <span class="fl-column-count" id="fl-count-build">0</span>
+        </div>
+        <div class="fl-cards" id="fl-cards-build"></div>
+      </div>
+      <div class="fl-column fl-column-done" id="fl-col-done">
+        <div class="fl-column-head">
+          <span class="fl-column-title">Done</span>
+          <span class="fl-column-count" id="fl-count-done">0</span>
+        </div>
+        <div class="fl-cards" id="fl-cards-done"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="fl-kpi-panel">
+    <h2>KPI</h2>
+    <div class="fl-kpi-grid">
+      <div class="fl-kpi-card">
+        <div class="fl-kpi-label">Completed</div>
+        <div class="fl-kpi-value"><span id="fl-kpi-completed">0</span></div>
+      </div>
+      <div class="fl-kpi-card">
+        <div class="fl-kpi-label">Avg lead time</div>
+        <div class="fl-kpi-value"><span id="fl-kpi-leadtime">—</span><span class="fl-kpi-unit">s</span></div>
+      </div>
+      <div class="fl-kpi-card">
+        <div class="fl-kpi-label">Throughput</div>
+        <div class="fl-kpi-value"><span id="fl-kpi-throughput">—</span><span class="fl-kpi-unit">/min</span></div>
+      </div>
+      <div class="fl-kpi-card">
+        <div class="fl-kpi-label">WIP nu</div>
+        <div class="fl-kpi-value"><span id="fl-kpi-wip">0</span></div>
+      </div>
+      <div class="fl-kpi-card">
+        <div class="fl-kpi-label">Max kö (todo)</div>
+        <div class="fl-kpi-value"><span id="fl-kpi-maxq-todo">0</span></div>
+      </div>
+      <div class="fl-kpi-card">
+        <div class="fl-kpi-label">Max kö (analysis)</div>
+        <div class="fl-kpi-value"><span id="fl-kpi-maxq-analysis">0</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="app-footer">
+  Created by <strong>Johan Lindengard</strong>
+  · <a href="https://www.linkedin.com/in/johan-lindengard/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  · <a href="index.html">OSS/BSS-simulator</a>
+</footer>
+
+<script src="src/flow-lab/flow-engine.js"></script>
+<script src="src/flow-lab/flow-render.js"></script>
+<script src="src/flow-lab/flow-app.js"></script>
+</body>
+</html>
