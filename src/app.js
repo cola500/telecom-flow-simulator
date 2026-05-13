@@ -10,6 +10,7 @@ wireDocsTabs(); // wirar docs-flik-knapparna (lazy-load doc vid mode-byte)
 wireInfoIcons(); // event-delegerar klick på alla .info-icon-knappar
 setupSearch();   // header-search över GLOSSARY + PATTERNS + SYSTEMS
 renderReflection(); // initial empty-state-frågor i Reflection-panelen
+if (window.Experiment) window.Experiment.init(); // Toyota Kata-loopen i Optimize Process
 
 // --- Mode tabs (Learn OSS/BSS / Optimize Process / Documentation) -----------
 // Mode-byte är fryst under run så användaren inte tappar UI mitt i en batch.
@@ -27,15 +28,23 @@ document.querySelectorAll(".mode-tab").forEach(btn => {
   });
 });
 
+// Liten helper: notifiera experiment-modulen om att settings/state ändrats,
+// så "Ändringar sedan förra körningen" och prediction-textens uppdateras live.
+function notifyExperimentOfChange() {
+  if (window.Experiment) window.Experiment.refresh();
+}
+
 // --- Automation toggle -------------------------------------------------------
 automationToggle.addEventListener("change", () => {
   automationEnabled = automationToggle.checked;
+  notifyExperimentOfChange();
 });
 
 // --- Provisioning automation toggle -----------------------------------------
 provAutomationToggle.addEventListener("change", () => {
   provAutomationEnabled = provAutomationToggle.checked;
   syncProvModeBadge();
+  notifyExperimentOfChange();
 });
 
 // --- Resource Inventory capacity --------------------------------------------
@@ -45,6 +54,7 @@ document.querySelectorAll("#capacity-buttons .cap-btn").forEach(btn => {
     document.querySelectorAll("#capacity-buttons .cap-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     workersPerSystem.ri = parseInt(btn.dataset.workers, 10);
+    notifyExperimentOfChange();
   });
 });
 
@@ -55,6 +65,7 @@ document.querySelectorAll("#prov-capacity-buttons .cap-btn").forEach(btn => {
     document.querySelectorAll("#prov-capacity-buttons .cap-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     workersPerSystem.prov = parseInt(btn.dataset.workers, 10);
+    notifyExperimentOfChange();
   });
 });
 
@@ -65,12 +76,14 @@ document.querySelectorAll("#variability-buttons .cap-btn").forEach(btn => {
     document.querySelectorAll("#variability-buttons .cap-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     variabilityPct = parseInt(btn.dataset.variability, 10);
+    notifyExperimentOfChange();
   });
 });
 
 // --- Backpressure toggle ----------------------------------------------------
 backpressureToggle.addEventListener("change", () => {
   backpressureEnabled = backpressureToggle.checked;
+  notifyExperimentOfChange();
 });
 
 // --- Order decomposition: product selector ----------------------------------
@@ -82,19 +95,32 @@ document.querySelectorAll("#product-buttons .cap-btn").forEach(btn => {
     document.querySelectorAll("#product-buttons .cap-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     renderDecomposition(btn.dataset.product);
+    notifyExperimentOfChange();
   });
 });
 
 // --- Simulation controls -----------------------------------------------------
+// Batch-knapparna anropar Experiment.beginRun(N) FÖRE startParallel så att
+// modulen hinner snapshotta settings + frysa "Förväntat"-texten innan engine
+// rensar UI-state.
 document.getElementById("btn-happy").addEventListener("click",
   () => runFlow(happyPathFor(currentProductId), "happy path", "happy"));
-document.getElementById("btn-batch-5").addEventListener("click", () => startParallel(5));
-document.getElementById("btn-batch-20").addEventListener("click", () => startParallel(20));
+document.getElementById("btn-batch-5").addEventListener("click", () => {
+  if (window.Experiment) window.Experiment.beginRun(5);
+  startParallel(5);
+});
+document.getElementById("btn-batch-20").addEventListener("click", () => {
+  if (window.Experiment) window.Experiment.beginRun(20);
+  startParallel(20);
+});
 document.getElementById("btn-fail-resource").addEventListener("click",
   () => runFlow(failResourceFor(currentProductId), "ResourceUnavailable", "resource"));
 document.getElementById("btn-fail-prov").addEventListener("click",
   () => runFlow(failProvFor(currentProductId), "ActivationRejected", "prov"));
-document.getElementById("btn-reset").addEventListener("click", fullReset);
+document.getElementById("btn-reset").addEventListener("click", () => {
+  fullReset();
+  if (window.Experiment) window.Experiment.onReset();
+});
 
 // --- Collapsible Learn-mode panels ------------------------------------------
 // Persist open/closed state per panel id i localStorage. Om localStorage är

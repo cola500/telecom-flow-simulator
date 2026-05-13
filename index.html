@@ -312,6 +312,39 @@
       <div id="decomp-example-host"></div>
     </details>
 
+    <details class="panel optimize-only collapsible" id="experiment-panel" open>
+      <summary>
+        <h2>Dagens experiment<button type="button" class="info-icon" data-info="kata_loop" aria-label="Förklara hypotesdriven förbättring" aria-expanded="false">i</button></h2>
+        <span class="summary-hint">Hypotes och förväntat resultat — innan du kör</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
+      <p class="exp-intro">Strukturera körningen som ett litet experiment: skriv ner målet, en hypotes om vad som händer, och kör. Efter körningen jämför du faktiskt utfall mot förväntat. <em>Målet är inte att gissa rätt — målet är att lära sig hur systemet beter sig.</em></p>
+      <div class="exp-form">
+        <label class="exp-field">
+          <span class="exp-label">Mål</span>
+          <textarea id="exp-goal" rows="2" placeholder="t.ex. Minska genomsnittlig lead time"></textarea>
+        </label>
+        <label class="exp-field">
+          <span class="exp-label">Hypotes</span>
+          <textarea id="exp-hypothesis" rows="2" placeholder="t.ex. Om jag höjer Provisioning capacity 1 → 2 minskar kön i activation."></textarea>
+        </label>
+        <label class="exp-field">
+          <span class="exp-label">Förväntat resultat <span class="exp-sublabel">(skriv eget eller använd förslaget nedan)</span></span>
+          <textarea id="exp-expected" rows="2" placeholder="t.ex. Avg lead time sjunker och bottleneck flyttar från Provisioning till Resource Reservation."></textarea>
+        </label>
+      </div>
+      <div class="exp-meta">
+        <div class="exp-meta-block">
+          <h3>Ändringar sedan förra körningen</h3>
+          <div id="exp-changes" class="exp-changes">Ingen tidigare körning än — kör en batch så börjar jämförelsen.</div>
+        </div>
+        <div class="exp-meta-block">
+          <h3>Förslag på förväntat resultat</h3>
+          <div id="exp-prediction" class="exp-prediction">Justera reglagen i Simulering så ser du en hypotesbaserad prediction här.</div>
+        </div>
+      </div>
+    </details>
+
     <details class="panel collapsible" id="sim-panel" open>
       <summary>
         <h2>Simulering</h2>
@@ -581,6 +614,44 @@
       </div>
     </details>
 
+    <details class="panel optimize-only collapsible" id="experiment-result-panel" open>
+      <summary>
+        <h2>Experimentresultat<button type="button" class="info-icon" data-info="kata_loop" aria-label="Förklara hypotesdriven förbättring" aria-expanded="false">i</button></h2>
+        <span class="summary-hint">Förväntat vs faktiskt — efter körning</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
+      <div id="exp-result-empty" class="exp-result-empty">Kör en batch så fylls jämförelsen i här.</div>
+      <div id="exp-result" class="exp-result hidden">
+        <div class="exp-result-grid">
+          <div class="exp-result-cell">
+            <h3>Förväntat</h3>
+            <p id="exp-result-expected">—</p>
+          </div>
+          <div class="exp-result-cell">
+            <h3>Faktiskt</h3>
+            <ul id="exp-result-actual" class="exp-result-list"></ul>
+          </div>
+        </div>
+        <div class="exp-reflection">
+          <h3>Stämde hypotesen?</h3>
+          <div class="exp-reflection-buttons" id="exp-reflection-buttons" role="group" aria-label="Hypotesbedömning">
+            <button type="button" data-answer="ja">Ja</button>
+            <button type="button" data-answer="delvis">Delvis</button>
+            <button type="button" data-answer="nej">Nej</button>
+            <button type="button" data-answer="osakert">Osäkert</button>
+          </div>
+          <label class="exp-reflection-text-label">
+            <span>Vad lärde du dig? <span class="exp-sublabel">(valfritt)</span></span>
+            <textarea id="exp-reflection-text" rows="2" placeholder="Något oväntat? En insikt om bottleneck eller capacity?"></textarea>
+          </label>
+        </div>
+        <div class="exp-history" id="exp-history">
+          <h3>Senaste experiment</h3>
+          <ul id="exp-history-list" class="exp-history-list"></ul>
+        </div>
+      </div>
+    </details>
+
     <details class="panel collapsible" id="reflection-panel" open>
       <summary>
         <h2>Reflektion<button type="button" class="info-icon" data-info="reflection_questions" aria-label="Förklara Reflektion" aria-expanded="false">i</button></h2>
@@ -640,6 +711,7 @@
 <script src="src/ui/glossary.js"></script>
 <script src="src/ui/search.js"></script>
 <script src="src/ui/reflection.js"></script>
+<script src="src/ui/experiment.js"></script>
 <script src="src/app.js"></script>
 </body>
 </html>

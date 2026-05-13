@@ -210,6 +210,11 @@ const GLOSSARY = {
     body: "Korta frågor som visas efter en körning. Frågorna byts baserat på vad du senast simulerat (happy path, fail-scenario, eller batch) och varje fråga har en kort hint som förklarar vad metricsen och händelserna betyder. Det är inte ett quiz med rätt eller fel — det är en pedagogisk prompt.",
     why: "Inspirerat av experiential learning: vi lär oss djupare genom att formulera en hypotes innan vi får förklaringen, och genom att reflektera över vad vi just sett. Frågorna är frivilliga, lokala (ingen profil, inga poäng) och tänker som en facilitator skulle: 'vad såg du? vad förvånade dig? vad skulle du testa härnäst?'"
   },
+  kata_loop: {
+    title: "Hypotesdriven förbättring (Toyota Kata)",
+    body: "Ändra en sak i taget, skriv vad du tror ska hända, kör simuleringen och jämför utfallet. Loopen: Mål → Hypotes → Förändring → Förväntat resultat → Faktiskt resultat → Reflektion. Inspirerat av Toyota Kata och Plan-Do-Check-Act.",
+    why: "Målet är inte att gissa rätt — målet är att lära sig hur systemet beter sig. Strukturerade experiment ger snabbare lärande än att 'leka med reglagen'. När hypotes och utfall divergerar är det där insikten ligger."
+  },
 
   // --- Dashboard / Metrics
   active: {

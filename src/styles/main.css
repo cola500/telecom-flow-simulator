@@ -795,6 +795,311 @@ button:disabled { opacity: 0.4; cursor: not-allowed; }
   border: 1px solid #d8dde8;
 }
 
+/* Toyota Kata-inspired experiment loop — Optimize Process only.
+   Två panels: "Dagens experiment" före Simulering (mål/hypotes/förväntat +
+   diff + auto-prediction) och "Experimentresultat" efter Operativ påverkan
+   (förväntat vs faktiskt + reflektion + lättviktig historik). Pedagogiskt
+   stöd för hypotesdriven förbättring — inte ett formulärmonster. */
+.exp-intro {
+  font-size: 12px;
+  color: #5b6478;
+  margin: 0 0 14px;
+  line-height: 1.55;
+}
+.exp-intro em { color: #2c3da3; font-style: italic; }
+.exp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.exp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.exp-field .exp-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #2a3140;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.exp-field .exp-sublabel {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #6b7385;
+  font-size: 11px;
+}
+.exp-form textarea {
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 8px 10px;
+  border: 1px solid #d8dde8;
+  border-radius: 6px;
+  resize: vertical;
+  background: #fbfcfe;
+  color: #1f2433;
+  min-height: 44px;
+}
+.exp-form textarea:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 1px;
+  border-color: #4a6cf7;
+  background: #fff;
+}
+.exp-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.exp-meta-block {
+  background: #fbfcfe;
+  border: 1px solid #d8dde8;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.exp-meta-block h3 {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #2a3140;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.exp-changes-empty,
+.exp-prediction-empty {
+  font-size: 12px;
+  color: #6b7385;
+  font-style: italic;
+}
+.exp-changes-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  color: #2a3140;
+  line-height: 1.5;
+}
+.exp-changes-list li {
+  padding: 3px 0;
+}
+.exp-changes-from {
+  color: #6b7385;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+.exp-changes-to {
+  color: #2c3da3;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-weight: 600;
+}
+.exp-prediction-text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #2a3140;
+}
+
+/* Resultatpanel: förväntat | faktiskt + reflektion + historik. */
+.exp-result-empty {
+  font-size: 12px;
+  color: #6b7385;
+  font-style: italic;
+  padding: 8px 0;
+}
+.exp-result.hidden { display: none; }
+.exp-result-empty.hidden { display: none; }
+.exp-result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.exp-result-cell {
+  background: #fbfcfe;
+  border: 1px solid #d8dde8;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.exp-result-cell h3 {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #2a3140;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.exp-result-cell p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #1f2433;
+}
+.exp-result-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.65;
+  color: #1f2433;
+}
+.exp-result-list li {
+  padding: 2px 0;
+}
+.exp-delta {
+  font-weight: 700;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  margin-left: 4px;
+}
+.exp-delta.better { color: #2da66a; }
+.exp-delta.worse { color: #c33; }
+
+.exp-reflection {
+  border-top: 1px solid #e8ebf2;
+  padding-top: 12px;
+  margin-bottom: 14px;
+}
+.exp-reflection h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2a3140;
+}
+.exp-reflection-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.exp-reflection-buttons button {
+  background: #fff;
+  border: 1px solid #d8dde8;
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #4a5263;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.exp-reflection-buttons button:hover {
+  background: #f3f6ff;
+  border-color: #4a6cf7;
+  color: #2c3da3;
+}
+.exp-reflection-buttons button.active {
+  background: #4a6cf7;
+  border-color: #4a6cf7;
+  color: #fff;
+  font-weight: 600;
+}
+.exp-reflection-buttons button:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+}
+.exp-reflection-text-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #2a3140;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.exp-reflection-text-label .exp-sublabel {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #6b7385;
+}
+.exp-reflection-text-label textarea {
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 8px 10px;
+  border: 1px solid #d8dde8;
+  border-radius: 6px;
+  resize: vertical;
+  background: #fbfcfe;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #1f2433;
+  font-weight: 400;
+}
+.exp-reflection-text-label textarea:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 1px;
+  border-color: #4a6cf7;
+  background: #fff;
+}
+
+.exp-history {
+  border-top: 1px solid #e8ebf2;
+  padding-top: 12px;
+}
+.exp-history h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2a3140;
+}
+.exp-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.exp-history-empty {
+  font-size: 12px;
+  color: #6b7385;
+  font-style: italic;
+}
+.exp-history-item {
+  background: #fbfcfe;
+  border: 1px solid #d8dde8;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.exp-history-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.exp-history-time {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  color: #6b7385;
+  font-size: 11px;
+}
+.exp-history-status {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #f0f3f8;
+  color: #5b6478;
+}
+.exp-history-status.status-ja { background: #e6f4ea; color: #1f5a3c; }
+.exp-history-status.status-delvis { background: #fff8e1; color: #8a6500; }
+.exp-history-status.status-nej { background: #fbeaea; color: #b94a00; }
+.exp-history-status.status-osakert { background: #eef0fb; color: #4a5263; }
+.exp-history-changes {
+  color: #2a3140;
+}
+.exp-history-result {
+  color: #5b6478;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
 /* Mini concept flow (top of main) — non-interactive orientation row.
    Six steps + arrows wrap naturally on narrow viewports. */
 .panel.concept-flow {
@@ -2215,6 +2520,16 @@ select:focus-visible,
   /* Insights and improvement panel */
   .insight { font-size: 13px; line-height: 1.6; }
   .improvement .imp-insight { font-size: 13px; line-height: 1.55; }
+
+  /* Toyota Kata experiment-paneler — stack och bumpa font på mobil */
+  .exp-meta { grid-template-columns: 1fr; gap: 8px; }
+  .exp-result-grid { grid-template-columns: 1fr; gap: 8px; }
+  .exp-form textarea,
+  .exp-reflection-text-label textarea { font-size: 14px; line-height: 1.55; }
+  .exp-result-cell p,
+  .exp-result-list,
+  .exp-history-item { font-size: 13px; line-height: 1.6; }
+  .exp-reflection-buttons button { min-height: 36px; padding: 6px 14px; font-size: 13px; }
 
   /* Search dropdown */
   .search-result-title { font-size: 14px; line-height: 1.4; }

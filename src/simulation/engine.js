@@ -472,4 +472,5 @@ function finalizeParallel() {
   });
 
   if (typeof updateReflectionFor === "function") updateReflectionFor("batch");
+  if (window.Experiment && typeof window.Experiment.onRunFinalized === "function") window.Experiment.onRunFinalized();
 }
