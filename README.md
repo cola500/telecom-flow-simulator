@@ -1,28 +1,25 @@
----
-title: OSS/BSS Order-to-Activate Simulator
-description: Lokal browser-baserad lärsimulator för en förenklad telekom-stack — visar order-to-activate-flödet, lead time, handoffs, bottlenecks och förbättringsfrågor.
-category: learning-tool
-status: in-progress
-last_updated: 2026-05-11
-sections: [Disclaimer, Three modes Learn OSS/BSS Optimize Process Documentation, Vad simulatorn lär ut, Saker att prova, Dokumentationsöversikt, Begrepp och förkortningar, Tillgänglighet och läsbarhet, Begränsningar, For developers]
----
-
 # OSS/BSS Order-to-Activate Simulator
 
-> 🔗 **Live demo:** [cola500.github.io/telecom-flow-simulator](https://cola500.github.io/telecom-flow-simulator/) — kör direkt i webbläsaren, ingen installation behövs.
+> Ett interaktivt lärverktyg som gör telekomstacken — handoffs, köbildning, bottlenecks — begriplig på fem minuter.
 
-Ett interaktivt lärverktyg för att förstå hur en kundorder vandrar genom en telekomoperatörs IT-system tills tjänsten är aktiverad och fakturering startar.
+🔗 **Live demo:** [cola500.github.io/telecom-flow-simulator](https://cola500.github.io/telecom-flow-simulator/)
 
-Simulatorn hjälper dig att se:
-- hur de stora system-domänerna i telekom är uppdelade (BSS för affär och kund, OSS för nät och tjänst);
-- hur en order dekomponeras till tekniska arbetsobjekt;
-- var flöden typiskt fastnar (köer, handoffs, "bottlenecks");
-- hur olika beslut — automation, kapacitet, variation — påverkar tjänstens leverans.
+<img width="1232" height="680" alt="Screenshot 2026-05-17 at 21 21 05" src="https://github.com/user-attachments/assets/58ceba39-3cf9-4196-9919-04cf9be56c73" />
 
-Du behöver inte ha jobbat med telekom tidigare. Allt förklaras stegvis i appens *Learn OSS/BSS*-läge och i denna dokumentation.
+<img width="1234" height="698" alt="Screenshot 2026-05-17 at 21 22 47" src="https://github.com/user-attachments/assets/1865f6af-2d15-43bb-a4ce-d279d76e0faf" />
 
-> **This is a simplified learning model, not a full telecom architecture.**
-> Domänerna och flödesfaserna är inspirerade av industristandard (TM Forum SID/eTOM), men eventnamn, durations, fail-typer och flöde är kraftigt förenklade för att vara begripliga på 5 minuter. Se [`REALISM_NOTES.md`](REALISM_NOTES.md) för en kalibrering: vad är realistiskt, vad är pedagogiskt förenklat, och vilka antaganden modellen gör. För telekomförkortningar (BSS, OSS, IMSI, MSISDN, OLT, RSP, HSS, …) finns en samlad referens i sektionen [Begrepp och förkortningar](#begrepp-och-förkortningar).
+Telekomoperatörers IT-stack är notoriskt svårförklarad — men varje förbättringssamtal kräver att deltagarna ser samma flöde. Den här simulatorn låter en team-medlem köra en kundorder, se den färdas genom BSS → OSS → nät, och själv upptäcka var tid spenderas, vart handoffs tar och vilken systemruta som blir flaskhals först.
+
+## Vad detta repo visar
+
+- **Systems thinking i ren form** — Theory of Constraints, Little's Law, flow-vs-resource-efficiency, backpressure, visualiserat istället för förklarat.
+- **Pedagogiskt design framför teknisk briljans** — tre lägen (Learn / Optimize / Documentation) för att skala kognitiv belastning till uppgiften.
+- **Hederlig avgränsning** — `REALISM_NOTES.md` dokumenterar vad som är pedagogiskt förenklat vs realistiskt, per aspekt. Modellen är inspirerad av TM Forum SID/eTOM men inte trogen den.
+- **Discovery före text** — användaren testar och ser resultatet *innan* teorin förklaras, vilket bygger förståelse snarare än bara minneskunskap.
+
+Avsedd för operatörsteam, RTE:er, agile coaches och konsulter som behöver ge ett team gemensam mental modell snabbt — inte för att ersätta riktig arkitekturkunskap.
+
+---
 
 ## Three modes: Learn OSS/BSS, Optimize Process, Documentation
 
