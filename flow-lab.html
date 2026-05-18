@@ -167,10 +167,25 @@
   </section>
 </main>
 
-<footer class="app-footer">
-  Created by <strong>Johan Lindengard</strong>
-  · <a href="https://www.linkedin.com/in/johan-lindengard/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-  · <a href="index.html">OSS/BSS-simulator</a>
+<footer>
+  <p style="margin: 0 0 .25rem 0; font-size: .8rem; color: #888; text-align: center;">
+    <a href="index.html" style="color: #555;">← OSS/BSS-simulator</a>
+  </p>
+  <!-- BEGIN personal-footer · template: shared/personal-footer.html i salvage-vision-repot
+       Se docs/personal-footer-pattern.md för design + footer contract.
+       Intern navlänk ovan ligger i en separat <p> så personal-footer-snippet:en
+       håller sig till mönstrets "max 2 externa länkar"-kontrakt. -->
+  <p class="personal-footer">
+    Created by
+    <strong class="personal-footer-name">Johan Lindengard</strong>
+    —
+    <span class="personal-footer-role">IT Consultant / AI-driven prototyping</span>
+    <span class="personal-footer-sep" aria-hidden="true">·</span>
+    <a class="personal-footer-link"
+       href="https://www.linkedin.com/in/johan-lindengard/"
+       target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  </p>
+  <!-- END personal-footer -->
 </footer>
 
 <script src="src/flow-lab/flow-engine.js"></script>
