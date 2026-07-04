@@ -119,6 +119,7 @@
   // En förbättringskontroll (alignment) transformerar planen ytterligare:
   //   premium        → work-steg får extra simtid uppfront (gäller alltid)
   //   reworkOverride → en blockers omtag krymps till angivna steg (gäller vid blocker)
+  //   waitFactor     → en blockers väntetid kortas med en faktor (gäller vid blocker)
 
   function buildPlan(blockerId, alignmentOn) {
     const blocker = blockerId ? D.BLOCKERS[blockerId] : null;
@@ -127,7 +128,12 @@
 
     for (const stage of D.STAGES) {
       if (blocker && blocker.waitMs && blocker.triggerStage === stage.id) {
-        plan.push({ kind: "wait", stageId: stage.id, durationMs: blocker.waitMs, blocker });
+        const waitFactor =
+          (control && control.waitFactor && control.waitFactor[blockerId]) || 1;
+        plan.push({
+          kind: "wait", stageId: stage.id,
+          durationMs: Math.round(blocker.waitMs * waitFactor), blocker
+        });
       }
       const premiumMs = (control && control.premium[stage.id]) || 0;
       plan.push({

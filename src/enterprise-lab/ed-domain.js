@@ -174,6 +174,9 @@
     premium: { arch: 300, seccomp: 300 },
     // När kontrollen är på krymper dessa blockers omtag till angivna steg.
     reworkOverride: { arch_rework: ["impl"] },
+    // När kontrollen är på kortas dessa blockers väntetid med angiven faktor.
+    // Security engageras tidigt → granskningskön är kortare (men försvinner inte).
+    waitFactor: { sec_delay: 0.4 },
     eventOn: {
       title: "Alignment: tidig arkitektur- & säkerhetsdialog",
       detail: "Arkitektur och säkerhet involveras tidigt och grundligt. Det kostar " +
