@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Enterprise Delivery Lab (experiment) — Från verksamhetsbehov till driftsatt IT-förmåga</title>
+<meta name="description" content="Experimentell simulator för enterprise IT-leverans: följ ett initiativ från verksamhetsbehov till driftsatt förmåga, trigga blockers och se operational impact. Domän 2-inkubator i OSS/BSS-simulator-repot.">
+<link rel="stylesheet" href="src/styles/main.css" />
+<link rel="stylesheet" href="src/styles/enterprise-lab.css" />
+</head>
+<body class="edl-body">
+<a class="skip-link" href="#edl-main">Hoppa till innehåll</a>
+
+<header class="edl-header">
+  <div class="edl-header-row">
+    <h1>Enterprise Delivery Lab</h1>
+    <span class="edl-experiment-badge" aria-label="Experimentstatus">Experiment · domän 2</span>
+  </div>
+  <p class="edl-intro">
+    Interaktiv lärsimulator för enterprise IT-leverans: följ ett initiativ från
+    verksamhetsbehov till driftsatt förmåga, trigga en blocker och se varför
+    leveransen blir långsam. Generisk modell — inga verkliga organisationer
+    eller interna processer.
+  </p>
+  <a href="index.html" class="edl-back-link" aria-label="Gå tillbaka till OSS/BSS-simulatorn">← Tillbaka till OSS/BSS-simulatorn</a>
+</header>
+
+<main id="edl-main" class="edl-main">
+  <section class="panel" id="edl-initiative-panel">
+    <h2>Initiative</h2>
+    <p class="edl-initiative-name" id="edl-initiative-name"></p>
+    <p class="edl-note" id="edl-initiative-desc"></p>
+
+    <div class="edl-controls">
+      <button type="button" id="edl-btn-start" class="primary">Start initiative</button>
+      <span class="edl-blocker-label">Med blocker:</span>
+      <button type="button" id="edl-btn-blocker-sec">Security review delay</button>
+      <button type="button" id="edl-btn-blocker-arch">Architecture rework</button>
+      <button type="button" id="edl-btn-reset">Återställ</button>
+    </div>
+
+    <div class="edl-status-row" aria-live="polite" aria-atomic="true">
+      <span class="status-pill" id="edl-status-pill">Redo</span>
+      <span class="edl-status-days" id="edl-status-days">—</span>
+    </div>
+  </section>
+
+  <div class="edl-columns">
+    <section class="panel" id="edl-flow-panel">
+      <h2>Delivery flow</h2>
+      <p class="edl-note">
+        Från verksamhetsbehov till driftsatt IT-förmåga — tio steg, många
+        ägarbyten. Fäll ut <em>Om steget</em> för att läsa vad varje steg
+        representerar och varför det spelar roll.
+      </p>
+      <ol class="edl-stage-list" id="edl-stage-list" aria-label="Delivery-steg med status"></ol>
+    </section>
+
+    <div class="edl-side">
+      <section class="panel" id="edl-log-panel">
+        <h2>Eventlogg</h2>
+        <div class="edl-log" id="edl-log" aria-live="polite"></div>
+      </section>
+
+      <section class="panel" id="edl-impact-panel">
+        <h2>Operational impact</h2>
+        <p class="edl-note" id="edl-impact-placeholder">
+          Kör initiativet till leverans så översätts resultatet till
+          organisatoriska konsekvenser här. Jämför gärna en körning utan
+          blocker med en körning med.
+        </p>
+        <div class="edl-impact-grid" id="edl-impact-grid" hidden></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="app-footer">
+  Created by <strong>Johan Lindengard</strong>
+  · <a href="https://www.linkedin.com/in/johan-lindengard/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  · <a href="index.html">OSS/BSS-simulator</a>
+  · <a href="flow-lab.html">FlowLab</a>
+</footer>
+
+<script src="src/enterprise-lab/ed-domain.js"></script>
+<script src="src/enterprise-lab/ed-engine.js"></script>
+<script src="src/enterprise-lab/ed-render.js"></script>
+<script src="src/enterprise-lab/ed-app.js"></script>
+</body>
+</html>

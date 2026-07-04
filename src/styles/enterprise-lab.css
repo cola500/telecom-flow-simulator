@@ -1,0 +1,327 @@
+/* ============================================================================
+ * Enterprise Delivery Lab-specifik CSS
+ *
+ * Komplementerar main.css — överrider inga befintliga regler. Alla nya klasser
+ * är prefixade med .edl- så vi garanterat inte kolliderar med telecom-
+ * simulatorns eller FlowLabs klasser. (Samma konvention som flow-lab.css.)
+ * ========================================================================== */
+
+/* --- Layout-stommen --------------------------------------------------------- */
+
+.edl-header {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px 4px;
+}
+
+.edl-header-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.edl-header-row h1 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+.edl-intro {
+  margin: 10px 0 6px;
+  color: #444;
+  max-width: 72ch;
+  line-height: 1.5;
+}
+
+.edl-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+.edl-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.edl-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* --- Experimentmarkör + navigation ------------------------------------------ */
+
+.edl-experiment-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #eef2ff;
+  color: #3a4fb5;
+  border: 1px solid #7a8ce0;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.edl-back-link {
+  display: inline-block;
+  margin-top: 6px;
+  color: #4a6cf7;
+  text-decoration: none;
+  font-size: 13px;
+  border-bottom: 1px dotted transparent;
+  transition: border-color 0.15s;
+}
+
+.edl-back-link:hover { border-bottom-color: #4a6cf7; }
+
+.edl-back-link:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* --- Initiative-panel ------------------------------------------------------- */
+
+.edl-initiative-name {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1c2330;
+}
+
+.edl-note {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.edl-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 0 10px;
+}
+
+.edl-blocker-label {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-left: 1px solid #d6dbe5;
+  padding-left: 12px;
+}
+
+.edl-status-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #555;
+}
+
+.edl-status-days { font-variant-numeric: tabular-nums; }
+
+/* --- Delivery flow: steglista ------------------------------------------------ */
+
+.edl-stage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.edl-stage {
+  background: #f5f7fb;
+  border-left: 3px solid #c7cfd9;
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.edl-stage-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.edl-stage-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #2c3a52;
+}
+
+.edl-stage-actor {
+  display: block;
+  font-size: 11px;
+  color: #6b7385;
+  font-weight: 400;
+  margin-top: 1px;
+}
+
+.edl-stage-badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #888;
+  white-space: nowrap;
+}
+
+/* Stegstatus: pending (default ovan) | active | queued | rework | done */
+
+.edl-stage-active {
+  background: #fff8e1;
+  border-left-color: #f5b400;
+}
+.edl-stage-active .edl-stage-badge { color: #8a6500; }
+
+.edl-stage-queued {
+  background: #fdeeee;
+  border-left-color: #b94a00;
+}
+.edl-stage-queued .edl-stage-badge { color: #b94a00; }
+
+.edl-stage-rework {
+  background: #fde7e7;
+  border-left-color: #b32a2a;
+}
+.edl-stage-rework .edl-stage-badge { color: #b32a2a; }
+
+.edl-stage-done {
+  background: #eef7f1;
+  border-left-color: #2da66a;
+}
+.edl-stage-done .edl-stage-badge { color: #1f7a47; }
+
+/* --- Learning notes (details) ------------------------------------------------ */
+
+.edl-stage-note {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.edl-stage-note summary {
+  cursor: pointer;
+  color: #4a6cf7;
+  font-weight: 500;
+  user-select: none;
+}
+
+.edl-stage-note summary:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.edl-stage-note p {
+  margin: 6px 0 0;
+  color: #444;
+  line-height: 1.5;
+}
+
+/* --- Eventlogg ---------------------------------------------------------------- */
+
+.edl-log {
+  max-height: 340px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.edl-event {
+  padding: 6px 10px;
+  border-left: 3px solid #c7cfd9;
+  border-radius: 0 4px 4px 0;
+  background: #fafbfd;
+  font-size: 12px;
+}
+
+.edl-event-head {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.edl-event-day {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 11px;
+  color: #6b7385;
+  white-space: nowrap;
+}
+
+.edl-event-title {
+  font-weight: 600;
+  color: #2c3a52;
+}
+
+.edl-event-detail {
+  margin-top: 2px;
+  color: #555;
+  line-height: 1.45;
+}
+
+.edl-event-ok     { border-left-color: #2da66a; background: #f4fbf6; }
+.edl-event-block  { border-left-color: #b94a00; background: #fdf3ec; }
+.edl-event-rework { border-left-color: #b32a2a; background: #fdf0f0; }
+
+/* --- Operational impact -------------------------------------------------------- */
+
+.edl-impact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.edl-impact-card {
+  background: #fff;
+  border: 1px solid #e1e6ee;
+  border-left-width: 3px;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.edl-impact-label {
+  font-size: 11px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.edl-impact-value {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 4px;
+  color: #222;
+}
+
+.edl-impact-detail {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.edl-impact-ok     { border-left-color: #2da66a; }
+.edl-impact-warn   { border-left-color: #f5b400; }
+.edl-impact-danger { border-left-color: #b32a2a; }
+
+/* --- Responsiv ---------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .edl-columns { grid-template-columns: 1fr; }
+  .edl-log { max-height: 260px; }
+}
