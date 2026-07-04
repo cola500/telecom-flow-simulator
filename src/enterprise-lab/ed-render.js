@@ -151,7 +151,10 @@
       card.innerHTML =
         `<div class="edl-impact-label">${item.label}</div>` +
         `<div class="edl-impact-value">${item.value}</div>` +
-        `<div class="edl-impact-detail">${item.detail}</div>`;
+        `<div class="edl-impact-detail">${item.detail}</div>` +
+        (item.delta
+          ? `<div class="edl-impact-delta edl-delta-${item.delta.dir}">${item.delta.text}</div>`
+          : "");
       dom.impactGrid.appendChild(card);
     }
   }

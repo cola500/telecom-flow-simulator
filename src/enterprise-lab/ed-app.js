@@ -31,10 +31,13 @@
   window.EdLabRender.init();
 
   // 3) Kontroller. Start-varianterna resetar först så en ny körning alltid
-  //    börjar från rent läge — samma mönster som FlowLabs run-knapp.
+  //    börjar från rent läge — samma mönster som FlowLabs run-knapp. Den interna
+  //    reset() behåller jämförelsen mot förra körningen; bara Återställ rensar den.
+  const alignmentToggle = document.getElementById("edl-align-toggle");
+
   function startWith(blockerId) {
     window.EdLabEngine.reset();
-    window.EdLabEngine.start(blockerId);
+    window.EdLabEngine.start(blockerId, !!(alignmentToggle && alignmentToggle.checked));
   }
 
   document.getElementById("edl-btn-start")
@@ -44,7 +47,7 @@
   document.getElementById("edl-btn-blocker-arch")
     ?.addEventListener("click", () => startWith("arch_rework"));
   document.getElementById("edl-btn-reset")
-    ?.addEventListener("click", () => window.EdLabEngine.reset());
+    ?.addEventListener("click", () => window.EdLabEngine.reset({ full: true }));
 
   console.info("[EdLab] API ready — engine:",
     Object.keys(window.EdLabEngine).join(", "));

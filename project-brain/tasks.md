@@ -18,7 +18,8 @@ sections: [Now, Next, Later, Done]
 ## Next
 
 - Länka till `project-brain/` från README om det känns uppenbart rätt.
-- Bestäm och beskriv nästa pedagogiska slice för Enterprise Delivery Lab.
+- Nästa pedagogiska slice: flera samtidiga initiatives (WIP-effekten).
+- Ev. mjuka upp confidence-tröskeln så en ren alignment-premie inte slår om till "Förhöjd risk" (enrads-tuning i `confidenceFor`).
 
 ## Later
 
@@ -29,3 +30,4 @@ sections: [Now, Next, Later, Done]
 
 - Skapa Project Brain 0.1-struktur (project, current, decisions, tasks, verification). *(2026-07-04)*
 - Första Enterprise Delivery Lab-slice på plats (`enterprise-lab.html`). *(2026-07-04)*
+- Repair-slice: early alignment-kontroll + delta mot förra körningen. Treklangen run → break → repair komplett. *(2026-07-04)*

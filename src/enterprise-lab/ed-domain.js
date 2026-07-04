@@ -163,23 +163,86 @@
     }
   };
 
+  // Förbättringskontroll (repair-halvan av treklangen): tidig arkitektur- &
+  // säkerhets-alignment. Mekaniskt två effekter — en premie som ALLTID gäller
+  // och en rework-override som bara slår när en matchande blocker triggas.
+  // Nyansen (varför/vad den lär ut) bor här; motorn känner bara mekaniken.
+  const EARLY_ALIGNMENT = {
+    id: "early_alignment",
+    label: "Tidig arkitektur- & säkerhets-alignment",
+    // Premie: extra simtid uppfront på dessa steg när kontrollen är på (alltid).
+    premium: { arch: 300, seccomp: 300 },
+    // När kontrollen är på krymper dessa blockers omtag till angivna steg.
+    reworkOverride: { arch_rework: ["impl"] },
+    eventOn: {
+      title: "Alignment: tidig arkitektur- & säkerhetsdialog",
+      detail: "Arkitektur och säkerhet involveras tidigt och grundligt. Det kostar " +
+        "några extra dagar nu i Architecture och Security & Compliance — en medveten " +
+        "premie för att undvika dyra omtag senare."
+    },
+    teach: "Tidig alignment är inte gratis: den kostar en liten premie varje gång. " +
+      "Den lönar sig när den kväver ett omtag som annars kaskaderat genom flera steg."
+  };
+
+  // Förtroende-nivå härledd ur hur mycket leveransen glider (dagar över baseline).
+  // Bruten ut så att den kan återanvändas för att beräkna förra körningens nivå.
+  function confidenceFor(delayDays) {
+    if (delayDays <= 0) {
+      return { level: "Stabil", tone: "ok",
+        detail: "Levererat enligt plan. Intressenternas förtroende är intakt." };
+    }
+    if (delayDays <= 30) {
+      return { level: "Förhöjd risk", tone: "warn",
+        detail: "Leveransen glider. Intressenter börjar fråga varför — varje " +
+          "statusmöte utan nytt datum kostar förtroende." };
+    }
+    return { level: "Hög risk", tone: "danger",
+      detail: "Kraftig försening. Beställaren omvärderar initiativet, och " +
+        "nästa initiativ möts av hårdare grindar — vilket gör <em>allt</em> långsammare." };
+  }
+
+  // --- Delta-jämförelse mot förra körningen -----------------------------------
+  // Varje hjälpare returnerar { dir: "better"|"worse"|"same", text } eller null.
+
+  const CONFIDENCE_RANK = { ok: 0, warn: 1, danger: 2 };
+
+  function deltaDelay(curDelay, prevDelay) {
+    const gained = prevDelay - curDelay; // positivt = färre förseningsdagar nu = bättre
+    if (gained === 0) return { dir: "same", text: "oförändrat mot förra körningen" };
+    return gained > 0
+      ? { dir: "better", text: `▼ ${gained} dagar bättre än förra körningen` }
+      : { dir: "worse", text: `▲ ${Math.abs(gained)} dagar sämre än förra körningen` };
+  }
+
+  function deltaRework(cur, prev) {
+    const prevCount = prev.reworkStageCount;
+    const prevDays = Math.round(prev.reworkDays);
+    if (cur.reworkStageCount === prevCount && Math.round(cur.reworkDays) === prevDays) {
+      return { dir: "same", text: "oförändrat mot förra körningen" };
+    }
+    const dir = prev.reworkDays > cur.reworkDays ? "better" : "worse";
+    const arrow = dir === "better" ? "▼" : "▲";
+    return { dir, text: `${arrow} från ${prevCount} steg (${prevDays} dagar)` };
+  }
+
+  function deltaConfidence(curTone, prevDelay) {
+    const prev = confidenceFor(prevDelay);
+    if (CONFIDENCE_RANK[curTone] === CONFIDENCE_RANK[prev.tone]) {
+      return { dir: "same", text: "oförändrat mot förra körningen" };
+    }
+    const dir = CONFIDENCE_RANK[curTone] < CONFIDENCE_RANK[prev.tone] ? "better" : "worse";
+    const arrow = dir === "better" ? "▼" : "▲";
+    return { dir, text: `${arrow} från ${prev.level}` };
+  }
+
   // Operational impact: översätter en körnings summering till konsekvenser.
   // summary = { baselineDays, actualDays, reworkStageCount, reworkDays, waitDays }
-  function deriveImpact(summary) {
+  // previous = förra körningens summary (eller null) → ger delta-rader på korten.
+  function deriveImpact(summary, previous) {
     const delayDays = Math.round(summary.actualDays - summary.baselineDays);
+    const confidence = confidenceFor(delayDays);
 
-    const confidence = delayDays <= 0
-      ? { level: "Stabil", tone: "ok",
-          detail: "Levererat enligt plan. Intressenternas förtroende är intakt." }
-      : delayDays <= 30
-        ? { level: "Förhöjd risk", tone: "warn",
-            detail: "Leveransen glider. Intressenter börjar fråga varför — varje " +
-              "statusmöte utan nytt datum kostar förtroende." }
-        : { level: "Hög risk", tone: "danger",
-            detail: "Kraftig försening. Beställaren omvärderar initiativet, och " +
-              "nästa initiativ möts av hårdare grindar — vilket gör <em>allt</em> långsammare." };
-
-    return [
+    const cards = [
       {
         id: "delay",
         label: "Delayed delivery",
@@ -210,9 +273,20 @@
         detail: confidence.detail
       }
     ];
+
+    if (previous) {
+      const prevDelay = Math.round(previous.actualDays - previous.baselineDays);
+      cards[0].delta = deltaDelay(delayDays, prevDelay);
+      cards[1].delta = deltaRework(summary, previous);
+      cards[2].delta = deltaConfidence(confidence.tone, prevDelay);
+    }
+
+    return cards;
   }
 
   // --- Exponera API -----------------------------------------------------------
 
-  window.EdLabDomain = { INITIATIVE, STAGES, BLOCKERS, DAYS_PER_MS, deriveImpact };
+  window.EdLabDomain = {
+    INITIATIVE, STAGES, BLOCKERS, EARLY_ALIGNMENT, DAYS_PER_MS, deriveImpact
+  };
 })();

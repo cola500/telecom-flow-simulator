@@ -17,20 +17,21 @@ Etablera Project Brain 0.1 som gemensamt arbetsminne mellan ChatGPT och Claude, 
 
 ## Current slice
 
-Project Brain 0.1 — de fem markdown-filerna i `project-brain/`. Enterprise Delivery Lab ligger på en enda "single initiative"-slice (`enterprise-lab.html`), se senaste commits.
+Enterprise Delivery Lab — **repair-slicen** (tidig arkitektur- & säkerhets-alignment) är byggd och verifierad. Därmed fungerar hela treklangen run → break → repair i `enterprise-lab.html`. Project Brain 0.1 (markdown-filerna i `project-brain/`) är fortfarande testbädden.
 
 ## Current status
 
 - `project-brain/`-strukturen skapad (project, current, decisions, tasks, verification).
-- Enterprise Delivery Lab har en första slice på plats (`enterprise-lab.html`, designdokument i `docs/enterprise-delivery-lab-design.md`).
+- Enterprise Delivery Lab: single-initiative-slice + repair-slice på plats. Repair = förbättringskontroll (alignment, tradeoff-modell) + delta-badges mot förra körningen. Verifierad i motorn (Node) och visuellt i webbläsaren; telecom/FlowLab orörda.
 - Ingen orchestrator, ingen automation — medvetet.
 
 ## Open questions
 
 - Var i befintliga docs bör vi länka till `project-brain/`? (Kandidat: README.)
 - När räknas Project Brain 0.1 som "verifierad"? Se [verification.md](verification.md).
-- Nästa pedagogiska slice för Enterprise Delivery Lab — vilken idé står på tur?
+- Confidence-tröskeln: happy path + alignment visar "Förhöjd risk" för +6 dagars premie — mjuka upp `confidenceFor` eller behålla? (Accepterad tradeoff just nu.)
+- Nästa pedagogiska slice: flera samtidiga initiatives (WIP-effekten) står närmast på tur enligt roadmapen.
 
 ## Next recommended step
 
-Kör ett par verkliga överlämningar mellan ChatGPT och Claude med `project-brain/` som utgångspunkt, och notera i [verification.md](verification.md) om kontextbehovet faktiskt minskar.
+Kör ett par verkliga överlämningar mellan ChatGPT och Claude med `project-brain/` som utgångspunkt, och notera i [verification.md](verification.md) om kontextbehovet faktiskt minskar. (Denna slice byggdes just via en sådan överlämning — start från current.md, inget inklistrat.)

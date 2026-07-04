@@ -120,6 +120,41 @@
   padding-left: 12px;
 }
 
+/* --- Förbättringskontroll (alignment-toggle) -------------------------------- */
+
+.edl-align-control {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  background: #eef2ff;
+  border: 1px solid #cdd6f5;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.edl-align-control input {
+  margin-top: 2px;
+  flex: none;
+  cursor: pointer;
+}
+
+.edl-align-text { display: block; }
+
+.edl-align-text strong {
+  font-size: 13px;
+  color: #2c3a52;
+}
+
+.edl-align-hint {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #5a6273;
+  line-height: 1.45;
+}
+
 .edl-status-row {
   display: flex;
   gap: 12px;
@@ -318,6 +353,18 @@
 .edl-impact-ok     { border-left-color: #2da66a; }
 .edl-impact-warn   { border-left-color: #f5b400; }
 .edl-impact-danger { border-left-color: #b32a2a; }
+
+/* Delta mot förra körningen — repair-halvans "ändra en sak, se skillnaden". */
+.edl-impact-delta {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.edl-delta-better { color: #1f7a47; }
+.edl-delta-worse  { color: #b32a2a; }
+.edl-delta-same   { color: #6b7385; font-weight: 500; }
 
 /* --- Responsiv ---------------------------------------------------------------- */
 

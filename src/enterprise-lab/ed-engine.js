@@ -24,6 +24,11 @@
   let state = createEmptyState();
   let subscribers = [];
   let timeoutId = null;
+  // Förra klara körningens summary — lever i modulscope, INTE i state, så en
+  // auto-reset före nästa körning inte tappar jämförelsen. Rensas bara av en
+  // full reset (manuella Återställ-knappen). Samma fälla som telecom-simulatorns
+  // comparePreviousRun, medvetet undviken här.
+  let previousSummary = null;
 
   function createEmptyState() {
     const stageStates = {};
@@ -31,6 +36,7 @@
     return {
       status: "idle",          // idle | running | done
       blockerId: null,
+      alignmentOn: false,      // förbättringskontrollen aktiv för denna körning?
       simMs: 0,                // ackumulerad simtid (1 ms ≈ 0,01 dag)
       baselineMs: 0,
       waitMs: 0,               // total kö-tid
@@ -45,7 +51,7 @@
 
   // --- Public API -------------------------------------------------------------
 
-  function start(blockerId = null) {
+  function start(blockerId = null, alignmentOn = false) {
     if (!D) {
       console.error("[EdLab] FATAL: EdLabDomain saknas — ed-domain.js laddades inte.");
       return;
@@ -62,22 +68,30 @@
     state = createEmptyState();
     state.status = "running";
     state.blockerId = blockerId;
-    state.plan = buildPlan(blockerId);
+    state.alignmentOn = !!alignmentOn;
+    state.plan = buildPlan(blockerId, state.alignmentOn);
     state.baselineMs = D.STAGES.reduce((sum, s) => sum + s.durationMs, 0);
 
     pushEvent("info", `InitiativeCreated — ${D.INITIATIVE.name}`,
       blockerId
         ? `Körning med blocker-scenario: ${D.BLOCKERS[blockerId].label}.`
         : "Körning utan blockers (happy path).");
-    console.info("[EdLab] start", { blockerId, steps: state.plan.length });
+    if (state.alignmentOn) {
+      pushEvent("info", D.EARLY_ALIGNMENT.eventOn.title, D.EARLY_ALIGNMENT.eventOn.detail);
+    }
+    console.info("[EdLab] start", { blockerId, alignmentOn: state.alignmentOn, steps: state.plan.length });
 
     runStep(0);
   }
 
-  function reset() {
+  // reset() rensar bara körläget och BEHÅLLER previousSummary — det är den
+  // interna reset som körs före varje ny körning, och jämförelsen ska överleva.
+  // reset({ full: true }) rensar även jämförelsen (manuella Återställ-knappen).
+  function reset(opts = {}) {
     if (timeoutId) { clearTimeout(timeoutId); timeoutId = null; }
     state = createEmptyState();
-    console.info("[EdLab] reset");
+    if (opts.full) previousSummary = null;
+    console.info("[EdLab] reset", opts.full ? "(full — jämförelse rensad)" : "");
     notify();
   }
 
@@ -102,19 +116,29 @@
   // Happy path: ett work-steg per domänsteg. En blocker transformerar planen:
   //   wait-blocker  → wait-steg skjuts in före triggerStage
   //   rework-blocker → efter triggerStage skjuts rework-kopior av reworkStages in
+  // En förbättringskontroll (alignment) transformerar planen ytterligare:
+  //   premium        → work-steg får extra simtid uppfront (gäller alltid)
+  //   reworkOverride → en blockers omtag krymps till angivna steg (gäller vid blocker)
 
-  function buildPlan(blockerId) {
+  function buildPlan(blockerId, alignmentOn) {
     const blocker = blockerId ? D.BLOCKERS[blockerId] : null;
+    const control = alignmentOn ? D.EARLY_ALIGNMENT : null;
     const plan = [];
 
     for (const stage of D.STAGES) {
       if (blocker && blocker.waitMs && blocker.triggerStage === stage.id) {
         plan.push({ kind: "wait", stageId: stage.id, durationMs: blocker.waitMs, blocker });
       }
-      plan.push({ kind: "work", stageId: stage.id, durationMs: stage.durationMs });
+      const premiumMs = (control && control.premium[stage.id]) || 0;
+      plan.push({
+        kind: "work", stageId: stage.id,
+        durationMs: stage.durationMs + premiumMs, premiumMs
+      });
 
       if (blocker && blocker.reworkStages && blocker.triggerStage === stage.id) {
-        for (const reworkId of blocker.reworkStages) {
+        const reworkStages =
+          (control && control.reworkOverride[blockerId]) || blocker.reworkStages;
+        for (const reworkId of reworkStages) {
           const reworkStage = D.STAGES.find(s => s.id === reworkId);
           if (!reworkStage) {
             console.error(`[EdLab] blocker "${blocker.id}" pekar på okänt steg "${reworkId}" — hoppar över.`);
@@ -122,7 +146,7 @@
           }
           plan.push({
             kind: "rework", stageId: reworkId, durationMs: reworkStage.durationMs,
-            blocker, first: reworkId === blocker.reworkStages[0]
+            blocker, first: reworkId === reworkStages[0]
           });
         }
       }
@@ -168,9 +192,13 @@
           state.reworkStageCount += 1;
         }
         state.stageStates[step.stageId] = "done";
+        const premiumDays = Math.round((step.premiumMs || 0) * D.DAYS_PER_MS);
+        const premiumNote = premiumDays > 0
+          ? ` (varav ${premiumDays} dagar alignment-premie).`
+          : "";
         pushEvent(step.kind === "rework" ? "rework" : "ok",
           `${stage.name} klart${step.kind === "rework" ? " (omtag)" : ""}`,
-          `${days} dagar.`);
+          `${days} dagar${premiumNote || "."}`);
       }
       runStep(index + 1);
     }, step.durationMs);
@@ -187,13 +215,18 @@
       reworkDays: state.reworkMs * D.DAYS_PER_MS,
       waitDays: state.waitMs * D.DAYS_PER_MS
     };
-    state.impact = D.deriveImpact(summary);
+    state.impact = D.deriveImpact(summary, previousSummary);
 
     pushEvent("ok", "CapabilityRealized — initiativet är levererat",
       `Lead time: ${Math.round(summary.actualDays)} dagar ` +
       `(baseline ${Math.round(summary.baselineDays)} dagar).` +
-      (state.blockerId ? ` Lärdom: ${D.BLOCKERS[state.blockerId].teach}` : ""));
+      (state.blockerId ? ` Lärdom: ${D.BLOCKERS[state.blockerId].teach}` : "") +
+      (state.alignmentOn ? ` Alignment: ${D.EARLY_ALIGNMENT.teach}` : ""));
     console.info("[EdLab] done", summary);
+
+    // Snapshot först EFTER att impact räknats mot förra körningen — annars
+    // jämför nästa körning mot sig själv.
+    previousSummary = summary;
     notify();
   }
 
