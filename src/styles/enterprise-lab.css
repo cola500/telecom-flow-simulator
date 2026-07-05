@@ -725,10 +725,120 @@
 .edl-delta-worse  { color: #b32a2a; }
 .edl-delta-same   { color: #6b7385; font-weight: 500; }
 
+/* --- Systemexperiment: flera initiativ --------------------------------------- */
+
+.edl-sys-board {
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  overflow-x: auto;
+  padding: 4px 0 8px;
+  margin-top: 4px;
+}
+
+.edl-sys-queue,
+.edl-sys-station,
+.edl-sys-done-box {
+  flex: 0 0 auto;
+  min-width: 84px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 6px;
+  border: 1px solid #c7cfd9;
+  border-radius: 8px;
+  background: #f5f7fb;
+}
+
+.edl-sys-queue { background: #fdf3ec; border-color: #f0c9ac; }
+.edl-sys-done-box { background: #eef7f1; border-color: #2da66a; }
+
+.edl-sys-bottleneck { border-color: #b94a00; border-width: 2px; }
+
+.edl-sys-st-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #2c3a52;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.edl-sys-cap {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  background: #b94a00;
+  color: #fff;
+  border-radius: 4px;
+  padding: 0 4px;
+  margin-top: 2px;
+}
+
+.edl-sys-chiprow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  justify-content: center;
+  align-items: center;
+  min-height: 22px;
+}
+
+.edl-sys-chip {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: #4a6cf7;
+}
+
+.edl-sys-chip-queue  { background: #b94a00; }
+.edl-sys-chip-active { background: #4a6cf7; }
+.edl-sys-chip-done   { background: #2da66a; }
+
+.edl-sys-empty { color: #b0b8c6; font-size: 12px; }
+
+.edl-sys-arrow {
+  align-self: center;
+  color: #b0b8c6;
+  font-size: 16px;
+  flex: 0 0 auto;
+}
+
+.edl-sys-metrics {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.edl-sys-metric {
+  font-size: 13px;
+  color: #444;
+  padding: 8px 10px;
+  background: #f5f7fb;
+  border: 1px solid #e1e6ee;
+  border-radius: 6px;
+}
+
+.edl-sys-metric-prev {
+  grid-column: 1 / -1;
+  background: #eef2ff;
+  border-color: #cdd6f5;
+  color: #3a4fb5;
+}
+
+.edl-sys-mk { font-weight: 600; color: #2c3a52; }
+
 /* --- Responsiv ---------------------------------------------------------------- */
 
 @media (max-width: 860px) {
   .edl-columns { grid-template-columns: 1fr; }
   .edl-journey-list { grid-template-columns: 1fr; }
+  .edl-sys-metrics { grid-template-columns: 1fr; }
   .edl-log { max-height: 260px; }
 }

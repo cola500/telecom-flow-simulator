@@ -133,6 +133,23 @@
       </section>
     </div>
   </div>
+
+  <section class="panel edl-system-panel" id="edl-system-panel">
+    <h2>Systemexperiment: flera initiativ</h2>
+    <p class="edl-note">Poängen med detta experiment är att visa att en begränsad
+      resurs skapar kö, och att väntan i kön driver ledtid. Kör tre initiativ genom
+      flödet — Architecture kan bara arbeta med ett i taget som default.</p>
+
+    <div class="edl-controls">
+      <button type="button" id="edl-sys-run" class="primary">Kör 3 initiativ</button>
+      <button type="button" id="edl-sys-cap">Architecture capacity: 1</button>
+      <button type="button" id="edl-sys-reset">Återställ</button>
+    </div>
+
+    <div class="edl-sys-board" id="edl-sys-board" role="img"
+      aria-label="Systemvy: initiativ genom sju steg med kö framför Architecture"></div>
+    <div class="edl-sys-metrics" id="edl-sys-metrics" aria-live="polite" hidden></div>
+  </section>
 </main>
 
 <footer class="app-footer">
@@ -147,5 +164,6 @@
 <script src="src/enterprise-lab/ed-render.js"></script>
 <script src="src/enterprise-lab/ed-predict.js"></script>
 <script src="src/enterprise-lab/ed-app.js"></script>
+<script src="src/enterprise-lab/ed-system.js"></script>
 </body>
 </html>
