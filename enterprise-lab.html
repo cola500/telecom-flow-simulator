@@ -26,6 +26,16 @@
 </header>
 
 <main id="edl-main" class="edl-main">
+  <details class="panel edl-journey" id="edl-journey" open>
+    <summary class="edl-journey-summary">Från verksamhetsbehov till driftsatt IT-förmåga</summary>
+    <p class="edl-note edl-journey-intro">
+      En guidad genomgång av de tio stegen ett initiativ passerar — läs den innan
+      eller medan du kör för att förstå var väntan och omtag uppstår. Fäll ihop när
+      du vill fokusera på körningen.
+    </p>
+    <div id="edl-journey-cards"></div>
+  </details>
+
   <section class="panel" id="edl-initiative-panel">
     <h2>Initiative</h2>
     <p class="edl-initiative-name" id="edl-initiative-name"></p>
@@ -73,13 +83,35 @@
     <div class="edl-predict-history" id="edl-predict-history" hidden></div>
   </section>
 
+  <section class="panel edl-flowgraph-panel" id="edl-flowgraph-panel">
+    <h2>Initiativets statuskarta</h2>
+    <p class="edl-note">En kompakt överblick av <em>var</em> det pågående initiativet är
+      just nu, och var blocker, omtag och tidig alignment slår. Färgen visar status;
+      markeringarna visar effekten. Visar en körning i taget.</p>
+
+    <div class="edl-fg-legend" aria-hidden="true">
+      <span class="edl-fg-key"><span class="edl-fg-sw edl-fg-sw-pending"></span>pending</span>
+      <span class="edl-fg-key"><span class="edl-fg-sw edl-fg-sw-active"></span>active</span>
+      <span class="edl-fg-key"><span class="edl-fg-sw edl-fg-sw-done"></span>done</span>
+      <span class="edl-fg-key"><span class="edl-fg-sw edl-fg-sw-blocked"></span>blocked / omtag</span>
+      <span class="edl-fg-key"><span class="edl-fg-sw edl-fg-sw-align">⚑</span>alignment</span>
+    </div>
+
+    <div class="edl-flowgraph-scroll">
+      <div id="edl-flowgraph" role="img" aria-label="Initiativets statuskarta: de tio stegen och deras status"></div>
+    </div>
+    <p class="edl-fg-caption" id="edl-flowgraph-caption" aria-live="polite" hidden></p>
+    <p class="edl-fg-future">Framtida vy: batch-flow med köer och bottlenecks över tid
+      kräver multi-initiative-simulering (flera samtidiga initiativ) — inte byggt än.</p>
+  </section>
+
   <div class="edl-columns">
     <section class="panel" id="edl-flow-panel">
-      <h2>Delivery flow</h2>
+      <h2>Delivery-steg</h2>
       <p class="edl-note">
-        Från verksamhetsbehov till driftsatt IT-förmåga — tio steg, många
-        ägarbyten. Fäll ut <em>Om steget</em> för att läsa vad varje steg
-        representerar och varför det spelar roll.
+        De tio stegen i detalj — vad varje steg representerar och varför det
+        spelar roll. Fäll ut <em>Om steget</em> för fördjupning. (Statuskartan
+        ovan ger snabböverblicken; den här listan är referensen per steg.)
       </p>
       <ol class="edl-stage-list" id="edl-stage-list" aria-label="Delivery-steg med status"></ol>
     </section>

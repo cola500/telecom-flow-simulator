@@ -22,6 +22,22 @@
   const LS_KEY = "edl.predictions.v1";
   const MAX_HISTORY = 3;
 
+  // Reflektionsfrågor efter körning — domänorienterade (knyter an till Learn-
+  // lagret: observation, väntan/omtag, tidig åtgärd, nästa experiment). Datadrivet
+  // så antal och formulering kan ändras på ett ställe.
+  const REFLECT_QUESTIONS = [
+    { key: "observed",    label: "Vad observerade du?" },
+    { key: "waitRework",  label: "Var uppstod väntan eller omtag?" },
+    { key: "earlyAction", label: "Vilken tidig åtgärd hade kunnat minska risken?" },
+    { key: "next",        label: "Vad skulle du testa nästa gång?" }
+  ];
+
+  function emptyReflection() {
+    const r = {};
+    for (const q of REFLECT_QUESTIONS) r[q.key] = "";
+    return r;
+  }
+
   let dom = null;
   let mode = "predict";     // predict | running | review
   let locked = null;        // { blockerId, alignmentOn, what, why } för pågående körning
@@ -103,7 +119,7 @@
       what: locked ? locked.what : "",
       why: locked ? locked.why : "",
       outcomeLine: outcome.line,
-      reflection: { matched: "", surprised: "", next: "", learned: "" }
+      reflection: emptyReflection()
     };
     history.unshift(currentEntry);
     if (history.length > MAX_HISTORY) history.length = MAX_HISTORY;
@@ -178,17 +194,18 @@
       `<label class="edl-predict-label" for="edl-reflect-${key}">${label}</label>` +
       `<textarea id="edl-reflect-${key}" class="edl-predict-input" rows="2" data-refl="${key}"></textarea>`;
 
-    // Med gissning: en spegel som ställer förutsägelse mot utfall och bjuder in
-    // till reflektion. Utan gissning: bara den enkla "vad lärde du dig?".
-    const reflectHtml = hasPrediction
-      ? `<div class="edl-predict-compare">` +
-          `<div class="edl-predict-heading">Jämför din förutsägelse med utfallet</div>` +
-          `<p class="edl-predict-hint">Ingen rätt eller fel — det här är en spegel, inte ett prov.</p>` +
-          reflectField("matched", "Vad stämde?") +
-          reflectField("surprised", "Vad överraskade dig?") +
-          reflectField("next", "Vad testar du nästa gång?") +
-        `</div>`
-      : reflectField("learned", "Vad lärde du dig?");
+    // Reflektion efter varje körning: de fyra domänfrågorna. Rubriken ramar in
+    // det som en jämförelse när en gissning finns, annars som ren reflektion.
+    // En spegel för lärande — ingen bedömning.
+    const heading = hasPrediction
+      ? "Jämför din förutsägelse med utfallet"
+      : "Reflektera över körningen";
+    const reflectHtml =
+      `<div class="edl-predict-compare">` +
+        `<div class="edl-predict-heading">${heading}</div>` +
+        `<p class="edl-predict-hint">Ingen rätt eller fel — det här är en spegel för lärande, inte ett prov.</p>` +
+        REFLECT_QUESTIONS.map((q) => reflectField(q.key, q.label)).join("") +
+      `</div>`;
 
     dom.review.innerHTML =
       `<div class="edl-predict-block">` +
@@ -263,10 +280,8 @@
   function reflectionSummary(refl) {
     if (!refl) return "";
     const parts = [];
-    if (refl.matched) parts.push(`Stämde: ${refl.matched}`);
-    if (refl.surprised) parts.push(`Överraskade: ${refl.surprised}`);
-    if (refl.next) parts.push(`Nästa: ${refl.next}`);
-    if (refl.learned) parts.push(refl.learned);
+    for (const q of REFLECT_QUESTIONS) if (refl[q.key]) parts.push(refl[q.key]);
+    if (refl.learned) parts.push(refl.learned); // bevara ev. äldre schema
     return parts.join(" · ");
   }
 
@@ -275,17 +290,18 @@
   function normalizeEntry(e) {
     const src = e && typeof e === "object" ? e : {};
     const r = src.reflection && typeof src.reflection === "object" ? src.reflection : {};
+    const reflection = emptyReflection();
+    for (const q of REFLECT_QUESTIONS) reflection[q.key] = r[q.key] || "";
+    // Bevara ev. äldre 'learned'-fält (topp-nivå eller i reflection) så gamla
+    // sparade poster inte tappar sin reflektion.
+    const legacy = r.learned || (typeof src.learned === "string" ? src.learned : "");
+    if (legacy) reflection.learned = legacy;
     return {
       scenario: src.scenario || "",
       what: src.what || "",
       why: src.why || "",
       outcomeLine: src.outcomeLine || "",
-      reflection: {
-        matched: r.matched || "",
-        surprised: r.surprised || "",
-        next: r.next || "",
-        learned: r.learned || (typeof src.learned === "string" ? src.learned : "")
-      }
+      reflection
     };
   }
 

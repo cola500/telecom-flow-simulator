@@ -99,6 +99,7 @@
     return {
       status: state.status,
       blockerId: state.blockerId,
+      alignmentOn: state.alignmentOn,
       simDays: state.simMs * D.DAYS_PER_MS,
       baselineDays: state.baselineMs * D.DAYS_PER_MS,
       stageStates: { ...state.stageStates },

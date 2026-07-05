@@ -187,6 +187,30 @@
       "Den lönar sig när den kväver ett omtag som annars kaskaderat genom flera steg."
   };
 
+  // Learn-lagret: guidad genomgång av de tio stegen. Additiv karta id → {sv, risk}
+  // som återanvänder STAGES note.what/note.why — här bor bara den svenska
+  // journey-rubriken och kopplingen till risk/blocker (där sådan finns). Ingen
+  // stegtext dupliceras. Blocker-referenser pekar på labbets faktiska blockers.
+  const LEARNING_JOURNEY = {
+    need:     { sv: "Verksamhetsbehov", short: "Behov" },
+    intake:   { sv: "Prioritering / intake", short: "Intake" },
+    arch:     { sv: "Arkitekturgranskning", short: "Arkitektur",
+      risk: "Labbets blocker <em>Architecture rework</em> slår här — sen arkitektur-alignment river upp redan godkänt arbete nedströms." },
+    seccomp:  { sv: "Säkerhet & compliance", short: "Säkerhet",
+      risk: "Labbets blocker <em>Security review delay</em> slår här — begränsad granskningskapacitet blir en kö. Tidig alignment kortar den." },
+    planning: { sv: "Planering", short: "Planering",
+      risk: "Beroenden som missas här förvandlas till väntan under implementation." },
+    impl:     { sv: "Implementation", short: "Implementation",
+      risk: "Ser ut som flaskhalsen när leveransen är sen — men väntan <em>runt</em> steget är ofta större än arbetet i det." },
+    test:     { sv: "Integration & test", short: "Test",
+      risk: "Delad testmiljö är en begränsad resurs: ”klart att testa” och ”testat” kan skiljas åt av veckor." },
+    deploy:   { sv: "Driftsättning", short: "Release",
+      risk: "Releasefönster och change-grindar skyddar produktionen men är samtidigt köpunkter." },
+    handover: { sv: "Överlämning till förvaltning", short: "Överlämning",
+      risk: "Driftsatt utan överlämning är en tickande incident — utan detta äger ingen problemen när de kommer." },
+    realized: { sv: "Realiserad förmåga", short: "Realiserad" }
+  };
+
   // Förtroende-nivå härledd ur hur mycket leveransen glider (dagar över baseline).
   // Bruten ut så att den kan återanvändas för att beräkna förra körningens nivå.
   function confidenceFor(delayDays) {
@@ -290,6 +314,7 @@
   // --- Exponera API -----------------------------------------------------------
 
   window.EdLabDomain = {
-    INITIATIVE, STAGES, BLOCKERS, EARLY_ALIGNMENT, DAYS_PER_MS, deriveImpact
+    INITIATIVE, STAGES, BLOCKERS, EARLY_ALIGNMENT, LEARNING_JOURNEY,
+    DAYS_PER_MS, deriveImpact
   };
 })();
