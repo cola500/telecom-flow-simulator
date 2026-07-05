@@ -27,8 +27,10 @@
   if (nameEl) nameEl.textContent = window.EdLabDomain.INITIATIVE.name;
   if (descEl) descEl.textContent = window.EdLabDomain.INITIATIVE.desc;
 
-  // 2) Bind render till engine.
+  // 2) Bind render till engine. Predict-panelen är icke-kritisk — anropas
+  //    defensivt så en eventuell laddningsmiss inte stjälper simulatorn.
   window.EdLabRender.init();
+  if (window.EdLabPredict) window.EdLabPredict.init();
 
   // 3) Kontroller. Start-varianterna resetar först så en ny körning alltid
   //    börjar från rent läge — samma mönster som FlowLabs run-knapp. Den interna
@@ -36,8 +38,11 @@
   const alignmentToggle = document.getElementById("edl-align-toggle");
 
   function startWith(blockerId) {
+    const alignmentOn = !!(alignmentToggle && alignmentToggle.checked);
+    // Lås gissningen INNAN körningen startar (predict-before-explanation).
+    if (window.EdLabPredict) window.EdLabPredict.onRunStart({ blockerId, alignmentOn });
     window.EdLabEngine.reset();
-    window.EdLabEngine.start(blockerId, !!(alignmentToggle && alignmentToggle.checked));
+    window.EdLabEngine.start(blockerId, alignmentOn);
   }
 
   document.getElementById("edl-btn-start")
@@ -47,7 +52,10 @@
   document.getElementById("edl-btn-blocker-arch")
     ?.addEventListener("click", () => startWith("arch_rework"));
   document.getElementById("edl-btn-reset")
-    ?.addEventListener("click", () => window.EdLabEngine.reset({ full: true }));
+    ?.addEventListener("click", () => {
+      window.EdLabEngine.reset({ full: true });
+      if (window.EdLabPredict) window.EdLabPredict.onFullReset();
+    });
 
   console.info("[EdLab] API ready — engine:",
     Object.keys(window.EdLabEngine).join(", "));

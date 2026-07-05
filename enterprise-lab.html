@@ -55,6 +55,24 @@
     </div>
   </section>
 
+  <section class="panel edl-predict" id="edl-predict-panel">
+    <h2>Förutsäg utfallet</h2>
+    <p class="edl-note">Gissa innan du kör — det är skillnaden mot din gissning som lär mest.</p>
+
+    <div class="edl-predict-fields" id="edl-predict-fields">
+      <label class="edl-predict-label" for="edl-predict-what">Vad tror du kommer hända?</label>
+      <textarea id="edl-predict-what" class="edl-predict-input" rows="2"
+        placeholder="T.ex. leveransen blir mycket långsammare och kräver omtag"></textarea>
+      <label class="edl-predict-label" for="edl-predict-why">Varför?</label>
+      <textarea id="edl-predict-why" class="edl-predict-input" rows="2"
+        placeholder="T.ex. säkerhetskön är en flaskhals som inte påverkas av mer arbete"></textarea>
+      <p class="edl-predict-hint" id="edl-predict-hint">Fyll i om du vill — kör sedan ett scenario ovan. (Frivilligt.)</p>
+    </div>
+
+    <div class="edl-predict-review" id="edl-predict-review" aria-live="polite" hidden></div>
+    <div class="edl-predict-history" id="edl-predict-history" hidden></div>
+  </section>
+
   <div class="edl-columns">
     <section class="panel" id="edl-flow-panel">
       <h2>Delivery flow</h2>
@@ -95,6 +113,7 @@
 <script src="src/enterprise-lab/ed-domain.js"></script>
 <script src="src/enterprise-lab/ed-engine.js"></script>
 <script src="src/enterprise-lab/ed-render.js"></script>
+<script src="src/enterprise-lab/ed-predict.js"></script>
 <script src="src/enterprise-lab/ed-app.js"></script>
 </body>
 </html>

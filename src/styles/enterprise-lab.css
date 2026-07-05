@@ -166,6 +166,140 @@
 
 .edl-status-days { font-variant-numeric: tabular-nums; }
 
+/* --- Predict before explanation ---------------------------------------------- */
+
+.edl-predict-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Klass-regelns display:flex överkör annars [hidden]-attributets display:none. */
+.edl-predict-fields[hidden] { display: none; }
+
+.edl-predict-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c3a52;
+  margin-top: 6px;
+}
+
+.edl-predict-input {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 13px;
+  padding: 8px 10px;
+  border: 1px solid #cdd6f5;
+  border-radius: 6px;
+  background: #fff;
+  resize: vertical;
+  min-height: 40px;
+}
+
+.edl-predict-input:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 1px;
+  border-color: #4a6cf7;
+}
+
+.edl-predict-input:disabled {
+  background: #f2f4f9;
+  color: #6b7385;
+}
+
+.edl-predict-hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #6b7385;
+  font-style: italic;
+}
+
+.edl-predict-block {
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  background: #f5f7fb;
+  border-left: 3px solid #7a8ce0;
+  border-radius: 0 6px 6px 0;
+}
+
+.edl-predict-block p { margin: 4px 0; font-size: 13px; color: #444; line-height: 1.45; }
+
+.edl-predict-heading {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #4a6cf7;
+  margin-bottom: 4px;
+}
+
+.edl-predict-k { font-weight: 600; color: #2c3a52; }
+
+.edl-predict-empty { color: #9aa1b0; font-style: italic; }
+
+.edl-predict-outcome {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 13px;
+  color: #444;
+}
+
+.edl-predict-newbtn {
+  margin-top: 10px;
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 14px;
+  border: 1px solid #cdd6f5;
+  border-radius: 6px;
+  background: #eef2ff;
+  color: #3a4fb5;
+  cursor: pointer;
+}
+
+.edl-predict-newbtn:hover { background: #e2e8fd; }
+
+.edl-predict-newbtn:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+}
+
+.edl-predict-compare {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #cdd6f5;
+}
+
+.edl-predict-history { margin-top: 12px; }
+
+.edl-predict-histlist {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edl-predict-histlist li {
+  padding: 8px 10px;
+  border: 1px solid #e1e6ee;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.edl-predict-hist-scenario {
+  font-weight: 600;
+  color: #2c3a52;
+  margin-bottom: 2px;
+}
+
 /* --- Delivery flow: steglista ------------------------------------------------ */
 
 .edl-stage-list {
