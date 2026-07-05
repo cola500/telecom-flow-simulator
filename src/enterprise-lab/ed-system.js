@@ -31,6 +31,8 @@
   let maxArchQueue = 0;
   let tickId = null;
   let prevRun = null;    // { capacity, avgLeadTime } för jämförelse
+  let series = [];       // tidsserie: [{ t, queue, completed, wip }] per tick
+  let prevSeries = null; // föregående körnings serie (ghost-kurva)
   let dom = null;
 
   function init() {
@@ -39,7 +41,10 @@
       metrics: document.getElementById("edl-sys-metrics"),
       runBtn: document.getElementById("edl-sys-run"),
       capBtn: document.getElementById("edl-sys-cap"),
-      resetBtn: document.getElementById("edl-sys-reset")
+      resetBtn: document.getElementById("edl-sys-reset"),
+      graph: document.getElementById("edl-sys-graph"),
+      graphEmpty: document.getElementById("edl-sys-graph-empty"),
+      graphNote: document.getElementById("edl-sys-graph-note")
     };
     if (!dom.board) return; // sektionen finns inte → gör inget
     if (dom.runBtn) dom.runBtn.addEventListener("click", run);
@@ -67,7 +72,10 @@
     inits = [];
     simTime = 0;
     maxArchQueue = 0;
+    series = [];
+    prevSeries = null;
     renderBoard();
+    renderGraph();
     if (dom.metrics) { dom.metrics.hidden = true; dom.metrics.innerHTML = ""; }
   }
 
@@ -81,6 +89,7 @@
     }));
     admitAll();          // släpp in de första enligt kapacitet
     trackArchQueue();
+    series = [sampleState()];
     if (dom.metrics) { dom.metrics.hidden = true; dom.metrics.innerHTML = ""; }
     renderBoard();
     tickId = setInterval(tick, TICK_MS);
@@ -116,12 +125,24 @@
 
     admitAll();
     trackArchQueue();
+    series.push(sampleState());
     renderBoard();
 
     if (inits.length && inits.every((it) => it.phase === "done")) {
       stopTick();
       finalize();
     }
+  }
+
+  // Ögonblicksbild av systemet för tidsserien. Liten datamodell (fyra tal).
+  function sampleState() {
+    let queue = 0, completed = 0, wip = 0;
+    for (const it of inits) {
+      if (it.phase === "done") completed += 1;
+      else wip += 1; // WIP = initiativ i systemet (ej klara)
+      if (it.stageIndex === ARCH && it.phase === "queue") queue += 1;
+    }
+    return { t: simTime, queue, completed, wip };
   }
 
   // Släpp in köande initiativ i steg med ledig kapacitet, FIFO (spawn-ordning).
@@ -150,7 +171,9 @@
       ? Math.round(done.reduce((sum, it) => sum + it.leadTime, 0) / done.length)
       : 0;
     renderMetrics(done.length, avg);
+    renderGraph();
     prevRun = { capacity: archCapacity, avgLeadTime: avg };
+    prevSeries = series.slice(); // spara för ghost-jämförelse nästa körning
   }
 
   // --- Rendering --------------------------------------------------------------
@@ -208,6 +231,80 @@
       `<div class="edl-sys-metric"><span class="edl-sys-mk">Bottleneck:</span> Architecture</div>` +
       prev;
     dom.metrics.hidden = false;
+  }
+
+  // Tidsserie-graf: systemtryck över tid. Mönstret (viewBox-skalning, path-bygge,
+  // ghost-kurva mot förra körningen) är lånat konceptuellt från OSS/BSS-grafen
+  // (src/ui/charts.js) — ingen delad kod, ingen chart-lib.
+  const GRAPH = { W: 560, H: 150, padTop: 12, padBottom: 20, padX: 6 };
+  const SERIES = [
+    { key: "wip",       stroke: "#4a6cf7", width: 1.6 },
+    { key: "completed", stroke: "#2da66a", width: 1.8 },
+    { key: "queue",     stroke: "#b94a00", width: 2.0 }  // ritas sist = överst
+  ];
+
+  function renderGraph() {
+    const svg = dom && dom.graph;
+    if (!svg) return;
+    const cur = series;
+    const ghost = prevSeries;
+    const haveCur = cur.length >= 2;
+
+    if (!haveCur) {
+      svg.hidden = true;
+      svg.innerHTML = "";
+      if (dom.graphEmpty) dom.graphEmpty.hidden = false;
+      if (dom.graphNote) dom.graphNote.hidden = true;
+      return;
+    }
+    if (dom.graphEmpty) dom.graphEmpty.hidden = true;
+    svg.hidden = false;
+
+    const { W, H, padTop, padBottom, padX } = GRAPH;
+    let tMax = 1, yMax = 1;
+    for (const arr of [cur, ghost]) {
+      if (!arr || !arr.length) continue;
+      if (arr[arr.length - 1].t > tMax) tMax = arr[arr.length - 1].t;
+      for (const d of arr) {
+        yMax = Math.max(yMax, d.queue, d.completed, d.wip);
+      }
+    }
+    const xOf = (t) => padX + (t / tMax) * (W - 2 * padX);
+    const yOf = (v) => H - padBottom - (v / yMax) * (H - padTop - padBottom);
+    const path = (arr, key) => arr
+      .map((d, i) => `${i ? "L" : "M"}${xOf(d.t).toFixed(1)},${yOf(d[key]).toFixed(1)}`)
+      .join(" ");
+
+    const grid = [0.25, 0.5, 0.75].map((p) => {
+      const y = (padTop + (1 - p) * (H - padTop - padBottom)).toFixed(1);
+      return `<line x1="${padX}" y1="${y}" x2="${W - padX}" y2="${y}" stroke="#eaeef5" stroke-width="0.5"/>`;
+    }).join("");
+
+    let ghostPaths = "";
+    const haveGhost = ghost && ghost.length >= 2;
+    if (haveGhost) {
+      ghostPaths = `<g opacity="0.3" stroke-dasharray="3,2">` +
+        `<path d="${path(ghost, "queue")}" stroke="#b94a00" stroke-width="1.4" fill="none"/>` +
+        `<path d="${path(ghost, "completed")}" stroke="#2da66a" stroke-width="1.4" fill="none"/>` +
+      `</g>`;
+    }
+    const curPaths = SERIES.map((s) =>
+      `<path d="${path(cur, s.key)}" stroke="${s.stroke}" stroke-width="${s.width}" fill="none"/>`
+    ).join("");
+
+    const label = (x, y, anchor, text) =>
+      `<text x="${x}" y="${y}" text-anchor="${anchor}" font-size="9" fill="#8a93a6" ` +
+      `font-family="ui-monospace,Menlo,monospace">${text}</text>`;
+
+    svg.innerHTML =
+      grid +
+      `<line x1="${padX}" y1="${H - padBottom}" x2="${W - padX}" y2="${H - padBottom}" stroke="#cdd3df" stroke-width="0.6"/>` +
+      ghostPaths + curPaths +
+      label(W - padX, padTop + 2, "end", `max ${yMax}`) +
+      label(padX, H - 6, "start", "0 dagar") +
+      label(W - padX, H - 6, "end", `${tMax} dagar`);
+
+    if (dom.graphNote) dom.graphNote.hidden = !haveGhost;
   }
 
   // Scripts ligger sist i body → DOM finns redan.

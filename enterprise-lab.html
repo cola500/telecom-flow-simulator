@@ -149,6 +149,18 @@
     <div class="edl-sys-board" id="edl-sys-board" role="img"
       aria-label="Systemvy: initiativ genom sju steg med kö framför Architecture"></div>
     <div class="edl-sys-metrics" id="edl-sys-metrics" aria-live="polite" hidden></div>
+
+    <div class="edl-sys-graph-wrap">
+      <div class="edl-sys-graph-legend" aria-hidden="true">
+        <span class="edl-sys-gl"><span class="edl-sys-gsw edl-sys-gsw-queue"></span>Architecture queue</span>
+        <span class="edl-sys-gl"><span class="edl-sys-gsw edl-sys-gsw-completed"></span>Completed</span>
+        <span class="edl-sys-gl"><span class="edl-sys-gsw edl-sys-gsw-wip"></span>WIP</span>
+      </div>
+      <p class="edl-sys-graph-empty" id="edl-sys-graph-empty">Kör experimentet för att se systemtryck över tid — kö, klara och WIP.</p>
+      <svg class="edl-sys-graph" id="edl-sys-graph" viewBox="0 0 560 150"
+        role="img" aria-label="Systemtryck över tid: Architecture-kö, klara initiativ och WIP" hidden></svg>
+      <p class="edl-sys-graph-note" id="edl-sys-graph-note" hidden>Streckad linje = föregående körning.</p>
+    </div>
   </section>
 </main>
 
