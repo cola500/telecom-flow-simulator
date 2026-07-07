@@ -987,6 +987,53 @@
 
 .edl-tr-delta { color: #6b7385; font-weight: 500; }
 
+/* Tidslinje-graf: förändring månad 1–6 */
+.edl-tr-graph-wrap { margin-top: 14px; }
+
+.edl-tr-graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #555;
+}
+
+.edl-tr-gl { display: inline-flex; align-items: center; gap: 5px; }
+
+.edl-tr-gsw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.edl-tr-gsw-lead { background: #4a6cf7; }
+.edl-tr-gsw-var  { background: #b94a00; }
+.edl-tr-gsw-pred { background: #2da66a; }
+
+.edl-tr-graph {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #e6ebf5;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.edl-tr-graph-empty {
+  margin: 0;
+  padding: 18px 12px;
+  font-size: 12.5px;
+  color: #6b7385;
+  font-style: italic;
+  text-align: center;
+  border: 1px dashed #d6dbe5;
+  border-radius: 8px;
+}
+
+.edl-tr-milestones {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+  color: #8a91a0;
+  font-style: italic;
+  line-height: 1.5;
+}
+
 /* --- Responsiv ---------------------------------------------------------------- */
 
 @media (max-width: 860px) {

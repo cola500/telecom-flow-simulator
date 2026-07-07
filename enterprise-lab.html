@@ -181,6 +181,19 @@
     </div>
 
     <div class="edl-tr-metrics" id="edl-tr-metrics" aria-live="polite" hidden></div>
+
+    <div class="edl-tr-graph-wrap">
+      <div class="edl-tr-graph-legend" aria-hidden="true">
+        <span class="edl-tr-gl"><span class="edl-tr-gsw edl-tr-gsw-lead"></span>Lead Time</span>
+        <span class="edl-tr-gl"><span class="edl-tr-gsw edl-tr-gsw-var"></span>Variation</span>
+        <span class="edl-tr-gl"><span class="edl-tr-gsw edl-tr-gsw-pred"></span>Predictability</span>
+      </div>
+      <p class="edl-tr-graph-empty" id="edl-tr-graph-empty">Kör transformationen för att se förändringen månad för månad.</p>
+      <svg class="edl-tr-graph" id="edl-tr-graph" viewBox="0 0 560 150"
+        role="img" aria-label="Metrics över månad 1–6: lead time, variation och predictability" hidden></svg>
+      <p class="edl-tr-milestones" id="edl-tr-milestones" hidden></p>
+    </div>
+
     <div class="edl-cards" id="edl-tr-cards" aria-live="polite" hidden></div>
   </section>
 </main>
