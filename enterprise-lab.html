@@ -164,6 +164,25 @@
 
     <div class="edl-cards" id="edl-cards" aria-live="polite" hidden></div>
   </section>
+
+  <section class="panel edl-transform-panel" id="edl-transform-panel">
+    <h2>Transformation Lab: gemensamt arbetssätt</h2>
+    <p class="edl-note">Tre enheter arbetar på olika sätt. Ledningen vill införa ett
+      gemensamt arbetssätt. Standardisering är inte en gratis förbättring — den kan
+      minska variation och öka förutsägbarhet, men kostar ofta tempo under införandet.
+      Generisk modell, inte en verklig organisation.</p>
+
+    <div class="edl-tr-sites" id="edl-tr-sites"></div>
+
+    <div class="edl-controls">
+      <button type="button" id="edl-tr-run" class="primary">Kör transformation</button>
+      <button type="button" id="edl-tr-std">Grad av standardisering: låg</button>
+      <button type="button" id="edl-tr-reset">Återställ</button>
+    </div>
+
+    <div class="edl-tr-metrics" id="edl-tr-metrics" aria-live="polite" hidden></div>
+    <div class="edl-cards" id="edl-tr-cards" aria-live="polite" hidden></div>
+  </section>
 </main>
 
 <footer class="app-footer">
@@ -180,5 +199,6 @@
 <script src="src/enterprise-lab/ed-app.js"></script>
 <script src="src/enterprise-lab/ed-learn-cards.js"></script>
 <script src="src/enterprise-lab/ed-system.js"></script>
+<script src="src/enterprise-lab/ed-transform.js"></script>
 </body>
 </html>

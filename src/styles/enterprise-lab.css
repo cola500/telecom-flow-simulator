@@ -931,11 +931,69 @@
   line-height: 1.5;
 }
 
+/* --- Transformation Lab ------------------------------------------------------ */
+
+.edl-tr-sites {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 4px 0 12px;
+}
+
+.edl-tr-site {
+  border: 1px solid #e6ebf5;
+  border-left: 3px solid #7a8ce0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #f5f7fb;
+}
+
+.edl-tr-site-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #2c3a52;
+}
+
+.edl-tr-site-style {
+  font-size: 12px;
+  color: #6b7385;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.edl-tr-site-lead {
+  font-size: 13px;
+  color: #444;
+  margin-top: 6px;
+}
+
+.edl-tr-metrics {
+  margin-top: 4px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.edl-tr-metric {
+  font-size: 13px;
+  color: #444;
+  padding: 8px 10px;
+  background: #f5f7fb;
+  border: 1px solid #e1e6ee;
+  border-radius: 6px;
+}
+
+.edl-tr-mk { font-weight: 600; color: #2c3a52; }
+
+.edl-tr-delta { color: #6b7385; font-weight: 500; }
+
 /* --- Responsiv ---------------------------------------------------------------- */
 
 @media (max-width: 860px) {
   .edl-columns { grid-template-columns: 1fr; }
   .edl-journey-list { grid-template-columns: 1fr; }
   .edl-sys-metrics { grid-template-columns: 1fr; }
+  .edl-tr-sites { grid-template-columns: 1fr; }
+  .edl-tr-metrics { grid-template-columns: 1fr; }
   .edl-log { max-height: 260px; }
 }

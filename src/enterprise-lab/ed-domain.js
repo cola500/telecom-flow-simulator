@@ -235,6 +235,13 @@
         body: "Ett beroende betyder att ett initiativ inte kan gå vidare förrän " +
           "något annat är klart — ofta en delad, begränsad resurs. Beroenden gör att " +
           "en lokal händelse sprider sig: väntan hos en påverkar många."
+      },
+      standardization: {
+        title: "Standardisering",
+        body: "Standardisering drar enheternas arbetssätt mot ett gemensamt. Det " +
+          "sänker variationen mellan dem och gör leveransen mer förutsägbar — men tar " +
+          "bort lokal anpassning och kostar tempo under omställningen. Frågan är inte " +
+          "om, utan hur mycket."
       }
     },
     patterns: {
@@ -257,6 +264,12 @@
         body: "Du optimerade ett steg som inte var flaskhalsen, så ledtiden rörde sig " +
           "knappt. Architecture begränsar fortfarande genomströmningen. Hitta flaskhalsen " +
           "först — den är den enda punkt där en förbättring fortplantar sig till helheten."
+      },
+      standardization_tradeoff: {
+        title: "Variationen föll — men vad kostade det?",
+        body: "Med hög standardisering blev enheterna mer lika och förutsägbarheten " +
+          "steg — men snitt-ledtiden steg också. Det är transitionskostnaden: förändring " +
+          "blir ofta sämre innan den blir bättre. Det farliga är att överge den mitt i svackan."
       }
     }
   };

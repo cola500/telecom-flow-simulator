@@ -16,13 +16,21 @@
   const TYPE_LABEL = { concept: "Begrepp", pattern: "Mönster", insight: "Varför?" };
   const BUCKET = { concept: "concepts", pattern: "patterns", insight: "insights" };
 
-  let host = null;
-  const shown = new Set(); // undvik dubblettkort i samma omgång
+  let defaultHost = null;
+  const shown = new Set(); // undvik dubblettkort per container (nyckel: hostId:type:id)
 
   function init() {
-    host = document.getElementById("edl-cards");
-    if (!host) return;
-    console.info("[EdLabCards] ready");
+    defaultHost = document.getElementById("edl-cards");
+    if (defaultHost) console.info("[EdLabCards] ready");
+  }
+
+  // Låter flera sektioner (systemexperiment, transformation, …) dela modulen
+  // men rendera i var sin container. host kan vara ett element, ett id, eller
+  // utelämnas för default (#edl-cards).
+  function resolveHost(host) {
+    if (host && host.nodeType) return host;
+    if (typeof host === "string") return document.getElementById(host);
+    return defaultHost;
   }
 
   function lookup(type, id) {
@@ -31,13 +39,14 @@
     return (bucket && bucket[id]) || null;
   }
 
-  function add(type, id) {
+  function add(type, id, hostArg) {
+    const host = resolveHost(hostArg);
     if (!host) return;
-    const key = `${type}:${id}`;
+    const key = `${host.id}:${type}:${id}`;
     if (shown.has(key)) return;
     const card = lookup(type, id);
     if (!card) {
-      console.warn(`[EdLabCards] okänt lärkort "${key}" — inget att visa.`);
+      console.warn(`[EdLabCards] okänt lärkort "${type}:${id}" — inget att visa.`);
       return;
     }
     shown.add(key);
@@ -52,9 +61,14 @@
     host.hidden = false;
   }
 
-  function clear() {
-    shown.clear();
-    if (host) { host.innerHTML = ""; host.hidden = true; }
+  function clear(hostArg) {
+    const host = resolveHost(hostArg);
+    if (!host) return;
+    host.innerHTML = "";
+    host.hidden = true;
+    for (const key of Array.from(shown)) {
+      if (key.indexOf(host.id + ":") === 0) shown.delete(key);
+    }
   }
 
   function escapeHtml(s) {
@@ -66,9 +80,9 @@
   init();
 
   window.EdLabCards = {
-    showConcept: (id) => add("concept", id),
-    showPattern: (id) => add("pattern", id),
-    showInsight: (id) => add("insight", id),
+    showConcept: (id, host) => add("concept", id, host),
+    showPattern: (id, host) => add("pattern", id, host),
+    showInsight: (id, host) => add("insight", id, host),
     clear
   };
 })();
