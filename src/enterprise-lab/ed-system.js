@@ -76,6 +76,7 @@
     prevSeries = null;
     renderBoard();
     renderGraph();
+    if (window.EdLabCards) window.EdLabCards.clear();
     if (dom.metrics) { dom.metrics.hidden = true; dom.metrics.innerHTML = ""; }
   }
 
@@ -91,6 +92,7 @@
     trackArchQueue();
     series = [sampleState()];
     if (dom.metrics) { dom.metrics.hidden = true; dom.metrics.innerHTML = ""; }
+    if (window.EdLabCards) window.EdLabCards.clear();
     renderBoard();
     tickId = setInterval(tick, TICK_MS);
   }
@@ -172,8 +174,27 @@
       : 0;
     renderMetrics(done.length, avg);
     renderGraph();
+    showLearningCards(avg);       // läser prevRun (föregående körning) → visa insikt
     prevRun = { capacity: archCapacity, avgLeadTime: avg };
-    prevSeries = series.slice(); // spara för ghost-jämförelse nästa körning
+    prevSeries = series.slice();  // spara för ghost-jämförelse nästa körning
+  }
+
+  // Signalera vilka lärkort som är relevanta för det som just hände. Modulen
+  // ed-learn-cards.js hämtar innehållet — vi känner bara till id:n här.
+  function showLearningCards(avg) {
+    const C = window.EdLabCards;
+    if (!C) return;
+    C.clear();
+    if (maxArchQueue > 0) {
+      C.showPattern("bottleneck");
+      C.showConcept("architecture_queue");
+    }
+    C.showConcept("wip");
+    // Jämförelse mot förra körningen: förklara resultatet ("varför?").
+    if (prevRun && prevRun.capacity !== archCapacity &&
+        archCapacity > prevRun.capacity && avg < prevRun.avgLeadTime) {
+      C.showInsight("bottleneck_relieved");
+    }
   }
 
   // --- Rendering --------------------------------------------------------------

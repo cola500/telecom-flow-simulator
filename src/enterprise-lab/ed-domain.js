@@ -211,6 +211,56 @@
     realized: { sv: "Realiserad förmåga", short: "Realiserad" }
   };
 
+  // Pedagogiskt lager: korta lärkort som förklarar det användaren just upplevt.
+  // Tre typer — begrepp (concept), mönster (pattern), resultat (insight/"varför?").
+  // ALLT innehåll bor här som data; renderingen (ed-learn-cards.js) slår bara upp
+  // per id. Simulatorn signalerar showConcept/showPattern/showInsight — den känner
+  // inte till texterna. Så här växer biblioteket utan att röra rendering eller motor.
+  const LEARNING = {
+    concepts: {
+      architecture_queue: {
+        title: "Architecture-kö",
+        body: "En kö framför arkitektur betyder inte att arkitekterna arbetar " +
+          "långsamt. Den visar att efterfrågan är större än kapaciteten. Frågan " +
+          "blir: ska kapaciteten öka, eller ska inflödet minska?"
+      },
+      wip: {
+        title: "WIP — work in progress",
+        body: "WIP är antalet initiativ som pågår samtidigt. Ju fler du startar på " +
+          "en gång, desto längre står varje enskilt och väntar i kö. Mindre WIP ger " +
+          "ofta kortare ledtid — trots att det känns mindre produktivt att hålla igen."
+      },
+      dependency: {
+        title: "Beroende",
+        body: "Ett beroende betyder att ett initiativ inte kan gå vidare förrän " +
+          "något annat är klart — ofta en delad, begränsad resurs. Beroenden gör att " +
+          "en lokal händelse sprider sig: väntan hos en påverkar många."
+      }
+    },
+    patterns: {
+      bottleneck: {
+        title: "Flaskhals",
+        body: "Du har precis skapat en flaskhals. När fler initiativ anländer än ett " +
+          "steg kan hantera byggs en kö upp framför det. Att optimera andra delar av " +
+          "systemet hjälper sällan förrän själva flaskhalsen adresseras."
+      }
+    },
+    insights: {
+      bottleneck_relieved: {
+        title: "Varför föll ledtiden?",
+        body: "Du ökade kapaciteten i just flaskhalsen (Architecture) — och ledtiden " +
+          "föll. Det är kärnan i Theory of Constraints: bara förbättringar i flaskhalsen " +
+          "rör helheten. Hade du ökat kapacitet någon annanstans hade nästan inget hänt."
+      },
+      local_optimization: {
+        title: "Varför hände nästan inget?",
+        body: "Du optimerade ett steg som inte var flaskhalsen, så ledtiden rörde sig " +
+          "knappt. Architecture begränsar fortfarande genomströmningen. Hitta flaskhalsen " +
+          "först — den är den enda punkt där en förbättring fortplantar sig till helheten."
+      }
+    }
+  };
+
   // Förtroende-nivå härledd ur hur mycket leveransen glider (dagar över baseline).
   // Bruten ut så att den kan återanvändas för att beräkna förra körningens nivå.
   function confidenceFor(delayDays) {
@@ -314,7 +364,7 @@
   // --- Exponera API -----------------------------------------------------------
 
   window.EdLabDomain = {
-    INITIATIVE, STAGES, BLOCKERS, EARLY_ALIGNMENT, LEARNING_JOURNEY,
+    INITIATIVE, STAGES, BLOCKERS, EARLY_ALIGNMENT, LEARNING_JOURNEY, LEARNING,
     DAYS_PER_MS, deriveImpact
   };
 })();

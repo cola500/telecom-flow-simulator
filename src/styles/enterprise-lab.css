@@ -886,6 +886,51 @@
   font-style: italic;
 }
 
+/* Pedagogiska lärkort (begrepp / mönster / varför?) */
+.edl-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.edl-card {
+  border: 1px solid #e1e6ee;
+  border-left-width: 3px;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #fff;
+}
+
+.edl-card-concept { border-left-color: #4a6cf7; }
+.edl-card-pattern { border-left-color: #b94a00; }
+.edl-card-insight { border-left-color: #2da66a; }
+
+.edl-card-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.edl-card-concept .edl-card-tag { color: #3a4fb5; }
+.edl-card-pattern .edl-card-tag { color: #b94a00; }
+.edl-card-insight .edl-card-tag { color: #1f7a47; }
+
+.edl-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3a52;
+  margin-top: 2px;
+}
+
+.edl-card-body {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: #555;
+  line-height: 1.5;
+}
+
 /* --- Responsiv ---------------------------------------------------------------- */
 
 @media (max-width: 860px) {
