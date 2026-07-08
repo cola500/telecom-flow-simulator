@@ -34,6 +34,35 @@
   line-height: 1.5;
 }
 
+.edl-start-here {
+  margin: 8px 0 6px;
+  font-size: 14px;
+  color: #dfe6ff;
+}
+
+.edl-start-here a {
+  color: #cdd6ff;
+  text-decoration: underline;
+}
+
+/* Numrerade sektionsrubriker som delar upp den långa sidan i lektioner */
+.edl-section-title {
+  max-width: 1100px;
+  margin: 26px auto 8px;
+  padding: 0 16px;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #4a6cf7;
+}
+
+.edl-panel-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
 .edl-main {
   max-width: 1100px;
   margin: 0 auto;

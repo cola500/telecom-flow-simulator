@@ -14,7 +14,7 @@
 <header class="edl-header">
   <div class="edl-header-row">
     <h1>Enterprise Delivery Lab</h1>
-    <span class="edl-experiment-badge" aria-label="Experimentstatus">Experiment · domän 2</span>
+    <span class="edl-experiment-badge" aria-label="Experimentstatus">Experiment · Enterprise-leverans</span>
   </div>
   <p class="edl-intro">
     Interaktiv lärsimulator för enterprise IT-leverans: följ ett initiativ från
@@ -22,11 +22,21 @@
     leveransen blir långsam. Generisk modell — inga verkliga organisationer
     eller interna processer.
   </p>
+  <p class="edl-start-here">
+    <strong>Börja här:</strong> <a href="#edl-predict-panel">gissa utfallet</a> →
+    <a href="#edl-initiative-panel">kör ett scenario</a> → jämför.
+  </p>
   <a href="index.html" class="edl-back-link" aria-label="Gå tillbaka till OSS/BSS-simulatorn">← Tillbaka till OSS/BSS-simulatorn</a>
 </header>
 
 <main id="edl-main" class="edl-main">
-  <details class="panel edl-journey" id="edl-journey" open>
+  <div class="edl-panel-controls" aria-label="Panelkontroller">
+    <button type="button" id="edl-expand-all" class="util-btn" aria-label="Expandera alla sektioner">Expandera alla</button>
+    <button type="button" id="edl-collapse-all" class="util-btn" aria-label="Fäll ihop alla sektioner">Fäll ihop alla</button>
+  </div>
+
+  <h2 class="edl-section-title">1. Lär domänen</h2>
+  <details class="panel edl-journey" id="edl-journey">
     <summary class="edl-journey-summary">Från verksamhetsbehov till driftsatt IT-förmåga</summary>
     <p class="edl-note edl-journey-intro">
       En guidad genomgång av de tio stegen ett initiativ passerar — läs den innan
@@ -36,6 +46,7 @@
     <div id="edl-journey-cards"></div>
   </details>
 
+  <h2 class="edl-section-title">2. Kör ett initiativ</h2>
   <section class="panel" id="edl-initiative-panel">
     <h2>Initiative</h2>
     <p class="edl-initiative-name" id="edl-initiative-name"></p>
@@ -134,8 +145,9 @@
     </div>
   </div>
 
+  <h2 class="edl-section-title">3. Systemexperiment</h2>
   <section class="panel edl-system-panel" id="edl-system-panel">
-    <h2>Systemexperiment: flera initiativ</h2>
+    <h2>Flera initiativ samtidigt</h2>
     <p class="edl-note">Poängen med detta experiment är att visa att en begränsad
       resurs skapar kö, och att väntan i kön driver ledtid. Kör tre initiativ genom
       flödet — Architecture kan bara arbeta med ett i taget som default.</p>
@@ -165,8 +177,9 @@
     <div class="edl-cards" id="edl-cards" aria-live="polite" hidden></div>
   </section>
 
+  <h2 class="edl-section-title">4. Transformation Lab</h2>
   <section class="panel edl-transform-panel" id="edl-transform-panel">
-    <h2>Transformation Lab: gemensamt arbetssätt</h2>
+    <h2>Gemensamt arbetssätt</h2>
     <p class="edl-note">Tre enheter arbetar på olika sätt. Ledningen vill införa ett
       gemensamt arbetssätt. Standardisering är inte en gratis förbättring — den kan
       minska variation och öka förutsägbarhet, men kostar ofta tempo under införandet.

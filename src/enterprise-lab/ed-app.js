@@ -57,6 +57,15 @@
       if (window.EdLabPredict) window.EdLabPredict.onFullReset();
     });
 
+  // Expandera/fäll ihop alla collapsible-sektioner (learning journey + "Om steget").
+  function toggleAllDetails(open) {
+    document.querySelectorAll("#edl-main details").forEach((d) => { d.open = open; });
+  }
+  document.getElementById("edl-expand-all")
+    ?.addEventListener("click", () => toggleAllDetails(true));
+  document.getElementById("edl-collapse-all")
+    ?.addEventListener("click", () => toggleAllDetails(false));
+
   console.info("[EdLab] API ready — engine:",
     Object.keys(window.EdLabEngine).join(", "));
 })();

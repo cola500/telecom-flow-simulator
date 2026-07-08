@@ -28,6 +28,14 @@ header .intro .intro-hint {
   color: rgba(255, 255, 255, 0.6);
   font-style: italic;
 }
+
+header .intro .start-here {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #dfe6ff;
+}
+
+header .intro .start-here a { color: #cdd6ff; text-decoration: underline; }
 .mode-pill {
   display: inline-block;
   padding: 1px 8px;
