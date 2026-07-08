@@ -1026,13 +1026,90 @@
   border-radius: 8px;
 }
 
-.edl-tr-milestones {
+.edl-tr-status {
+  margin: 0 0 12px;
+  background: #eef2ff;
+  border: 1px solid #cdd6f5;
+  border-radius: 6px;
+  padding: 6px 12px;
+  display: inline-block;
+}
+
+.edl-tr-status-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #3a4fb5;
+}
+
+.edl-tr-status-desc {
+  display: block;
+  font-size: 12px;
+  color: #5a6273;
+  margin-top: 1px;
+}
+
+.edl-tr-graph-scale {
   margin: 6px 0 0;
   font-size: 11.5px;
   color: #8a91a0;
   font-style: italic;
   line-height: 1.5;
 }
+
+/* Milstolpe-tidslinje: ○ väntar · ● pågår · ✓ klart */
+.edl-tr-events {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.edl-tr-event {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid #e6ebf5;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #f8f9fc;
+  color: #5a6273;
+}
+
+.edl-tr-event-marker { font-size: 14px; line-height: 1; flex: none; width: 16px; text-align: center; }
+.edl-tr-event-body { flex: 1 1 auto; min-width: 0; }
+.edl-tr-event-body strong { color: #2c3a52; }
+
+.edl-tr-event-tag {
+  flex: none;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+.edl-tr-event-pending { opacity: 0.7; }
+.edl-tr-event-pending .edl-tr-event-marker { color: #b0b8c6; }
+
+.edl-tr-event-active {
+  background: #fbf7f2;
+  border-color: #ecdcc9;
+  border-left: 3px solid #c9992a;
+  color: #4a3a1a;
+}
+.edl-tr-event-active .edl-tr-event-marker { color: #c9992a; }
+.edl-tr-event-active .edl-tr-event-tag { background: #f5e6cc; color: #8a6a1a; }
+
+.edl-tr-event-done {
+  background: #f4fbf6;
+  border-color: #cdeddb;
+  border-left: 3px solid #2da66a;
+}
+.edl-tr-event-done .edl-tr-event-marker { color: #1f7a47; }
+.edl-tr-event-done .edl-tr-event-tag { background: #d7f0e2; color: #1f7a47; }
 
 /* --- Responsiv ---------------------------------------------------------------- */
 
