@@ -1,0 +1,1253 @@
+/* ============================================================================
+ * Enterprise Delivery Lab-specifik CSS
+ *
+ * Komplementerar main.css — överrider inga befintliga regler. Alla nya klasser
+ * är prefixade med .edl- så vi garanterat inte kolliderar med telecom-
+ * simulatorns eller FlowLabs klasser. (Samma konvention som flow-lab.css.)
+ * ========================================================================== */
+
+/* --- Layout-stommen --------------------------------------------------------- */
+
+.edl-header {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px 4px;
+}
+
+.edl-header-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.edl-header-row h1 {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+.edl-intro {
+  margin: 10px 0 6px;
+  color: #444;
+  max-width: 72ch;
+  line-height: 1.5;
+}
+
+.edl-start-here {
+  margin: 8px 0 6px;
+  font-size: 14px;
+  color: #dfe6ff;
+}
+
+.edl-start-here a {
+  color: #cdd6ff;
+  text-decoration: underline;
+}
+
+/* Numrerade sektionsrubriker som delar upp den långa sidan i lektioner */
+.edl-section-title {
+  max-width: 1100px;
+  margin: 26px auto 8px;
+  padding: 0 16px;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #4a6cf7;
+}
+
+.edl-panel-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.edl-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+.edl-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.edl-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* --- Experimentmarkör + navigation ------------------------------------------ */
+
+.edl-experiment-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #eef2ff;
+  color: #3a4fb5;
+  border: 1px solid #7a8ce0;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.edl-back-link {
+  display: inline-block;
+  margin-top: 6px;
+  color: #4a6cf7;
+  text-decoration: none;
+  font-size: 13px;
+  border-bottom: 1px dotted transparent;
+  transition: border-color 0.15s;
+}
+
+.edl-back-link:hover { border-bottom-color: #4a6cf7; }
+
+.edl-back-link:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* --- Initiative-panel ------------------------------------------------------- */
+
+.edl-initiative-name {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1c2330;
+}
+
+.edl-note {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.edl-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 0 10px;
+}
+
+.edl-blocker-label {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-left: 1px solid #d6dbe5;
+  padding-left: 12px;
+}
+
+/* --- Förbättringskontroll (alignment-toggle) -------------------------------- */
+
+.edl-align-control {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  background: #eef2ff;
+  border: 1px solid #cdd6f5;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.edl-align-control input {
+  margin-top: 2px;
+  flex: none;
+  cursor: pointer;
+}
+
+.edl-align-text { display: block; }
+
+.edl-align-text strong {
+  font-size: 13px;
+  color: #2c3a52;
+}
+
+.edl-align-hint {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #5a6273;
+  line-height: 1.45;
+}
+
+.edl-status-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #555;
+}
+
+.edl-status-days { font-variant-numeric: tabular-nums; }
+
+/* --- Learning journey (Learn-lager) ------------------------------------------ */
+
+.edl-journey { padding-bottom: 16px; }
+
+.edl-journey-summary {
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1c2330;
+  list-style-position: inside;
+  user-select: none;
+}
+
+.edl-journey-summary:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.edl-journey-intro { margin-top: 8px; }
+
+.edl-journey-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.edl-journey-card {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #f5f7fb;
+  border: 1px solid #e6ebf5;
+  border-radius: 8px;
+}
+
+.edl-journey-num {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #4a6cf7;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edl-journey-text { min-width: 0; }
+
+.edl-journey-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #2c3a52;
+}
+
+.edl-journey-actor {
+  display: block;
+  font-size: 11px;
+  color: #6b7385;
+  font-weight: 400;
+  margin-top: 1px;
+}
+
+.edl-journey-what {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.edl-journey-why {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.edl-journey-risk {
+  margin: 6px 0 0;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #7a3a1a;
+  background: #fdf3ec;
+  border-left: 3px solid #b94a00;
+  border-radius: 0 4px 4px 0;
+  line-height: 1.45;
+}
+
+/* --- Delivery-graf (visuell flödesvy) ---------------------------------------- */
+
+.edl-fg-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 4px 0 12px;
+  font-size: 12px;
+  color: #555;
+}
+
+.edl-fg-key { display: inline-flex; align-items: center; gap: 5px; }
+
+.edl-fg-sw {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid #c7cfd9;
+  background: #f5f7fb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.edl-fg-sw-pending { background: #f5f7fb; border-color: #c7cfd9; }
+.edl-fg-sw-active  { background: #fff8e1; border-color: #f5b400; }
+.edl-fg-sw-done    { background: #eef7f1; border-color: #2da66a; }
+.edl-fg-sw-blocked { background: #fde7e7; border-color: #b32a2a; }
+.edl-fg-sw-align   { background: #eef2ff; border-color: #7a8ce0; color: #3a4fb5; }
+
+.edl-flowgraph-scroll {
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+#edl-flowgraph {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  min-width: min-content;
+}
+
+.edl-fg-conn {
+  align-self: center;
+  color: #b0b8c6;
+  font-size: 16px;
+  flex: 0 0 auto;
+}
+
+.edl-fg-node {
+  position: relative;
+  flex: 0 0 auto;
+  width: 88px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 6px;
+  border: 1px solid #c7cfd9;
+  border-radius: 8px;
+  background: #f5f7fb;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.edl-fg-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #c7cfd9;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2c3a52;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edl-fg-label {
+  font-size: 11px;
+  line-height: 1.25;
+  text-align: center;
+  color: #2c3a52;
+  font-weight: 600;
+}
+
+.edl-fg-badges {
+  display: flex;
+  gap: 3px;
+  min-height: 16px;
+}
+
+.edl-fg-badge {
+  font-size: 11px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.edl-fg-badge-align  { background: #eef2ff; color: #3a4fb5; border: 1px solid #cdd6f5; }
+.edl-fg-badge-delay  { background: #fdf3ec; color: #b94a00; border: 1px solid #f0c9ac; }
+.edl-fg-badge-rework { background: #fde7e7; color: #b32a2a; border: 1px solid #f0bcbc; }
+
+/* Nodstatus — samma färgspråk som steglistan */
+.edl-fg-active  { background: #fff8e1; border-color: #f5b400; }
+.edl-fg-active .edl-fg-num  { border-color: #f5b400; color: #8a6500; }
+.edl-fg-done    { background: #eef7f1; border-color: #2da66a; }
+.edl-fg-done .edl-fg-num    { border-color: #2da66a; color: #1f7a47; }
+.edl-fg-blocked { background: #fdeeee; border-color: #b94a00; }
+.edl-fg-blocked .edl-fg-num { border-color: #b94a00; color: #b94a00; }
+.edl-fg-rework  { background: #fde7e7; border-color: #b32a2a; }
+.edl-fg-rework .edl-fg-num  { border-color: #b32a2a; color: #b32a2a; }
+
+.edl-fg-caption {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.edl-fg-future {
+  margin: 10px 0 0;
+  padding-top: 8px;
+  border-top: 1px dashed #e1e6ee;
+  font-size: 11.5px;
+  color: #8a91a0;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* --- Predict before explanation ---------------------------------------------- */
+
+.edl-predict-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Klass-regelns display:flex överkör annars [hidden]-attributets display:none. */
+.edl-predict-fields[hidden] { display: none; }
+
+.edl-predict-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c3a52;
+  margin-top: 6px;
+}
+
+.edl-predict-input {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  font-size: 13px;
+  padding: 8px 10px;
+  border: 1px solid #cdd6f5;
+  border-radius: 6px;
+  background: #fff;
+  resize: vertical;
+  min-height: 40px;
+}
+
+.edl-predict-input:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 1px;
+  border-color: #4a6cf7;
+}
+
+.edl-predict-input:disabled {
+  background: #f2f4f9;
+  color: #6b7385;
+}
+
+.edl-predict-hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #6b7385;
+  font-style: italic;
+}
+
+.edl-predict-block {
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  background: #f5f7fb;
+  border-left: 3px solid #7a8ce0;
+  border-radius: 0 6px 6px 0;
+}
+
+.edl-predict-block p { margin: 4px 0; font-size: 13px; color: #444; line-height: 1.45; }
+
+.edl-predict-heading {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #4a6cf7;
+  margin-bottom: 4px;
+}
+
+.edl-predict-k { font-weight: 600; color: #2c3a52; }
+
+.edl-predict-empty { color: #9aa1b0; font-style: italic; }
+
+.edl-predict-outcome {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 13px;
+  color: #444;
+}
+
+.edl-predict-newbtn {
+  margin-top: 10px;
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 14px;
+  border: 1px solid #cdd6f5;
+  border-radius: 6px;
+  background: #eef2ff;
+  color: #3a4fb5;
+  cursor: pointer;
+}
+
+.edl-predict-newbtn:hover { background: #e2e8fd; }
+
+.edl-predict-newbtn:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+}
+
+.edl-predict-compare {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #cdd6f5;
+}
+
+.edl-predict-history { margin-top: 12px; }
+
+.edl-predict-histlist {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edl-predict-histlist li {
+  padding: 8px 10px;
+  border: 1px solid #e1e6ee;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.edl-predict-hist-scenario {
+  font-weight: 600;
+  color: #2c3a52;
+  margin-bottom: 2px;
+}
+
+/* --- Delivery flow: steglista ------------------------------------------------ */
+
+.edl-stage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.edl-stage {
+  background: #f5f7fb;
+  border-left: 3px solid #c7cfd9;
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.edl-stage-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.edl-stage-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #2c3a52;
+}
+
+.edl-stage-actor {
+  display: block;
+  font-size: 11px;
+  color: #6b7385;
+  font-weight: 400;
+  margin-top: 1px;
+}
+
+.edl-stage-badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #888;
+  white-space: nowrap;
+}
+
+/* Stegstatus: pending (default ovan) | active | queued | rework | done */
+
+.edl-stage-active {
+  background: #fff8e1;
+  border-left-color: #f5b400;
+}
+.edl-stage-active .edl-stage-badge { color: #8a6500; }
+
+.edl-stage-queued {
+  background: #fdeeee;
+  border-left-color: #b94a00;
+}
+.edl-stage-queued .edl-stage-badge { color: #b94a00; }
+
+.edl-stage-rework {
+  background: #fde7e7;
+  border-left-color: #b32a2a;
+}
+.edl-stage-rework .edl-stage-badge { color: #b32a2a; }
+
+.edl-stage-done {
+  background: #eef7f1;
+  border-left-color: #2da66a;
+}
+.edl-stage-done .edl-stage-badge { color: #1f7a47; }
+
+/* --- Learning notes (details) ------------------------------------------------ */
+
+.edl-stage-note {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.edl-stage-note summary {
+  cursor: pointer;
+  color: #4a6cf7;
+  font-weight: 500;
+  user-select: none;
+}
+
+.edl-stage-note summary:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.edl-stage-note p {
+  margin: 6px 0 0;
+  color: #444;
+  line-height: 1.5;
+}
+
+/* --- Eventlogg ---------------------------------------------------------------- */
+
+.edl-log {
+  max-height: 340px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.edl-event {
+  padding: 6px 10px;
+  border-left: 3px solid #c7cfd9;
+  border-radius: 0 4px 4px 0;
+  background: #fafbfd;
+  font-size: 12px;
+}
+
+.edl-event-head {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.edl-event-day {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 11px;
+  color: #6b7385;
+  white-space: nowrap;
+}
+
+.edl-event-title {
+  font-weight: 600;
+  color: #2c3a52;
+}
+
+.edl-event-detail {
+  margin-top: 2px;
+  color: #555;
+  line-height: 1.45;
+}
+
+.edl-event-ok     { border-left-color: #2da66a; background: #f4fbf6; }
+.edl-event-block  { border-left-color: #b94a00; background: #fdf3ec; }
+.edl-event-rework { border-left-color: #b32a2a; background: #fdf0f0; }
+
+/* --- Operational impact -------------------------------------------------------- */
+
+.edl-impact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.edl-impact-card {
+  background: #fff;
+  border: 1px solid #e1e6ee;
+  border-left-width: 3px;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.edl-impact-label {
+  font-size: 11px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.edl-impact-value {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 4px;
+  color: #222;
+}
+
+.edl-impact-detail {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.edl-impact-ok     { border-left-color: #2da66a; }
+.edl-impact-warn   { border-left-color: #f5b400; }
+.edl-impact-danger { border-left-color: #b32a2a; }
+
+/* Delta mot förra körningen — repair-halvans "ändra en sak, se skillnaden". */
+.edl-impact-delta {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.edl-delta-better { color: #1f7a47; }
+.edl-delta-worse  { color: #b32a2a; }
+.edl-delta-same   { color: #6b7385; font-weight: 500; }
+
+/* --- Systemexperiment: flera initiativ --------------------------------------- */
+
+.edl-sys-board {
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  overflow-x: auto;
+  padding: 4px 0 8px;
+  margin-top: 4px;
+}
+
+.edl-sys-queue,
+.edl-sys-station,
+.edl-sys-done-box {
+  flex: 0 0 auto;
+  min-width: 84px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 6px;
+  border: 1px solid #c7cfd9;
+  border-radius: 8px;
+  background: #f5f7fb;
+}
+
+.edl-sys-queue { background: #fdf3ec; border-color: #f0c9ac; }
+.edl-sys-done-box { background: #eef7f1; border-color: #2da66a; }
+
+.edl-sys-bottleneck { border-color: #b94a00; border-width: 2px; }
+
+.edl-sys-st-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #2c3a52;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.edl-sys-cap {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  background: #b94a00;
+  color: #fff;
+  border-radius: 4px;
+  padding: 0 4px;
+  margin-top: 2px;
+}
+
+.edl-sys-chiprow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  justify-content: center;
+  align-items: center;
+  min-height: 22px;
+}
+
+.edl-sys-chip {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: #4a6cf7;
+}
+
+.edl-sys-chip-queue  { background: #b94a00; }
+.edl-sys-chip-active { background: #4a6cf7; }
+.edl-sys-chip-done   { background: #2da66a; }
+
+.edl-sys-empty { color: #b0b8c6; font-size: 12px; }
+
+.edl-sys-arrow {
+  align-self: center;
+  color: #b0b8c6;
+  font-size: 16px;
+  flex: 0 0 auto;
+}
+
+.edl-sys-metrics {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.edl-sys-metric {
+  font-size: 13px;
+  color: #444;
+  padding: 8px 10px;
+  background: #f5f7fb;
+  border: 1px solid #e1e6ee;
+  border-radius: 6px;
+}
+
+.edl-sys-metric-prev {
+  grid-column: 1 / -1;
+  background: #eef2ff;
+  border-color: #cdd6f5;
+  color: #3a4fb5;
+}
+
+.edl-sys-mk { font-weight: 600; color: #2c3a52; }
+
+/* Tidsserie-graf: systemtryck över tid */
+.edl-sys-graph-wrap { margin-top: 14px; }
+
+.edl-sys-graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #555;
+}
+
+.edl-sys-gl { display: inline-flex; align-items: center; gap: 5px; }
+
+.edl-sys-gsw {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.edl-sys-gsw-queue     { background: #b94a00; }
+.edl-sys-gsw-completed { background: #2da66a; }
+.edl-sys-gsw-wip       { background: #4a6cf7; }
+
+.edl-sys-graph {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #e6ebf5;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.edl-sys-graph-empty {
+  margin: 0;
+  padding: 18px 12px;
+  font-size: 12.5px;
+  color: #6b7385;
+  font-style: italic;
+  text-align: center;
+  border: 1px dashed #d6dbe5;
+  border-radius: 8px;
+}
+
+.edl-sys-graph-note {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+  color: #8a91a0;
+  font-style: italic;
+}
+
+/* Pedagogiska lärkort (begrepp / mönster / varför?) */
+.edl-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.edl-card {
+  border: 1px solid #e1e6ee;
+  border-left-width: 3px;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #fff;
+}
+
+.edl-card-concept { border-left-color: #4a6cf7; }
+.edl-card-pattern { border-left-color: #b94a00; }
+.edl-card-insight { border-left-color: #2da66a; }
+
+.edl-card-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.edl-card-concept .edl-card-tag { color: #3a4fb5; }
+.edl-card-pattern .edl-card-tag { color: #b94a00; }
+.edl-card-insight .edl-card-tag { color: #1f7a47; }
+
+.edl-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3a52;
+  margin-top: 2px;
+}
+
+.edl-card-body {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* --- Transformation Lab ------------------------------------------------------ */
+
+.edl-tr-sites {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 4px 0 12px;
+}
+
+.edl-tr-site {
+  border: 1px solid #e6ebf5;
+  border-left: 3px solid #7a8ce0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #f5f7fb;
+}
+
+.edl-tr-site-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #2c3a52;
+}
+
+.edl-tr-site-style {
+  font-size: 12px;
+  color: #6b7385;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.edl-tr-site-lead {
+  font-size: 13px;
+  color: #444;
+  margin-top: 6px;
+}
+
+.edl-tr-metrics {
+  margin-top: 4px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.edl-tr-metric {
+  font-size: 13px;
+  color: #444;
+  padding: 8px 10px;
+  background: #f5f7fb;
+  border: 1px solid #e1e6ee;
+  border-radius: 6px;
+}
+
+.edl-tr-mk { font-weight: 600; color: #2c3a52; }
+
+.edl-tr-delta { color: #6b7385; font-weight: 500; }
+
+/* Tidslinje-graf: förändring månad 1–6 */
+.edl-tr-graph-wrap { margin-top: 14px; }
+
+.edl-tr-graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #555;
+}
+
+.edl-tr-gl { display: inline-flex; align-items: center; gap: 5px; }
+
+.edl-tr-gsw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.edl-tr-gsw-lead { background: #4a6cf7; }
+.edl-tr-gsw-var  { background: #b94a00; }
+.edl-tr-gsw-pred { background: #2da66a; }
+
+.edl-tr-graph {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #e6ebf5;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.edl-tr-graph-empty {
+  margin: 0;
+  padding: 18px 12px;
+  font-size: 12.5px;
+  color: #6b7385;
+  font-style: italic;
+  text-align: center;
+  border: 1px dashed #d6dbe5;
+  border-radius: 8px;
+}
+
+.edl-tr-status {
+  margin: 0 0 12px;
+  background: #eef2ff;
+  border: 1px solid #cdd6f5;
+  border-radius: 6px;
+  padding: 6px 12px;
+  display: inline-block;
+}
+
+.edl-tr-status-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #3a4fb5;
+}
+
+.edl-tr-status-desc {
+  display: block;
+  font-size: 12px;
+  color: #5a6273;
+  margin-top: 1px;
+}
+
+.edl-tr-graph-scale {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+  color: #8a91a0;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* Milstolpe-tidslinje: ○ väntar · ● pågår · ✓ klart */
+.edl-tr-events {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.edl-tr-event {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid #e6ebf5;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #f8f9fc;
+  color: #5a6273;
+}
+
+.edl-tr-event-marker { font-size: 14px; line-height: 1; flex: none; width: 16px; text-align: center; }
+.edl-tr-event-body { flex: 1 1 auto; min-width: 0; }
+.edl-tr-event-body strong { color: #2c3a52; }
+
+.edl-tr-event-tag {
+  flex: none;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+.edl-tr-event-pending { opacity: 0.7; }
+.edl-tr-event-pending .edl-tr-event-marker { color: #b0b8c6; }
+
+.edl-tr-event-active {
+  background: #fbf7f2;
+  border-color: #ecdcc9;
+  border-left: 3px solid #c9992a;
+  color: #4a3a1a;
+}
+.edl-tr-event-active .edl-tr-event-marker { color: #c9992a; }
+.edl-tr-event-active .edl-tr-event-tag { background: #f5e6cc; color: #8a6a1a; }
+
+.edl-tr-event-done {
+  background: #f4fbf6;
+  border-color: #cdeddb;
+  border-left: 3px solid #2da66a;
+}
+.edl-tr-event-done .edl-tr-event-marker { color: #1f7a47; }
+.edl-tr-event-done .edl-tr-event-tag { background: #d7f0e2; color: #1f7a47; }
+
+/* --- Scenario Lab ------------------------------------------------------------ */
+
+.edl-sc-situation {
+  margin: 4px 0 14px;
+  padding: 12px 14px;
+  background: #f5f7fb;
+  border-left: 3px solid #4a6cf7;
+  border-radius: 0 6px 6px 0;
+  font-size: 14px;
+  color: #2c3a52;
+  line-height: 1.55;
+}
+
+.edl-sc-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edl-sc-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: 1px solid #cdd6f5;
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+  font-size: 13.5px;
+  color: #2c3a52;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.edl-sc-option:hover { background: #f5f7fb; border-color: #7a8ce0; }
+
+.edl-sc-option:focus-visible {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+}
+
+.edl-sc-option-active {
+  background: #eef2ff;
+  border-color: #4a6cf7;
+  border-left-width: 3px;
+}
+
+.edl-sc-option-num {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #4a6cf7;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edl-sc-option-label { line-height: 1.45; }
+
+.edl-sc-result {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edl-sc-block {
+  padding: 10px 12px;
+  border: 1px solid #e1e6ee;
+  border-left-width: 3px;
+  border-left-color: #b94a00;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.edl-sc-reflection { border-left-color: #2da66a; background: #f4fbf6; }
+
+.edl-sc-heading {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #b94a00;
+  margin-bottom: 4px;
+}
+
+.edl-sc-reflection .edl-sc-heading { color: #1f7a47; }
+
+.edl-sc-text {
+  margin: 0;
+  font-size: 13px;
+  color: #444;
+  line-height: 1.55;
+}
+
+/* --- Responsiv ---------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .edl-columns { grid-template-columns: 1fr; }
+  .edl-journey-list { grid-template-columns: 1fr; }
+  .edl-sys-metrics { grid-template-columns: 1fr; }
+  .edl-tr-sites { grid-template-columns: 1fr; }
+  .edl-tr-metrics { grid-template-columns: 1fr; }
+  .edl-log { max-height: 260px; }
+}

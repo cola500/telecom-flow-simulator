@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Enterprise Delivery Lab (experiment) — Från verksamhetsbehov till driftsatt IT-förmåga</title>
+<meta name="description" content="Experimentell simulator för enterprise IT-leverans: följ ett initiativ från verksamhetsbehov till driftsatt förmåga, trigga blockers och se operational impact. Domän 2-inkubator i OSS/BSS-simulator-repot.">
+<link rel="stylesheet" href="src/styles/main.css" />
+<link rel="stylesheet" href="src/styles/enterprise-lab.css" />
+</head>
+<body class="edl-body">
+<a class="skip-link" href="#edl-main">Hoppa till innehåll</a>
+
+<header class="edl-header">
+  <div class="edl-header-row">
+    <h1>Enterprise Delivery Lab</h1>
+    <span class="edl-experiment-badge" aria-label="Experimentstatus">Experiment · Enterprise-leverans</span>
+  </div>
+  <p class="edl-intro">
+    Interaktiv lärsimulator för enterprise IT-leverans: följ ett initiativ från
+    verksamhetsbehov till driftsatt förmåga, trigga en blocker och se varför
+    leveransen blir långsam. Generisk modell — inga verkliga organisationer
+    eller interna processer.
+  </p>
+  <p class="edl-start-here">
+    <strong>Börja här:</strong> <a href="#edl-predict-panel">gissa utfallet</a> →
+    <a href="#edl-initiative-panel">kör ett scenario</a> → jämför.
+  </p>
+  <a href="index.html" class="edl-back-link" aria-label="Gå tillbaka till OSS/BSS-simulatorn">← Tillbaka till OSS/BSS-simulatorn</a>
+</header>
+
+<main id="edl-main" class="edl-main">
+  <div class="edl-panel-controls" aria-label="Panelkontroller">
+    <button type="button" id="edl-expand-all" class="util-btn" aria-label="Expandera alla sektioner">Expandera alla</button>
+    <button type="button" id="edl-collapse-all" class="util-btn" aria-label="Fäll ihop alla sektioner">Fäll ihop alla</button>
+  </div>
+
+  <h2 class="edl-section-title">1. Lär domänen</h2>
+  <details class="panel edl-journey" id="edl-journey">
+    <summary class="edl-journey-summary">Från verksamhetsbehov till driftsatt IT-förmåga</summary>
+    <p class="edl-note edl-journey-intro">
+      En guidad genomgång av de tio stegen ett initiativ passerar — läs den innan
+      eller medan du kör för att förstå var väntan och omtag uppstår. Fäll ihop när
+      du vill fokusera på körningen.
+    </p>
+    <div id="edl-journey-cards"></div>
+  </details>
+
+  <h2 class="edl-section-title">2. Kör ett initiativ</h2>
+  <section class="panel" id="edl-initiative-panel">
+    <h2>Initiative</h2>
+    <p class="edl-initiative-name" id="edl-initiative-name"></p>
+    <p class="edl-note" id="edl-initiative-desc"></p>
+
+    <div class="edl-controls">
+      <button type="button" id="edl-btn-start" class="primary">Start initiative</button>
+      <span class="edl-blocker-label">Med blocker:</span>
+      <button type="button" id="edl-btn-blocker-sec">Security review delay</button>
+      <button type="button" id="edl-btn-blocker-arch">Architecture rework</button>
+      <button type="button" id="edl-btn-reset">Återställ</button>
+    </div>
+
+    <label class="edl-align-control" for="edl-align-toggle">
+      <input type="checkbox" id="edl-align-toggle" />
+      <span class="edl-align-text">
+        <strong>Förbättring: tidig arkitektur- &amp; säkerhets-alignment</strong>
+        <span class="edl-align-hint">Kostar några dagar uppfront varje körning — men dämpar
+        omtags-kaskaden vid <em>Architecture rework</em> och kortar granskningskön vid
+        <em>Security review delay</em>. Kör med och utan för att se skillnaden.</span>
+      </span>
+    </label>
+
+    <div class="edl-status-row" aria-live="polite" aria-atomic="true">
+      <span class="status-pill" id="edl-status-pill">Redo</span>
+      <span class="edl-status-days" id="edl-status-days">—</span>
+    </div>
+  </section>
+
+  <section class="panel edl-predict" id="edl-predict-panel">
+    <h2>Förutsäg utfallet</h2>
+    <p class="edl-note">Gissa innan du kör — det är skillnaden mot din gissning som lär mest.</p>
+
+    <div class="edl-predict-fields" id="edl-predict-fields">
+      <label class="edl-predict-label" for="edl-predict-what">Vad tror du kommer hända?</label>
+      <textarea id="edl-predict-what" class="edl-predict-input" rows="2"
+        placeholder="T.ex. leveransen blir mycket långsammare och kräver omtag"></textarea>
+      <label class="edl-predict-label" for="edl-predict-why">Varför?</label>
+      <textarea id="edl-predict-why" class="edl-predict-input" rows="2"
+        placeholder="T.ex. säkerhetskön är en flaskhals som inte påverkas av mer arbete"></textarea>
+      <p class="edl-predict-hint" id="edl-predict-hint">Fyll i om du vill — kör sedan ett scenario ovan. (Frivilligt.)</p>
+    </div>
+
+    <div class="edl-predict-review" id="edl-predict-review" aria-live="polite" hidden></div>
+    <div class="edl-predict-history" id="edl-predict-history" hidden></div>
+  </section>
+
+  <section class="panel edl-flowgraph-panel" id="edl-flowgraph-panel">
+    <h2>Initiativets statuskarta</h2>
+    <p class="edl-note">En kompakt överblick av <em>var</em> det pågående initiativet är
+      just nu, och var blocker, omtag och tidig alignment slår. Färgen visar status;
+      markeringarna visar effekten. Visar en körning i taget.</p>
+
+    <div class="edl-fg-legend" aria-hidden="true">
+      <span class="edl-fg-key"><span class="edl-fg-sw edl-fg-sw-pending"></span>pending</span>
+      <span class="edl-fg-key"><span class="edl-fg-sw edl-fg-sw-active"></span>active</span>
+      <span class="edl-fg-key"><span class="edl-fg-sw edl-fg-sw-done"></span>done</span>
+      <span class="edl-fg-key"><span class="edl-fg-sw edl-fg-sw-blocked"></span>blocked / omtag</span>
+      <span class="edl-fg-key"><span class="edl-fg-sw edl-fg-sw-align">⚑</span>alignment</span>
+    </div>
+
+    <div class="edl-flowgraph-scroll">
+      <div id="edl-flowgraph" role="img" aria-label="Initiativets statuskarta: de tio stegen och deras status"></div>
+    </div>
+    <p class="edl-fg-caption" id="edl-flowgraph-caption" aria-live="polite" hidden></p>
+    <p class="edl-fg-future">Framtida vy: batch-flow med köer och bottlenecks över tid
+      kräver multi-initiative-simulering (flera samtidiga initiativ) — inte byggt än.</p>
+  </section>
+
+  <div class="edl-columns">
+    <section class="panel" id="edl-flow-panel">
+      <h2>Delivery-steg</h2>
+      <p class="edl-note">
+        De tio stegen i detalj — vad varje steg representerar och varför det
+        spelar roll. Fäll ut <em>Om steget</em> för fördjupning. (Statuskartan
+        ovan ger snabböverblicken; den här listan är referensen per steg.)
+      </p>
+      <ol class="edl-stage-list" id="edl-stage-list" aria-label="Delivery-steg med status"></ol>
+    </section>
+
+    <div class="edl-side">
+      <section class="panel" id="edl-log-panel">
+        <h2>Eventlogg</h2>
+        <div class="edl-log" id="edl-log" aria-live="polite"></div>
+      </section>
+
+      <section class="panel" id="edl-impact-panel">
+        <h2>Operational impact</h2>
+        <p class="edl-note" id="edl-impact-placeholder">
+          Kör initiativet till leverans så översätts resultatet till
+          organisatoriska konsekvenser här. Jämför gärna en körning utan
+          blocker med en körning med.
+        </p>
+        <div class="edl-impact-grid" id="edl-impact-grid" hidden></div>
+      </section>
+    </div>
+  </div>
+
+  <h2 class="edl-section-title">3. Systemexperiment</h2>
+  <section class="panel edl-system-panel" id="edl-system-panel">
+    <h2>Flera initiativ samtidigt</h2>
+    <p class="edl-note">Poängen med detta experiment är att visa att en begränsad
+      resurs skapar kö, och att väntan i kön driver ledtid. Kör tre initiativ genom
+      flödet — Architecture kan bara arbeta med ett i taget som default.</p>
+
+    <div class="edl-controls">
+      <button type="button" id="edl-sys-run" class="primary">Kör 3 initiativ</button>
+      <button type="button" id="edl-sys-cap">Architecture capacity: 1</button>
+      <button type="button" id="edl-sys-reset">Återställ</button>
+    </div>
+
+    <div class="edl-sys-board" id="edl-sys-board" role="img"
+      aria-label="Systemvy: initiativ genom sju steg med kö framför Architecture"></div>
+    <div class="edl-sys-metrics" id="edl-sys-metrics" aria-live="polite" hidden></div>
+
+    <div class="edl-sys-graph-wrap">
+      <div class="edl-sys-graph-legend" aria-hidden="true">
+        <span class="edl-sys-gl"><span class="edl-sys-gsw edl-sys-gsw-queue"></span>Architecture queue</span>
+        <span class="edl-sys-gl"><span class="edl-sys-gsw edl-sys-gsw-completed"></span>Completed</span>
+        <span class="edl-sys-gl"><span class="edl-sys-gsw edl-sys-gsw-wip"></span>WIP</span>
+      </div>
+      <p class="edl-sys-graph-empty" id="edl-sys-graph-empty">Kör experimentet för att se systemtryck över tid — kö, klara och WIP.</p>
+      <svg class="edl-sys-graph" id="edl-sys-graph" viewBox="0 0 560 150"
+        role="img" aria-label="Systemtryck över tid: Architecture-kö, klara initiativ och WIP" hidden></svg>
+      <p class="edl-sys-graph-note" id="edl-sys-graph-note" hidden>Streckad linje = föregående körning.</p>
+    </div>
+
+    <div class="edl-cards" id="edl-cards" aria-live="polite" hidden></div>
+  </section>
+
+  <h2 class="edl-section-title">4. Transformation Lab</h2>
+  <section class="panel edl-transform-panel" id="edl-transform-panel">
+    <h2>Gemensamt arbetssätt</h2>
+    <p class="edl-note">Tre enheter arbetar på olika sätt. Ledningen vill införa ett
+      gemensamt arbetssätt. Standardisering är inte en gratis förbättring — den kan
+      minska variation och öka förutsägbarhet, men kostar ofta tempo under införandet.
+      Generisk modell, inte en verklig organisation.</p>
+
+    <div class="edl-tr-sites" id="edl-tr-sites"></div>
+
+    <div class="edl-controls">
+      <button type="button" id="edl-tr-run" class="primary">Starta transformation</button>
+      <button type="button" id="edl-tr-std">Grad av standardisering: låg</button>
+      <button type="button" id="edl-tr-reset">Återställ</button>
+    </div>
+
+    <p class="edl-tr-status" id="edl-tr-status" aria-live="polite" hidden></p>
+
+    <div class="edl-tr-metrics" id="edl-tr-metrics" aria-live="polite" hidden></div>
+
+    <div class="edl-tr-graph-wrap">
+      <div class="edl-tr-graph-legend" aria-hidden="true">
+        <span class="edl-tr-gl"><span class="edl-tr-gsw edl-tr-gsw-lead"></span>Lead Time</span>
+        <span class="edl-tr-gl"><span class="edl-tr-gsw edl-tr-gsw-var"></span>Variation</span>
+        <span class="edl-tr-gl"><span class="edl-tr-gsw edl-tr-gsw-pred"></span>Predictability</span>
+      </div>
+      <p class="edl-tr-graph-empty" id="edl-tr-graph-empty">Starta transformationen för att se förändringen månad för månad.</p>
+      <svg class="edl-tr-graph" id="edl-tr-graph" viewBox="0 0 560 150"
+        role="img" aria-label="Metrics över månad 0–6: lead time, variation och predictability" hidden></svg>
+      <p class="edl-tr-graph-scale" id="edl-tr-graph-scale" hidden>Kurvorna delar en
+        jämförelseskala (0–100) så att lead time, variation och predictability kan visas
+        i samma bild — läs formen på trenderna; exakta värden står i mätvärdena ovan.</p>
+    </div>
+
+    <div class="edl-tr-events" id="edl-tr-events" aria-live="polite" hidden></div>
+    <div class="edl-cards" id="edl-tr-cards" aria-live="polite" hidden></div>
+  </section>
+
+  <h2 class="edl-section-title">5. Scenario Lab</h2>
+  <section class="panel edl-scenario-panel" id="edl-scenario-panel">
+    <h2>Provkör arbetssättet</h2>
+    <p class="edl-note">Testa hur ett arbetssätt håller när verkligheten blir rörig.
+      Välj ett agerande och se vilken organisatorisk konsekvens det får.</p>
+
+    <p class="edl-sc-situation" id="edl-sc-situation"></p>
+    <div class="edl-sc-options" id="edl-sc-options" role="group" aria-label="Handlingsalternativ"></div>
+    <div class="edl-sc-result" id="edl-sc-result" aria-live="polite" hidden></div>
+  </section>
+</main>
+
+<footer>
+  <p style="margin: 0 0 .25rem 0; font-size: .8rem; color: #888; text-align: center;">
+    <a href="index.html" style="color: #555;">← OSS/BSS-simulator</a>
+    · <a href="flow-lab.html" style="color: #555;">FlowLab</a>
+  </p>
+  <!-- BEGIN personal-footer · template: shared/personal-footer.html i salvage-vision-repot
+       Se docs/personal-footer-pattern.md för design + footer contract.
+       Intern navlänk ovan ligger i en separat <p> så personal-footer-snippet:en
+       håller sig till mönstrets "max 2 externa länkar"-kontrakt. -->
+  <p class="personal-footer">
+    Created by
+    <strong class="personal-footer-name">Johan Lindengard</strong>
+    —
+    <span class="personal-footer-role">IT Consultant / AI-driven prototyping</span>
+    <span class="personal-footer-sep" aria-hidden="true">·</span>
+    <a class="personal-footer-link"
+       href="https://www.linkedin.com/in/johan-lindengard/"
+       target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  </p>
+  <!-- END personal-footer -->
+</footer>
+
+<script src="src/enterprise-lab/ed-domain.js"></script>
+<script src="src/enterprise-lab/ed-engine.js"></script>
+<script src="src/enterprise-lab/ed-render.js"></script>
+<script src="src/enterprise-lab/ed-predict.js"></script>
+<script src="src/enterprise-lab/ed-app.js"></script>
+<script src="src/enterprise-lab/ed-learn-cards.js"></script>
+<script src="src/enterprise-lab/ed-system.js"></script>
+<script src="src/enterprise-lab/ed-transform.js"></script>
+<script src="src/enterprise-lab/ed-scenario.js"></script>
+</body>
+</html>

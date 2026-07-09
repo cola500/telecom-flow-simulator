@@ -3,13 +3,15 @@ title: Development notes
 description: Hur du kör simulatorn lokalt, hur koden är organiserad, och hur du lägger till nya pedagogiska slices. Användarvänd dokumentation finns i README.md; modellantaganden i REALISM_NOTES.md.
 category: developer-docs
 status: in-progress
-last_updated: 2026-05-10
+last_updated: 2026-07-04
 sections: [Kör lokalt, Kodstruktur, Lägga till nya pedagogiska slices, Framtida slice-idéer]
 ---
 
 # Development notes
 
 Den här filen är teknisk dokumentation för någon som vill *bygga vidare* på simulatorn. Användarinstruktioner och pedagogiskt innehåll finns i [`README.md`](README.md). Modellantaganden och realismnivå finns i [`REALISM_NOTES.md`](REALISM_NOTES.md).
+
+För *var vi är nu* och nästa steg i pågående arbete, se [`project-brain/current.md`](project-brain/current.md) — det delade arbetsminnet.
 
 ## Kör lokalt
 
