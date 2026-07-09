@@ -2024,33 +2024,38 @@ body.mode-parallel .parallel-only { display: block; }
   }
 }
 
-/* App footer (attribution) ---------------------------------------------------
-   Diskret rad längst ner med skapar-namn + LinkedIn. Låg visuell tyngd:
-   muted text, prickad understrykning på länken som blir blå vid hover. */
-.app-footer {
+/* BEGIN personal-footer · template: shared/personal-footer.css i salvage-vision-repot
+   Se: docs/personal-footer-pattern.md i samma repo. Inline-embed för att hålla
+   oss-bss-simulator helt självgående (inga externa deps). Sync:a mot mallen
+   vid uppdatering. Dark-mode-blocket utelämnat — sidan är ljus-only. */
+.personal-footer {
+  --pf-text:        #888;
+  --pf-text-strong: #555;
+  --pf-link:        #555;
+  --pf-link-hover:  #222;
+  --pf-sep:         #bbb;
+  --pf-margin-top:  1.25rem;
+
+  margin: var(--pf-margin-top) 0 0 0;
+  color: var(--pf-text);
+  font-size: .8rem;
+  line-height: 1.5;
   text-align: center;
-  padding: 20px 16px 28px;
-  margin-top: 16px;
-  border-top: 1px solid #e2e6ee;
-  color: #6b7385;
-  font-size: 12px;
-  background: transparent;
 }
-.app-footer strong {
-  color: #5b6478;
-  font-weight: 500;
+
+/* Projekt-lokal: ge <footer> egen luft (mallen är medvetet padding-fri). */
+body > footer { padding: 16px 0 24px; }
+.personal-footer-name { color: var(--pf-text-strong); font-weight: 600; }
+.personal-footer-sep  { margin: 0 .35rem; color: var(--pf-sep); }
+.personal-footer-link {
+  color: var(--pf-link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
 }
-.app-footer a {
-  color: #6b7385;
-  text-decoration: none;
-  border-bottom: 1px dotted #cdd3df;
-  padding-bottom: 1px;
-  transition: color 0.15s, border-color 0.15s;
-}
-.app-footer a:hover {
-  color: #4a6cf7;
-  border-bottom-color: #4a6cf7;
-}
+.personal-footer-link:hover,
+.personal-footer-link:focus-visible { color: var(--pf-link-hover); }
+/* END personal-footer */
 
 /* Mode-tabs show/hide-regler — placerade sist så de vinner kaskaden mot
    body.mode-parallel .parallel-only (samma specificity, sista vinner).

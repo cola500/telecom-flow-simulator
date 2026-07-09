@@ -13,6 +13,10 @@ sections: [Vision, De tre labben, Designprinciper, Vad som finns idag, Roadmap, 
 
 > 🔗 **Live demo:** [cola500.github.io/telecom-flow-simulator](https://cola500.github.io/telecom-flow-simulator/) — kör direkt i webbläsaren, ingen installation. (Landar i OSS/BSS-simulatorn; övriga labb nås därifrån och via `enterprise-lab.html`.)
 
+<img width="1232" height="680" alt="OSS/BSS Simulator — Learn-läget" src="https://github.com/user-attachments/assets/58ceba39-3cf9-4196-9919-04cf9be56c73" />
+
+<img width="1234" height="698" alt="OSS/BSS Simulator — Optimize-läget" src="https://github.com/user-attachments/assets/1865f6af-2d15-43bb-a4ce-d279d76e0faf" />
+
 ## Vision
 
 Systemdynamik — köer, flaskhalsar, WIP-effekter, transitionskostnader, lokala vs globala optimeringar — är kontraintuitiv och förstås bäst genom att *upplevas*. FlowLab låter användaren köra en organisation i miniatyr och upptäcka, genom experiment, varför leverans i stora system blir långsam. Samma pedagogiska tes bär alla labben: **gissa → kör → observera → reflektera → inse.**

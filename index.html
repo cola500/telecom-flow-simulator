@@ -697,11 +697,20 @@
   <span aria-hidden="true">↑</span>
 </button>
 
-<footer class="app-footer">
-  Created by <strong>Johan Lindengard</strong>
-  · <a href="https://www.linkedin.com/in/johan-lindengard/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-  · <a href="enterprise-lab.html">Enterprise Delivery Lab</a>
-  · <a href="flow-lab.html">FlowLab</a>
+<footer>
+  <!-- BEGIN personal-footer · template: shared/personal-footer.html i salvage-vision-repot
+       Se docs/personal-footer-pattern.md för design + footer contract. -->
+  <p class="personal-footer">
+    Created by
+    <strong class="personal-footer-name">Johan Lindengard</strong>
+    —
+    <span class="personal-footer-role">IT Consultant / AI-driven prototyping</span>
+    <span class="personal-footer-sep" aria-hidden="true">·</span>
+    <a class="personal-footer-link"
+       href="https://www.linkedin.com/in/johan-lindengard/"
+       target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  </p>
+  <!-- END personal-footer -->
 </footer>
 
 <script src="src/simulation/scenarios.js"></script>
