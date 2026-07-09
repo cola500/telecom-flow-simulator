@@ -36,6 +36,14 @@ header .intro .start-here {
 }
 
 header .intro .start-here a { color: #cdd6ff; text-decoration: underline; }
+
+header .intro .labb-nav {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+header .intro .labb-nav a { color: #cdd6ff; text-decoration: underline; }
 .mode-pill {
   display: inline-block;
   padding: 1px 8px;
